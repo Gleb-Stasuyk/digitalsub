@@ -1,0 +1,18 @@
+services:
+  web:
+    build: .
+    container_name: digitalsub
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      - PORT=8080
+      - DATA_DIR=/app/data
+    volumes:
+      - leads:/app/data
+
+volumes:
+  leads:
