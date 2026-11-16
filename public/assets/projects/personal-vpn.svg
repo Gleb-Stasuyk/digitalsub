@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" width="960" height="600" role="img" aria-label="Личный VPN: ваши устройства подключаются к собственному VPN-серверу">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6d5dfc"/><stop offset="1" stop-color="#22d3ee"/></linearGradient>
+    <radialGradient id="glow1" cx="30%" cy="25%" r="55%"><stop offset="0" stop-color="#6d5dfc" stop-opacity=".35"/><stop offset="1" stop-color="#6d5dfc" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glow2" cx="80%" cy="80%" r="50%"><stop offset="0" stop-color="#22d3ee" stop-opacity=".22"/><stop offset="1" stop-color="#22d3ee" stop-opacity="0"/></radialGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#26304f" stroke-width="1" opacity=".55"/></pattern>
+  </defs>
+  <rect width="960" height="600" fill="#0b1020"/>
+  <rect width="960" height="600" fill="url(#grid)"/>
+  <rect width="960" height="600" fill="url(#glow1)"/>
+  <rect width="960" height="600" fill="url(#glow2)"/>
+  <!-- линии туннелей -->
+  <g fill="none" stroke="url(#g)" stroke-width="3" stroke-dasharray="10 9" stroke-linecap="round" opacity=".85">
+    <path d="M250 170 C 360 170, 380 300, 450 300"/>
+    <path d="M250 300 L 450 300"/>
+    <path d="M250 430 C 360 430, 380 300, 450 300"/>
+    <path d="M630 300 L 760 300"/>
+  </g>
+  <!-- устройства -->
+  <g fill="#141c33" stroke="#3d4a75" stroke-width="2">
+    <rect x="120" y="120" width="130" height="90" rx="10"/>
+    <rect x="104" y="210" width="162" height="12" rx="6"/>
+    <rect x="160" y="250" width="60" height="104" rx="12"/>
+    <rect x="130" y="390" width="120" height="84" rx="10"/>
+  </g>
+  <g fill="#19223d"><rect x="132" y="132" width="106" height="66" rx="5"/><rect x="168" y="262" width="44" height="76" rx="5"/><rect x="142" y="402" width="96" height="60" rx="5"/></g>
+  <g fill="#9aa5c4" opacity=".7"><rect x="145" y="148" width="60" height="6" rx="3"/><rect x="145" y="162" width="80" height="6" rx="3"/><rect x="175" y="276" width="30" height="5" rx="2.5"/><rect x="155" y="418" width="56" height="6" rx="3"/></g>
+  <!-- сервер с щитом -->
+  <rect x="450" y="190" width="180" height="220" rx="22" fill="#141c33" stroke="url(#g)" stroke-width="3"/>
+  <path d="M540 228 L590 246 V294 C590 330 568 352 540 364 C512 352 490 330 490 294 V246 Z" fill="url(#g)"/>
+  <rect x="524" y="288" width="32" height="26" rx="5" fill="#0b1020"/>
+  <path d="M530 288 V278 a10 10 0 0 1 20 0 V288" fill="none" stroke="#0b1020" stroke-width="5"/>
+  <g fill="#26304f"><rect x="474" y="378" width="132" height="8" rx="4"/></g>
+  <circle cx="606" cy="214" r="5" fill="#34d399"/>
+  <!-- интернет -->
+  <circle cx="820" cy="300" r="62" fill="#141c33" stroke="#3d4a75" stroke-width="2"/>
+  <g fill="none" stroke="#9aa5c4" stroke-width="2" opacity=".8"><circle cx="820" cy="300" r="38"/><ellipse cx="820" cy="300" rx="16" ry="38"/><path d="M782 300h76M788 282h64M788 318h64"/></g>
+  <text x="540" y="456" text-anchor="middle" font-family="system-ui,Segoe UI,Arial,sans-serif" font-size="22" font-weight="700" fill="#e8ecf7">Ваш VPN-сервер</text>
+  <text x="540" y="484" text-anchor="middle" font-family="system-ui,Segoe UI,Arial,sans-serif" font-size="16" fill="#9aa5c4">на вашем VPS</text>
+  <text x="185" y="520" text-anchor="middle" font-family="system-ui,Segoe UI,Arial,sans-serif" font-size="16" fill="#9aa5c4">ваши устройства</text>
+  <text x="820" y="400" text-anchor="middle" font-family="system-ui,Segoe UI,Arial,sans-serif" font-size="16" fill="#9aa5c4">интернет</text>
+</svg>

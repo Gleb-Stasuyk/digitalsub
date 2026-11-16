@@ -24,7 +24,6 @@
   <link rel="manifest" href="/site.webmanifest">
   <link rel="stylesheet" href="/assets/styles.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://digitalsub.ru/"},{"@type":"ListItem","position":2,"name":"Выкуп и переуступка","item":"https://digitalsub.ru/buyout"}]}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Кому принадлежит продукт?","acceptedAnswer":{"@type":"Answer","text":"До выкупа права на код остаются у нас, вы пользуетесь продуктом по лицензии. После выкупа исходный код, права и доступы передаются вам. Домен принадлежит вам с самого начала."}},{"@type":"Question","name":"Сколько стоит выкуп?","acceptedAnswer":{"@type":"Answer","text":"Базовая цена выкупа — 12 месячных платежей без учёта скидки за срок. Из неё вычитается 30% уже оплаченных подписок, но итог не опускается ниже 3 месячных платежей. Цена выкупа фиксируется в договоре на старте, а посчитать её для своего проекта можно в калькуляторе."}},{"@type":"Question","name":"Можно ли продать или передать проект другому владельцу?","acceptedAnswer":{"@type":"Answer","text":"Да. При переуступке мы переоформляем договор и права на нового владельца — комиссия 15% от остаточной стоимости проекта, но не менее 30 000 ₽. Остаточная стоимость — цена выкупа на момент сделки: 12 месячных платежей без скидки минус 30% оплаченных подписок, не меньше 3 платежей. Если покупателя ещё нет, можно выставить проект на продажу в нашем каталоге «Готовые решения» — комиссия 10% от суммы продажи."}}]}</script>
 </head>
 <body>
   <a class="skip" href="#main">Перейти к содержанию</a>
@@ -32,6 +31,7 @@
     <div class="container header__inner">
       <a class="logo" href="/" aria-label="DigitalSub — на главную"><img src="/favicon.svg" alt="" width="32" height="32"><span>Digital<b>Sub</b></span></a>
       <nav class="nav" id="nav" aria-label="Основная навигация">
+        <a href="/">Главная</a>
         <div class="nav__drop">
           <a class="nav__droplink" href="/services">Услуги</a>
           <div class="nav__menu"><a href="/services/landing">Лендинг и сайт-визитка</a><a href="/services/website">Многостраничный сайт</a><a href="/services/shop">Интернет-магазин</a><a href="/services/web-app">Веб-приложение</a><a href="/services/android">Мобильное приложение Android</a><a href="/services/desktop">Десктоп-приложение</a></div>
@@ -39,7 +39,7 @@
         <a href="/prices">Цены</a>
         <a href="/solutions">Готовые решения</a>
         <a href="/buyout" class="is-active" aria-current="page">Выкуп</a>
-        <a href="/faq">FAQ</a>
+        <a href="/faq">Вопросы</a>
         <a class="btn nav__cta" href="#lead">Оставить заявку</a>
       </nav>
       <a class="btn btn--sm header__cta" href="#lead">Оставить заявку</a>
@@ -124,22 +124,7 @@
       </div>
     </section>
 
-    <section class="section" id="buyout-faq">
-      <div class="container">
-        <div class="section__head"><p class="eyebrow">FAQ</p><h2>Вопросы о выкупе</h2></div>
-        <div class="faq">
-            <div class="faq__col">
-              <details><summary>Кому принадлежит продукт?</summary><p>До выкупа права на код остаются у нас, вы пользуетесь продуктом по лицензии. После выкупа исходный код, права и доступы передаются вам. Домен принадлежит вам с самого начала.</p></details>
-              <details><summary>Сколько стоит выкуп?</summary><p>Базовая цена выкупа — 12 месячных платежей без учёта скидки за срок. Из неё вычитается 30% уже оплаченных подписок, но итог не опускается ниже 3 месячных платежей. Цена выкупа фиксируется в договоре на старте, а посчитать её для своего проекта можно в калькуляторе.</p></details>
-            </div>
-            <div class="faq__col">
-              <details><summary>Можно ли продать или передать проект другому владельцу?</summary><p>Да. При переуступке мы переоформляем договор и права на нового владельца — комиссия 15% от остаточной стоимости проекта, но не менее 30 000 ₽. Остаточная стоимость — цена выкупа на момент сделки: 12 месячных платежей без скидки минус 30% оплаченных подписок, не меньше 3 платежей. Если покупателя ещё нет, можно выставить проект на продажу в нашем каталоге «Готовые решения» — комиссия 10% от суммы продажи.</p></details>
-            </div>
-          </div>
-      </div>
-    </section>
-
-    <section class="section section--alt" id="lead">
+    <section class="section" id="lead">
       <div class="container lead-box">
         <div class="lead-box__text">
           <p class="eyebrow">Заявка</p>
@@ -198,7 +183,7 @@
       </nav>
       <nav class="footer__nav" aria-label="Разделы сайта">
         <p class="footer__title">Разделы</p>
-        <a href="/prices">Цены и калькулятор</a><a href="/solutions">Готовые решения</a><a href="/buyout">Выкуп и переуступка</a><a href="/faq">Частые вопросы</a><a href="/#lead">Оставить заявку</a><a href="/privacy">Политика конфиденциальности</a>
+        <a href="/prices">Цены и калькулятор</a><a href="/solutions">Готовые решения</a><a href="/buyout">Выкуп и переуступка</a><a href="/faq">Вопросы</a><a href="/#lead">Оставить заявку</a><a href="/privacy">Политика конфиденциальности</a>
       </nav>
       <p class="footer__copy">© <span id="year">2026</span> DigitalSub · digitalsub.ru</p>
     </div>

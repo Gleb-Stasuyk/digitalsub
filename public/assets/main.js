@@ -306,7 +306,7 @@
   /* ---------- Готовые решения ---------- */
   let PR = null;
   const prPrice = (id) => { const p = PR && PR.projects.find((x) => x.id === id); return p && typeof p.price === 'number' ? fmt(p.price, PR.currency || '₽') : 'Цена по запросу'; };
-  if ($('[data-price],[data-transfer-share],[data-transfer-min],[data-sale-commission],[data-project-buy]')) fetch('/assets/projects.json', { cache: 'no-cache' })
+  if ($('[data-price],[data-transfer-share],[data-transfer-min],[data-sale-commission],[data-project-action]')) fetch('/assets/projects.json', { cache: 'no-cache' })
     .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
     .then((data) => {
       PR = data;
@@ -320,23 +320,30 @@
     })
     .catch((e) => console.error(e));
 
-  function attachProject(id, name, mode) {
-    const buy = mode === 'buy';
+  // Кнопки готовых решений: data-project-action = buy | copy | order | sub, data-line — строка для заявки, data-label — для статуса
+  function attachProject(btn) {
+    const { id, name, line, label } = btn.dataset; const mode = btn.dataset.projectAction;
     const p = PR && PR.projects.find((x) => x.id === id);
-    const subFrom = p && typeof p.subscriptionFrom === 'number' ? `, от ${fmt(p.subscriptionFrom, PR.currency || '₽')}/мес` : '';
-    const summary = buy
-      ? `Готовое решение: ${name}\nХочу купить проект целиком (исходный код и домен)\nЦена: ${prPrice(id)}`
-      : `Готовое решение: ${name}\nХочу такой же продукт под свой бренд по подписке${subFrom}`;
+    const subFrom = mode === 'copy' && p && typeof p.subscriptionFrom === 'number' ? `, от ${fmt(p.subscriptionFrom, PR.currency || '₽')}/мес` : '';
+    const withPrice = mode === 'buy' || mode === 'order';
+    const summary = `Готовое решение: ${name}\n${line}${subFrom}${withPrice ? `\nЦена: ${prPrice(id)}` : ''}`;
     state.attached = false; // расчёт калькулятора больше не перезаписывает заявку
     $('#f-calc').value = JSON.stringify({ kind: 'project', project: id, mode, summary });
     const sel = $('#f-product'); if (sel) sel.value = 'Готовое решение';
     $('#lead').scrollIntoView({ behavior: 'smooth' });
     setTimeout(() => { const n = $('#f-name'); if (n) n.focus({ preventScroll: true }); }, 500);
     const st = $('#form-status');
-    if (st) { st.className = 'form__status form__status--ok'; st.textContent = `✓ ${buy ? 'Покупка проекта' : 'Копия проекта по подписке'} «${name}» добавлена в заявку. Укажите имя и контакт и нажмите «Отправить заявку».`; }
+    if (st) { st.className = 'form__status form__status--ok'; st.textContent = `✓ ${label} «${name}» добавлен${/^(Покупка|Копия)/.test(label) ? 'а' : ''} в заявку. Укажите имя и контакт и нажмите «Отправить заявку».`; }
   }
-  $$('[data-project-buy]').forEach((b) => b.addEventListener('click', () => attachProject(b.dataset.projectBuy, b.dataset.name, 'buy')));
-  $$('[data-project-copy]').forEach((b) => b.addEventListener('click', () => attachProject(b.dataset.projectCopy, b.dataset.name, 'copy')));
+  $$('[data-project-action]').forEach((b) => b.addEventListener('click', () => attachProject(b)));
+
+  /* ---------- Галерея на странице готового решения ---------- */
+  const gMain = $('#gallery-main');
+  $$('.gallery__thumb').forEach((t) => t.addEventListener('click', () => {
+    if (!gMain) return;
+    gMain.src = t.dataset.src; gMain.alt = t.dataset.alt;
+    $$('.gallery__thumb').forEach((x) => x.removeAttribute('aria-current')); t.setAttribute('aria-current', 'true');
+  }));
 
   // Цены на карточках и страницах услуг берутся из pricing.json, чтобы не расходиться с калькулятором
   function hydratePrices() {

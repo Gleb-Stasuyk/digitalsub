@@ -413,3 +413,40 @@ p{margin:0 0 1em}
 @media (max-width:760px){.footer__inner{grid-template-columns:1fr 1fr}.footer__inner>div:first-child{grid-column:1/-1}}
 @media (max-width:420px){.footer__inner{grid-template-columns:1fr}}
 @media (max-width:600px){.calc-row b{white-space:normal;text-align:right}}
+
+/* Готовые решения: каталог и страница проекта */
+a.project__shot{display:block}
+.project__title{color:var(--text)}
+.project__title:hover{color:var(--brand-2);text-decoration:none}
+.product-page{padding-bottom:70px}
+.product{display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:start}
+.gallery{display:grid;gap:12px;min-width:0}
+.gallery__main{padding:0;overflow:hidden;aspect-ratio:16/10;background:var(--card-2)}
+.gallery__main img{width:100%;height:100%;object-fit:cover;object-position:top center}
+.gallery__thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.gallery__thumb{padding:0;border:2px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card-2);cursor:pointer;aspect-ratio:16/10}
+.gallery__thumb img{width:100%;height:100%;object-fit:cover;object-position:top center}
+.gallery__thumb:hover{border-color:#3d4a75}
+.gallery__thumb[aria-current="true"]{border-color:var(--brand)}
+.product__info{min-width:0}
+.product__info h1{font-size:clamp(2rem,4vw,2.9rem);margin-bottom:.25em}
+.product__host{margin:0 0 14px;font-weight:600}
+.product__host--off{color:var(--muted);font-weight:500}
+.product__info .lead{font-size:1.05rem}
+.product__buy{display:grid;gap:12px;margin-top:6px}
+.product__price-label{margin:0;font-size:.85rem;text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.product__price{margin:0 0 4px;font-size:1.9rem;font-weight:800;color:var(--text)!important;line-height:1.1}
+.product__btns{display:grid;gap:10px}
+.product__inc-title{margin:8px 0 0;font-weight:700;color:var(--text)!important}
+.product__buy .ticks li{font-size:.95rem}
+.product-details{display:grid;grid-template-columns:1.4fr .8fr;gap:44px;align-items:start}
+.product__about{color:var(--muted);font-size:1.05rem;max-width:720px}
+.product-side{display:grid;gap:6px}
+.product-side__title{margin:10px 0 0;font-weight:700;color:var(--text)!important}
+.product-side__title:first-child{margin-top:0}
+.product-side__list{list-style:none;padding:0;margin:0 0 12px;display:grid;gap:8px}
+.product-side__list span{display:block;color:var(--muted);font-size:.82rem}
+@media (max-width:980px){.product,.product-details{grid-template-columns:1fr;gap:32px}}
+@media (max-width:600px){.gallery__thumbs{grid-template-columns:repeat(3,1fr)}.product__price{font-size:1.6rem}}
+.projects--catalog{grid-template-columns:repeat(2,1fr)}
+@media (max-width:700px){.projects--catalog{grid-template-columns:1fr}}
