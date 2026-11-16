@@ -1,0 +1,11 @@
+{
+  "_comment": "Готовые решения: цены продажи проектов целиком и условия переуступки. price: null — показывается «Цена по запросу», число — цена в рублях. subscriptionFrom: null или цена копии по подписке, ₽/мес. После изменений: docker compose up -d --build.",
+  "currency": "₽",
+  "projects": [
+    {"id": "simpleab", "name": "SimpleAB", "price": null, "subscriptionFrom": null},
+    {"id": "l2start", "name": "L2Start", "price": null, "subscriptionFrom": null},
+    {"id": "armgame", "name": "ARM Game", "price": null, "subscriptionFrom": null}
+  ],
+  "transfer": {"share": 0.15, "min": 30000},
+  "saleCommission": 0.10
+}

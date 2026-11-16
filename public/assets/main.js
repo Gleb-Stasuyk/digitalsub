@@ -301,6 +301,41 @@
     const st = $('#form-status'); if (st) { st.className = 'form__status form__status--ok'; st.textContent = '✓ Расчёт добавлен в заявку. Укажите имя и контакт и нажмите «Отправить заявку».'; }
   });
 
+  /* ---------- Готовые решения ---------- */
+  let PR = null;
+  const prPrice = (id) => { const p = PR && PR.projects.find((x) => x.id === id); return p && typeof p.price === 'number' ? fmt(p.price, PR.currency || '₽') : 'Цена по запросу'; };
+  fetch('/assets/projects.json', { cache: 'no-cache' })
+    .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then((data) => {
+      PR = data;
+      $$('[data-price]').forEach((el) => { el.textContent = prPrice(el.dataset.price); });
+      const pct = (v) => Math.round(v * 100) + '%';
+      if (data.transfer) {
+        $$('[data-transfer-share]').forEach((el) => { el.textContent = pct(data.transfer.share); });
+        $$('[data-transfer-min]').forEach((el) => { el.textContent = fmt(data.transfer.min, data.currency || '₽'); });
+      }
+      if (typeof data.saleCommission === 'number') $$('[data-sale-commission]').forEach((el) => { el.textContent = pct(data.saleCommission); });
+    })
+    .catch((e) => console.error(e));
+
+  function attachProject(id, name, mode) {
+    const buy = mode === 'buy';
+    const p = PR && PR.projects.find((x) => x.id === id);
+    const subFrom = p && typeof p.subscriptionFrom === 'number' ? `, от ${fmt(p.subscriptionFrom, PR.currency || '₽')}/мес` : '';
+    const summary = buy
+      ? `Готовое решение: ${name}\nХочу купить проект целиком (исходный код и домен)\nЦена: ${prPrice(id)}`
+      : `Готовое решение: ${name}\nХочу такой же продукт под свой бренд по подписке${subFrom}`;
+    state.attached = false; // расчёт калькулятора больше не перезаписывает заявку
+    $('#f-calc').value = JSON.stringify({ kind: 'project', project: id, mode, summary });
+    const sel = $('#f-product'); if (sel) sel.value = 'Готовое решение';
+    $('#lead').scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => { const n = $('#f-name'); if (n) n.focus({ preventScroll: true }); }, 500);
+    const st = $('#form-status');
+    if (st) { st.className = 'form__status form__status--ok'; st.textContent = `✓ ${buy ? 'Покупка проекта' : 'Копия проекта по подписке'} «${name}» добавлена в заявку. Укажите имя и контакт и нажмите «Отправить заявку».`; }
+  }
+  $$('[data-project-buy]').forEach((b) => b.addEventListener('click', () => attachProject(b.dataset.projectBuy, b.dataset.name, 'buy')));
+  $$('[data-project-copy]').forEach((b) => b.addEventListener('click', () => attachProject(b.dataset.projectCopy, b.dataset.name, 'copy')));
+
   fetch('/assets/pricing.json', { cache: 'no-cache' })
     .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
     .then((data) => { P = data; build(); })

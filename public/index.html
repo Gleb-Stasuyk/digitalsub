@@ -28,6 +28,13 @@
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"ProfessionalService","name":"DigitalSub","url":"https://digitalsub.ru/","description":"Разработка сайтов, интернет-магазинов, веб-, мобильных и десктоп-приложений по подписке с правом выкупа.","areaServed":"RU","priceRange":"от 4 900 ₽/мес"}
   </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"ItemList","name":"Готовые решения DigitalSub","itemListElement":[
+    {"@type":"ListItem","position":1,"item":{"@type":"WebApplication","name":"SimpleAB","url":"https://simpleab.ru/","applicationCategory":"BusinessApplication","operatingSystem":"Web","description":"Калькулятор A/B-тестов: размер выборки, значимость, CUPED, ratio-метрики и guardrails.","image":"https://digitalsub.ru/assets/projects/simpleab.webp"}},
+    {"@type":"ListItem","position":2,"item":{"@type":"WebSite","name":"L2Start","url":"https://l2start.ru/","description":"Сайт игрового проекта Lineage 2 Interlude: серверы, загрузки, форум, новости, личный кабинет.","image":"https://digitalsub.ru/assets/projects/l2start.webp"}},
+    {"@type":"ListItem","position":3,"item":{"@type":"WebApplication","name":"ARM Game","applicationCategory":"ShoppingApplication","operatingSystem":"Web","description":"Интернет-магазин игр для консолей: каталог, корзина, доставка, онлайн-оплата, личный кабинет и админка.","image":"https://digitalsub.ru/assets/projects/arm-game.webp"}}
+  ]}
+  </script>
 </head>
 <body>
   <a class="skip" href="#main">Перейти к содержанию</a>
@@ -37,6 +44,7 @@
       <nav class="nav" id="nav" aria-label="Основная навигация">
         <a href="#how">Как это работает</a>
         <a href="#what">Что делаем</a>
+        <a href="#solutions">Готовые решения</a>
         <a href="#compare">Сравнение</a>
         <a href="#pricing">Тарифы</a>
         <a href="#calc">Калькулятор</a>
@@ -137,7 +145,65 @@
       </div>
     </section>
 
-    <section class="section" id="compare">
+    <section class="section" id="solutions">
+      <div class="container">
+        <div class="section__head">
+          <p class="eyebrow">Готовые решения</p>
+          <h2>Работающие проекты, которые можно купить или повторить</h2>
+          <p class="section__sub">Каждый проект можно купить целиком — с исходным кодом и доменом — или заказать такой же под свой бренд по подписке: на готовой основе это быстрее и дешевле, чем с нуля.</p>
+        </div>
+        <div class="grid grid--3 projects">
+          <article class="card project" data-project="simpleab">
+            <div class="project__shot"><img src="/assets/projects/simpleab.webp" alt="Скриншот SimpleAB — калькулятор A/B-тестов" width="960" height="600" loading="lazy" decoding="async"></div>
+            <div class="project__body">
+              <p class="project__niche">Веб-приложение · аналитика</p>
+              <h3>SimpleAB <span class="project__host">simpleab.ru</span></h3>
+              <p>Онлайн-калькулятор A/B-тестов для маркетологов и продуктовых команд: от расчёта выборки до решения «катить или нет».</p>
+              <ul class="ticks"><li>Размер выборки и проверка значимости</li><li>Конверсия, среднее, ratio-метрики и CUPED</li><li>Мульти-метрики, guardrails и поправки на множественные сравнения</li><li>Загрузка CSV, графики и вывод простым языком</li><li>Вики по A/B-тестированию</li></ul>
+              <p class="project__stack">Python, FastAPI, SciPy, statsmodels · Docker</p>
+              <div class="project__foot">
+                <div class="project__row"><a class="project__link" href="https://simpleab.ru/" target="_blank" rel="noopener">Открыть сайт ↗</a><span class="project__price" data-price="simpleab">Цена по запросу</span></div>
+                <button class="btn btn--block project__btn" type="button" data-project-buy="simpleab" data-name="SimpleAB">Купить проект целиком</button>
+                <button class="btn btn--ghost btn--block project__btn" type="button" data-project-copy="simpleab" data-name="SimpleAB">Хочу такой же по подписке</button>
+              </div>
+            </div>
+          </article>
+          <article class="card project" data-project="l2start">
+            <div class="project__shot"><img src="/assets/projects/l2start.webp" alt="Скриншот L2Start — сайт игрового проекта Lineage 2" width="960" height="600" loading="lazy" decoding="async"></div>
+            <div class="project__body">
+              <p class="project__niche">Игровой проект · сообщество</p>
+              <h3>L2Start <span class="project__host">l2start.ru</span></h3>
+              <p>Сайт игрового проекта по Lineage 2 Interlude: витрина серверов, загрузки и сообщество игроков.</p>
+              <ul class="ticks"><li>Русская и английская версии</li><li>Регистрация, вход и личный кабинет с подтверждением email</li><li>Форум, новости, база знаний и помощь</li><li>Страницы серверов и загрузок</li><li>Админ-панель для контента</li></ul>
+              <p class="project__stack">Next.js, React, TypeScript, Tailwind · FastAPI, PostgreSQL</p>
+              <div class="project__foot">
+                <div class="project__row"><a class="project__link" href="https://l2start.ru/" target="_blank" rel="noopener">Открыть сайт ↗</a><span class="project__price" data-price="l2start">Цена по запросу</span></div>
+                <button class="btn btn--block project__btn" type="button" data-project-buy="l2start" data-name="L2Start">Купить проект целиком</button>
+                <button class="btn btn--ghost btn--block project__btn" type="button" data-project-copy="l2start" data-name="L2Start">Хочу такой же по подписке</button>
+              </div>
+            </div>
+          </article>
+          <article class="card project" data-project="armgame">
+            <div class="project__shot"><img src="/assets/projects/arm-game.webp" alt="Скриншот ARM Game — интернет-магазин игр для консолей" width="960" height="600" loading="lazy" decoding="async"></div>
+            <div class="project__body">
+              <p class="project__niche">Интернет-магазин · игры для консолей</p>
+              <h3>ARM Game</h3>
+              <p>Магазин дисков и картриджей для PS4, PS5, Nintendo Switch и Xbox, геймпадов и аксессуаров. Тёмная игровая тема, адаптив под телефон. Домен пока не подключён.</p>
+              <ul class="ticks"><li>Каталог с поиском, фильтрами по платформе и сортировкой</li><li>Карточки товаров с галереей и отзывами, избранное</li><li>Корзина и оформление заказа: Почта России, СДЭК, Boxberry, Яндекс Доставка</li><li>Оплата картой и СБП через ЮKassa, наложенный платёж</li><li>Личный кабинет и админка заказов</li></ul>
+              <p class="project__stack">Python, FastAPI, PostgreSQL · HTML/CSS/JS</p>
+              <div class="project__foot">
+                <div class="project__row"><span class="project__link project__link--off">Демо по запросу</span><span class="project__price" data-price="armgame">Цена по запросу</span></div>
+                <button class="btn btn--block project__btn" type="button" data-project-buy="armgame" data-name="ARM Game">Купить проект целиком</button>
+                <button class="btn btn--ghost btn--block project__btn" type="button" data-project-copy="armgame" data-name="ARM Game">Хочу такой же по подписке</button>
+              </div>
+            </div>
+          </article>
+        </div>
+        <p class="projects__note">Хотите продать свой проект? Разместим его в этом разделе — <a href="#transfer">условия продажи и переуступки</a>.</p>
+      </div>
+    </section>
+
+    <section class="section section--alt" id="compare">
       <div class="container">
         <div class="section__head"><p class="eyebrow">Сравнение</p><h2>Разработка под ключ или подписка</h2></div>
         <div class="table-wrap">
@@ -157,7 +223,7 @@
       </div>
     </section>
 
-    <section class="section section--alt" id="pricing">
+    <section class="section" id="pricing">
       <div class="container">
         <div class="section__head">
           <p class="eyebrow">Тарифы</p>
@@ -208,7 +274,7 @@
       </div>
     </section>
 
-    <section class="section" id="calc">
+    <section class="section section--alt" id="calc">
       <div class="container">
         <div class="section__head">
           <p class="eyebrow">Калькулятор</p>
@@ -247,7 +313,7 @@
       </div>
     </section>
 
-    <section class="section section--alt" id="buyout">
+    <section class="section" id="buyout">
       <div class="container buyout">
         <div class="buyout__text">
           <p class="eyebrow">Модель выкупа</p>
@@ -269,9 +335,29 @@
           <p class="buyout__hint">Посчитать выкуп для своего проекта можно в <a href="#calc">калькуляторе</a>. Точные условия прописываются в договоре.</p>
         </div>
       </div>
+      <div class="container transfer" id="transfer">
+        <div class="section__head">
+          <p class="eyebrow">Переуступка и продажа</p>
+          <h3 class="transfer__title">Проект можно передать или продать</h3>
+          <p class="section__sub">Если продукт стал не нужен или вы хотите заработать на нём, проект не пропадёт: его можно передать другому владельцу или выставить на продажу.</p>
+        </div>
+        <div class="grid transfer__grid">
+          <div class="card transfer__card">
+            <p class="transfer__label">Переуступка проекта</p>
+            <p class="transfer__big"><span data-transfer-share>15%</span> <small>от остаточной стоимости</small></p>
+            <p>Вы сами нашли нового владельца — мы переоформляем на него договор подписки и права на проект. Комиссия — <span data-transfer-share>15%</span> от остаточной стоимости проекта, но не менее <span data-transfer-min>30 000 ₽</span>.</p>
+          </div>
+          <div class="card transfer__card">
+            <p class="transfer__label">Продажа через наш каталог</p>
+            <p class="transfer__big"><span data-sale-commission>10%</span> <small>комиссия с продажи</small></p>
+            <p>Разместим проект в разделе «<a href="#solutions">Готовые решения</a>», покажем его покупателям и проведём передачу. Комиссия — <span data-sale-commission>10%</span> от суммы продажи, берётся только если проект продан.</p>
+          </div>
+        </div>
+        <p class="transfer__hint">Остаточная стоимость — это цена выкупа проекта на момент сделки по формуле выше: 12 месячных платежей без скидки минус 30% уже оплаченных подписок, но не меньше 3 месячных платежей.</p>
+      </div>
     </section>
 
-    <section class="section" id="faq">
+    <section class="section section--alt" id="faq">
       <div class="container">
         <div class="section__head"><p class="eyebrow">FAQ</p><h2>Частые вопросы</h2></div>
         <div class="faq">
@@ -282,9 +368,11 @@
               <details><summary>Какой минимальный срок подписки?</summary><p>12 месяцев. На старте оплачиваются первый и последний месяц подписки, дальше — ежемесячно. При подписке на 24 месяца ежемесячный платёж ниже на 25%, на 36 месяцев — на 35%. Условия досрочного расторжения прописываются в договоре.</p></details>
               <details><summary>Кому принадлежит продукт?</summary><p>До выкупа права на код остаются у нас, вы пользуетесь продуктом по лицензии. После выкупа исходный код, права и доступы передаются вам. Домен принадлежит вам с самого начала.</p></details>
               <details><summary>Сколько стоит выкуп?</summary><p>Базовая цена выкупа — 12 месячных платежей без учёта скидки за срок. Из неё вычитается 30% уже оплаченных подписок, но итог не опускается ниже 3 месячных платежей. Цена выкупа фиксируется в договоре на старте, а посчитать её для своего проекта можно в калькуляторе.</p></details>
+              <details><summary>Можно ли продать или передать проект другому владельцу?</summary><p>Да. При переуступке мы переоформляем договор и права на нового владельца — комиссия 15% от остаточной стоимости проекта, но не менее 30 000 ₽. Остаточная стоимость — цена выкупа на момент сделки: 12 месячных платежей без скидки минус 30% оплаченных подписок, не меньше 3 платежей. Если покупателя ещё нет, можно выставить проект на продажу в нашем каталоге «Готовые решения» — комиссия 10% от суммы продажи.</p></details>
             </div>
             <div class="faq__col">
               <details><summary>На кого регистрируется домен?</summary><p>Домен регистрируется на вас и остаётся вашим, в том числе после окончания подписки. В стоимость подписки входят регистрация и продление базового домена в зонах .ru, .рф и .online. Премиальные имена и другие доменные зоны оплачиваются отдельно.</p></details>
+              <details><summary>Что входит в покупку готового решения?</summary><p>Проект из раздела «Готовые решения» продаётся целиком: исходный код, домен (если он есть у проекта), доступы и помощь с переносом на ваш сервер. Если нужен такой же продукт под ваш бренд, сделаем копию по подписке — на готовой основе это быстрее, чем разработка с нуля. Цены на проекты — по запросу.</p></details>
               <details><summary>Сколько правок входит в подписку?</summary><p>В тариф «Лендинг / сайт-визитка» входят 3 правки или 4 часа работы в месяц — что наступит раньше. Для многостраничных сайтов и приложений объём фиксируется в договоре в зависимости от проекта.</p></details>
               <details><summary>Что входит в продвижение?</summary><p>В разделе «Продвижение» калькулятора — SEO-оптимизация, настройка и ведение рекламы в Яндекс Директе и VK, ведение соцсетей, карточки на Яндекс Картах и 2ГИС, статьи для блога, email-маркетинг, подключение метрик и A/B-тесты. Цены указаны «от» и зависят от объёма работ. Рекламный бюджет (оплата показов и кликов) в стоимость не входит и оплачивается вами отдельно, напрямую рекламной площадке.</p></details>
               <details><summary>Можно ли добавить модули позже?</summary><p>Да. Пакет можно расширять в любой момент: начните с необходимого, а новые модули — оплату, запись, Telegram-бота, интеграции, продвижение и другие — подключим, когда они понадобятся. Ежемесячный платёж пересчитывается с момента подключения.</p></details>
@@ -295,7 +383,7 @@
       </div>
     </section>
 
-    <section class="section section--alt" id="lead">
+    <section class="section" id="lead">
       <div class="container lead-box">
         <div class="lead-box__text">
           <p class="eyebrow">Заявка</p>
@@ -321,6 +409,7 @@
               <option value="Веб-приложение">Веб-приложение (CRM, кабинет, запись)</option>
               <option value="Мобильное приложение Android">Мобильное приложение Android</option>
               <option value="Десктоп-приложение">Десктоп-приложение</option>
+              <option value="Готовое решение">Готовое решение из каталога</option>
               <option value="Пока не знаю">Пока не знаю, нужна консультация</option>
             </select>
           </div>
@@ -348,7 +437,7 @@
         <p class="footer__tag">Сайты и приложения по подписке с правом выкупа.</p>
       </div>
       <nav class="footer__nav" aria-label="Навигация в подвале">
-        <a href="#how">Как это работает</a><a href="#pricing">Тарифы</a><a href="#calc">Калькулятор</a><a href="#buyout">Выкуп</a><a href="#faq">FAQ</a><a href="/privacy.html">Политика конфиденциальности</a>
+        <a href="#how">Как это работает</a><a href="#solutions">Готовые решения</a><a href="#pricing">Тарифы</a><a href="#calc">Калькулятор</a><a href="#buyout">Выкуп</a><a href="#faq">FAQ</a><a href="/privacy.html">Политика конфиденциальности</a>
       </nav>
       <p class="footer__copy">© <span id="year">2026</span> DigitalSub · digitalsub.ru</p>
     </div>

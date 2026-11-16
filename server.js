@@ -20,7 +20,7 @@ fs.mkdirSync(DATA_DIR, { recursive: true });
 const MIME = {
   '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8',
   '.js': 'application/javascript; charset=utf-8', '.json': 'application/json; charset=utf-8',
-  '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.ico': 'image/x-icon',
+  '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.ico': 'image/x-icon',
   '.webmanifest': 'application/manifest+json', '.txt': 'text/plain; charset=utf-8', '.xml': 'application/xml; charset=utf-8',
 };
 
@@ -62,7 +62,7 @@ function parseCalc(v) {
 async function notifyTelegram(lead) {
   if (!TG_TOKEN || !TG_CHAT) return false;
   const esc = (s) => s.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
-  const text = `<b>Новая заявка DigitalSub</b>\n\n<b>Имя:</b> ${esc(lead.name)}\n<b>Контакт:</b> ${esc(lead.contact)}\n<b>Тип:</b> ${esc(lead.product || '—')}\n<b>Задача:</b> ${esc(lead.message || '—')}${lead.calc && lead.calc.summary ? `\n\n<b>Расчёт:</b>\n${esc(lead.calc.summary.replace(/^Расчёт с калькулятора:\n?/, ''))}` : ''}\n\n<i>${lead.createdAt}</i>`;
+  const text = `<b>Новая заявка DigitalSub</b>\n\n<b>Имя:</b> ${esc(lead.name)}\n<b>Контакт:</b> ${esc(lead.contact)}\n<b>Тип:</b> ${esc(lead.product || '—')}\n<b>Задача:</b> ${esc(lead.message || '—')}${lead.calc && lead.calc.summary ? `\n\n<b>${lead.calc.kind === 'project' ? 'Готовое решение' : 'Расчёт'}:</b>\n${esc(lead.calc.summary.replace(/^(Расчёт с калькулятора|Готовое решение):\s?\n?/, ''))}` : ''}\n\n<i>${lead.createdAt}</i>`;
   try {
     const r = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
