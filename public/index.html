@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>DigitalSub — сайты и приложения по подписке с правом выкупа</title>
   <meta name="description" content="Сайт, интернет-магазин, веб-приложение, мобильное приложение Android или десктоп-программа для вашего бизнеса без оплаты разработки. Подписка от 4 900 ₽/мес: хостинг, домен, обновления и поддержка включены. Первая версия сайта за 3–7 дней, мобильного и десктоп-приложения — до 30 дней. Право выкупа продукта.">
-  <meta name="keywords" content="сайт по подписке, сайт в рассрочку, разработка сайтов, CRM для бизнеса, онлайн-запись, веб-приложение, мобильное приложение Android, десктоп-приложение, выкуп сайта">
   <link rel="canonical" href="https://digitalsub.ru/">
   <meta name="theme-color" content="#0b1020">
   <meta name="robots" content="index, follow">
@@ -23,33 +22,27 @@
   <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-  <link rel="preload" href="/assets/pricing.json" as="fetch" crossorigin>
+  <meta name="keywords" content="сайт по подписке, сайт в рассрочку, разработка сайтов, CRM для бизнеса, онлайн-запись, веб-приложение, мобильное приложение Android, десктоп-приложение, выкуп сайта">
+  <script src="/assets/legacy-hash.js"></script>
   <link rel="stylesheet" href="/assets/styles.css">
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"ProfessionalService","name":"DigitalSub","url":"https://digitalsub.ru/","description":"Разработка сайтов, интернет-магазинов, веб-, мобильных и десктоп-приложений по подписке с правом выкупа.","areaServed":"RU","priceRange":"от 4 900 ₽/мес"}
-  </script>
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"ItemList","name":"Готовые решения DigitalSub","itemListElement":[
-    {"@type":"ListItem","position":1,"item":{"@type":"WebApplication","name":"SimpleAB","url":"https://simpleab.ru/","applicationCategory":"BusinessApplication","operatingSystem":"Web","description":"Калькулятор A/B-тестов: размер выборки, значимость, CUPED, ratio-метрики и guardrails.","image":"https://digitalsub.ru/assets/projects/simpleab.webp"}},
-    {"@type":"ListItem","position":2,"item":{"@type":"WebSite","name":"L2Start","url":"https://l2start.ru/","description":"Сайт игрового проекта Lineage 2 Interlude: серверы, загрузки, форум, новости, личный кабинет.","image":"https://digitalsub.ru/assets/projects/l2start.webp"}},
-    {"@type":"ListItem","position":3,"item":{"@type":"WebApplication","name":"ARM Game","applicationCategory":"ShoppingApplication","operatingSystem":"Web","description":"Интернет-магазин игр для консолей: каталог, корзина, доставка, онлайн-оплата, личный кабинет и админка.","image":"https://digitalsub.ru/assets/projects/arm-game.webp"}}
-  ]}
-  </script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","name":"DigitalSub","url":"https://digitalsub.ru/","image":"https://digitalsub.ru/assets/og-image.png","description":"Разработка сайтов, интернет-магазинов, веб-, мобильных и десктоп-приложений по подписке с правом выкупа.","areaServed":"RU","priceRange":"от 4 900 ₽/мес"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"DigitalSub","url":"https://digitalsub.ru/","inLanguage":"ru"}</script>
 </head>
 <body>
   <a class="skip" href="#main">Перейти к содержанию</a>
   <header class="header" id="top">
     <div class="container header__inner">
-      <a class="logo" href="#top" aria-label="DigitalSub — на главную"><img src="/favicon.svg" alt="" width="32" height="32"><span>Digital<b>Sub</b></span></a>
+      <a class="logo" href="/" aria-label="DigitalSub — на главную"><img src="/favicon.svg" alt="" width="32" height="32"><span>Digital<b>Sub</b></span></a>
       <nav class="nav" id="nav" aria-label="Основная навигация">
-        <a href="#how">Как это работает</a>
-        <a href="#what">Что делаем</a>
-        <a href="#solutions">Готовые решения</a>
-        <a href="#compare">Сравнение</a>
-        <a href="#pricing">Тарифы</a>
-        <a href="#calc">Калькулятор</a>
-        <a href="#buyout">Выкуп</a>
-        <a href="#faq">FAQ</a>
+        <div class="nav__drop">
+          <a class="nav__droplink" href="/services">Услуги</a>
+          <div class="nav__menu"><a href="/services/landing">Лендинг и сайт-визитка</a><a href="/services/website">Многостраничный сайт</a><a href="/services/shop">Интернет-магазин</a><a href="/services/web-app">Веб-приложение</a><a href="/services/android">Мобильное приложение Android</a><a href="/services/desktop">Десктоп-приложение</a></div>
+        </div>
+        <a href="/prices">Цены</a>
+        <a href="/solutions">Готовые решения</a>
+        <a href="/buyout">Выкуп</a>
+        <a href="/faq">FAQ</a>
+        <a class="btn nav__cta" href="#lead">Оставить заявку</a>
       </nav>
       <a class="btn btn--sm header__cta" href="#lead">Оставить заявку</a>
       <button class="burger" id="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
@@ -71,7 +64,7 @@
             <li><b>2 месяца</b> оплаты на старте</li>
           </ul>
           <div class="hero__actions">
-            <a class="btn btn--lg" href="#calc">Рассчитать стоимость</a>
+            <a class="btn btn--lg" href="/prices#calc">Рассчитать стоимость</a>
             <a class="btn btn--ghost btn--lg" href="#lead">Обсудить проект</a>
           </div>
         </div>
@@ -110,280 +103,129 @@
           <h2>Продукты для малого бизнеса и сферы услуг</h2>
           <p class="section__sub">Салоны красоты, клиники, автосервисы, школы и курсы, локальная розница: всем, кому нужен понятный цифровой инструмент без крупных вложений.</p>
         </div>
-        <div class="grid grid--3">
+        <div class="grid grid--3 products">
           <article class="card feature">
             <div class="feature__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M7 6.5h.01M10 6.5h.01"/></svg></div>
-            <h3>Сайты и лендинги</h3>
-            <p>Сайт-визитка, продающий лендинг, сайт услуг с прайсом и формой заявки. Быстрые, адаптивные, с базовым SEO.</p>
-            <ul class="ticks"><li>Адаптив под телефоны</li><li>Заявки в Telegram</li><li>Подключение аналитики</li></ul>
+            <h3><a class="feature__link" href="/services/landing">Лендинг и сайт-визитка</a></h3>
+            <p>Продающий лендинг, сайт-визитка или страница услуги с формой заявки. Быстрый, адаптивный, с базовым SEO.</p>
+            <div class="feature__foot"><span class="feature__price">от <b data-base-price="landing">4 900 ₽</b>/мес</span><span class="feature__more" aria-hidden="true">Подробнее →</span></div>
+          </article>
+          <article class="card feature">
+            <div class="feature__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M7 13h10M7 16.5h6"/></svg></div>
+            <h3><a class="feature__link" href="/services/website">Многостраничный сайт</a></h3>
+            <p>Сайт услуг, компании или школы: отдельные страницы под каждую услугу, прайс, формы заявок. 5 страниц включено.</p>
+            <div class="feature__foot"><span class="feature__price">от <b data-base-price="site">9 900 ₽</b>/мес</span><span class="feature__more" aria-hidden="true">Подробнее →</span></div>
           </article>
           <article class="card feature">
             <div class="feature__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.4 11h11.2L21 8H6.2"/><circle cx="9" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg></div>
-            <h3>Интернет-магазины</h3>
+            <h3><a class="feature__link" href="/services/shop">Интернет-магазин</a></h3>
             <p>Каталог, корзина и оформление заказа, онлайн-оплата, доставка, выгрузка в 1С и на маркетплейсы.</p>
-            <ul class="ticks"><li>Заказы в Telegram и на почту</li><li>Оплата и доставка</li><li>SEO и реклама</li></ul>
+            <div class="feature__foot"><span class="feature__price">от <b data-base-price="shop">14 900 ₽</b>/мес</span><span class="feature__more" aria-hidden="true">Подробнее →</span></div>
           </article>
           <article class="card feature">
             <div class="feature__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v10H4z"/><path d="M8 19h8M12 15v4"/><path d="M8 9l2 2 4-4"/></svg></div>
-            <h3>Веб-приложения</h3>
+            <h3><a class="feature__link" href="/services/web-app">Веб-приложение</a></h3>
             <p>CRM, личный кабинет клиента, онлайн-запись, каталог с заказами, внутренние панели для сотрудников.</p>
-            <ul class="ticks"><li>Роли и доступы</li><li>Интеграции и уведомления</li><li>Работает в браузере</li></ul>
+            <div class="feature__foot"><span class="feature__price">от <b data-base-price="webapp">19 900 ₽</b>/мес</span><span class="feature__more" aria-hidden="true">Подробнее →</span></div>
           </article>
           <article class="card feature">
             <div class="feature__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10.5 18.5h3"/></svg></div>
-            <h3>Мобильные приложения Android</h3>
+            <h3><a class="feature__link" href="/services/android">Мобильное приложение Android</a></h3>
             <p>Приложение для клиентов или сотрудников: запись, заказы, бонусы, учёт, работа в поле. Публикация в Google Play и RuStore.</p>
-            <ul class="ticks"><li>Push-уведомления</li><li>Офлайн-режим</li><li>Камера, QR и геолокация</li></ul>
+            <div class="feature__foot"><span class="feature__price">от <b data-base-price="android">29 900 ₽</b>/мес</span><span class="feature__more" aria-hidden="true">Подробнее →</span></div>
           </article>
           <article class="card feature">
             <div class="feature__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M2 13h20M9 21h6M12 17v4"/></svg></div>
-            <h3>Десктоп-приложения</h3>
+            <h3><a class="feature__link" href="/services/desktop">Десктоп-приложение</a></h3>
             <p>Программы для Windows и других систем: учёт, касса, обработка документов, автоматизация рутины.</p>
-            <ul class="ticks"><li>Автообновления</li><li>Работа офлайн</li><li>Синхронизация с вебом</li></ul>
+            <div class="feature__foot"><span class="feature__price">от <b data-base-price="desktop">34 900 ₽</b>/мес</span><span class="feature__more" aria-hidden="true">Подробнее →</span></div>
           </article>
         </div>
       </div>
     </section>
 
-    <section class="section" id="solutions">
+    <section class="section" id="tariffs">
+      <div class="container">
+        <div class="section__head">
+          <p class="eyebrow">Тарифы</p>
+          <h2>От 4 900 ₽ в месяц</h2>
+          <p class="section__sub">Итоговая стоимость зависит от задачи и фиксируется в договоре. Начните с необходимого — новые модули подключаются в любой момент.</p>
+        </div>
+        <div class="grid grid--3">
+          <div class="card fact"><p class="fact__big">до 35%</p><h3>Скидка за срок</h3><p>Минимальный срок подписки — 12 месяцев, при подписке на 24 месяца скидка 25%, на 36 месяцев — 35%.</p></div>
+          <div class="card fact"><p class="fact__big">2 платежа</p><h3>Оплата на старте</h3><p>На старте оплачиваются только первый и последний месяц подписки, дальше — ежемесячно.</p></div>
+          <div class="card fact"><p class="fact__big">6 основ</p><h3>Модули по необходимости</h3><p>Онлайн-оплата, запись, Telegram, интеграции, продвижение — подключаются к основе, когда понадобятся.</p></div>
+        </div>
+        <div class="teaser__actions"><a class="btn btn--lg" href="/prices">Все тарифы и модули</a><a class="btn btn--ghost btn--lg" href="/prices#calc">Рассчитать стоимость</a></div>
+      </div>
+    </section>
+
+    <section class="section section--alt" id="solutions-teaser">
       <div class="container">
         <div class="section__head">
           <p class="eyebrow">Готовые решения</p>
           <h2>Работающие проекты, которые можно купить или повторить</h2>
-          <p class="section__sub">Каждый проект можно купить целиком — с исходным кодом и доменом — или заказать такой же под свой бренд по подписке: на готовой основе это быстрее и дешевле, чем с нуля.</p>
+          <p class="section__sub">Каждый проект можно купить целиком — с исходным кодом и доменом — или заказать такой же под свой бренд по подписке.</p>
         </div>
         <div class="grid grid--3 projects">
-          <article class="card project" data-project="simpleab">
+          <article class="card project project--mini">
             <div class="project__shot"><img src="/assets/projects/simpleab.webp" alt="Скриншот SimpleAB — калькулятор A/B-тестов" width="960" height="600" loading="lazy" decoding="async"></div>
             <div class="project__body">
               <p class="project__niche">Веб-приложение · аналитика</p>
-              <h3>SimpleAB <span class="project__host">simpleab.ru</span></h3>
+              <h3><a class="feature__link" href="/solutions#solutions">SimpleAB</a></h3>
               <p>Онлайн-калькулятор A/B-тестов для маркетологов и продуктовых команд: от расчёта выборки до решения «катить или нет».</p>
-              <ul class="ticks"><li>Размер выборки и проверка значимости</li><li>Конверсия, среднее, ratio-метрики и CUPED</li><li>Мульти-метрики, guardrails и поправки на множественные сравнения</li><li>Загрузка CSV, графики и вывод простым языком</li><li>Вики по A/B-тестированию</li></ul>
-              <p class="project__stack">Python, FastAPI, SciPy, statsmodels · Docker</p>
-              <div class="project__foot">
-                <div class="project__row"><a class="project__link" href="https://simpleab.ru/" target="_blank" rel="noopener">Открыть сайт ↗</a><span class="project__price" data-price="simpleab">Цена по запросу</span></div>
-                <button class="btn btn--block project__btn" type="button" data-project-buy="simpleab" data-name="SimpleAB">Купить проект целиком</button>
-                <button class="btn btn--ghost btn--block project__btn" type="button" data-project-copy="simpleab" data-name="SimpleAB">Хочу такой же по подписке</button>
-              </div>
+              <p class="project__row"><span class="feature__more">Подробнее →</span><span class="project__price" data-price="simpleab">Цена по запросу</span></p>
             </div>
           </article>
-          <article class="card project" data-project="l2start">
+          <article class="card project project--mini">
             <div class="project__shot"><img src="/assets/projects/l2start.webp" alt="Скриншот L2Start — сайт игрового проекта Lineage 2" width="960" height="600" loading="lazy" decoding="async"></div>
             <div class="project__body">
               <p class="project__niche">Игровой проект · сообщество</p>
-              <h3>L2Start <span class="project__host">l2start.ru</span></h3>
+              <h3><a class="feature__link" href="/solutions#solutions">L2Start</a></h3>
               <p>Сайт игрового проекта по Lineage 2 Interlude: витрина серверов, загрузки и сообщество игроков.</p>
-              <ul class="ticks"><li>Русская и английская версии</li><li>Регистрация, вход и личный кабинет с подтверждением email</li><li>Форум, новости, база знаний и помощь</li><li>Страницы серверов и загрузок</li><li>Админ-панель для контента</li></ul>
-              <p class="project__stack">Next.js, React, TypeScript, Tailwind · FastAPI, PostgreSQL</p>
-              <div class="project__foot">
-                <div class="project__row"><a class="project__link" href="https://l2start.ru/" target="_blank" rel="noopener">Открыть сайт ↗</a><span class="project__price" data-price="l2start">Цена по запросу</span></div>
-                <button class="btn btn--block project__btn" type="button" data-project-buy="l2start" data-name="L2Start">Купить проект целиком</button>
-                <button class="btn btn--ghost btn--block project__btn" type="button" data-project-copy="l2start" data-name="L2Start">Хочу такой же по подписке</button>
-              </div>
+              <p class="project__row"><span class="feature__more">Подробнее →</span><span class="project__price" data-price="l2start">Цена по запросу</span></p>
             </div>
           </article>
-          <article class="card project" data-project="armgame">
+          <article class="card project project--mini">
             <div class="project__shot"><img src="/assets/projects/arm-game.webp" alt="Скриншот ARM Game — интернет-магазин игр для консолей" width="960" height="600" loading="lazy" decoding="async"></div>
             <div class="project__body">
               <p class="project__niche">Интернет-магазин · игры для консолей</p>
-              <h3>ARM Game</h3>
+              <h3><a class="feature__link" href="/solutions#solutions">ARM Game</a></h3>
               <p>Магазин дисков и картриджей для PS4, PS5, Nintendo Switch и Xbox, геймпадов и аксессуаров. Тёмная игровая тема, адаптив под телефон. Домен пока не подключён.</p>
-              <ul class="ticks"><li>Каталог с поиском, фильтрами по платформе и сортировкой</li><li>Карточки товаров с галереей и отзывами, избранное</li><li>Корзина и оформление заказа: Почта России, СДЭК, Boxberry, Яндекс Доставка</li><li>Оплата картой и СБП через ЮKassa, наложенный платёж</li><li>Личный кабинет и админка заказов</li></ul>
-              <p class="project__stack">Python, FastAPI, PostgreSQL · HTML/CSS/JS</p>
-              <div class="project__foot">
-                <div class="project__row"><span class="project__link project__link--off">Демо по запросу</span><span class="project__price" data-price="armgame">Цена по запросу</span></div>
-                <button class="btn btn--block project__btn" type="button" data-project-buy="armgame" data-name="ARM Game">Купить проект целиком</button>
-                <button class="btn btn--ghost btn--block project__btn" type="button" data-project-copy="armgame" data-name="ARM Game">Хочу такой же по подписке</button>
-              </div>
+              <p class="project__row"><span class="feature__more">Подробнее →</span><span class="project__price" data-price="armgame">Цена по запросу</span></p>
             </div>
           </article>
         </div>
-        <p class="projects__note">Хотите продать свой проект? Разместим его в этом разделе — <a href="#transfer">условия продажи и переуступки</a>.</p>
+        <div class="teaser__actions"><a class="btn btn--ghost btn--lg" href="/solutions">Все готовые решения</a></div>
       </div>
     </section>
 
-    <section class="section section--alt" id="compare">
-      <div class="container">
-        <div class="section__head"><p class="eyebrow">Сравнение</p><h2>Разработка под ключ или подписка</h2></div>
-        <div class="table-wrap">
-          <table class="compare">
-            <thead><tr><th scope="col"></th><th scope="col">Разработка под ключ</th><th scope="col" class="compare__us">Подписка DigitalSub</th></tr></thead>
-            <tbody>
-              <tr><th scope="row">Оплата на старте</th><td>Крупная сумма, часто 50–100% предоплаты</td><td class="compare__us">Только первый и последний месяц подписки</td></tr>
-              <tr><th scope="row">Сроки первой версии</th><td>Недели и месяцы</td><td class="compare__us">3–7 дней для сайтов, магазинов и веб-приложений, до 30 дней для Android и десктопа</td></tr>
-              <tr><th scope="row">Хостинг и домен</th><td>Отдельно, на вас</td><td class="compare__us">Включены, домен оформляется на вас</td></tr>
-              <tr><th scope="row">Обновления и безопасность</th><td>Отдельный договор поддержки</td><td class="compare__us">Включены</td></tr>
-              <tr><th scope="row">Доработки</th><td>Каждая оплачивается отдельно</td><td class="compare__us">Часы правок каждый месяц</td></tr>
-              <tr><th scope="row">Владение кодом</th><td>Сразу после оплаты</td><td class="compare__us">После выкупа, с зачётом 30% платежей</td></tr>
-              <tr><th scope="row">Риск для бюджета</th><td>Высокий: платите до результата</td><td class="compare__us">Низкий: платите за работающий продукт</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="pricing">
-      <div class="container">
-        <div class="section__head">
-          <p class="eyebrow">Тарифы</p>
-          <h2>Понятная ежемесячная цена</h2>
-          <p class="section__sub">Итоговая стоимость зависит от задачи и фиксируется в договоре. Минимальный срок подписки — 12 месяцев, при подписке на 24 месяца скидка 25%, на 36 месяцев — 35%.</p>
-        </div>
-        <div class="carousel" id="pricing-carousel" role="region" aria-roledescription="карусель" aria-label="Тарифы">
-          <div class="carousel__track pricing" tabindex="0" aria-label="Тарифы, используйте стрелки влево и вправо">
-          <article class="card plan">
-            <h3>Сайт</h3><p class="plan__desc">Лендинг, сайт-визитка или многостраничный сайт на 5 страниц</p>
-            <p class="plan__price"><span>от</span> 4 900 ₽<small>/мес</small></p>
-            <ul class="ticks"><li>Многостраничный сайт: 5 страниц — от 9 900 ₽/мес, доп. страница +1 000 ₽</li><li>Первая версия за 3–7 дней</li><li>Форма заявок</li><li>Хостинг, домен .ru / .рф / .online, SSL</li><li>Обновления и резервные копии</li><li>3 правки или 4 часа работы в месяц</li></ul>
-            <a class="btn btn--ghost btn--block" href="#calc" data-base="landing">Рассчитать</a>
-          </article>
-          <article class="card plan">
-            <h3>Интернет-магазин</h3><p class="plan__desc">Каталог, корзина и оформление заказа</p>
-            <p class="plan__price"><span>от</span> 14 900 ₽<small>/мес</small></p>
-            <ul class="ticks"><li>Первая версия за 3–7 дней</li><li>Каталог товаров и корзина</li><li>Заказы с уведомлениями</li><li>Хостинг, домен, SSL</li><li>Модули: оплата, доставка, 1С, маркетплейсы</li></ul>
-            <a class="btn btn--ghost btn--block" href="#calc" data-base="shop">Рассчитать</a>
-          </article>
-          <article class="card plan plan--hot">
-            <span class="plan__badge">Чаще всего нужно бизнесу</span>
-            <h3>Веб-приложение</h3><p class="plan__desc">CRM, личный кабинет, онлайн-запись, каталог</p>
-            <p class="plan__price"><span>от</span> 19 900 ₽<small>/мес</small></p>
-            <ul class="ticks"><li>Всё из тарифа «Сайт»</li><li>Первая версия за 3–7 дней</li><li>База данных и роли пользователей</li><li>Модули: оплата, запись, Telegram и другие</li><li>Мониторинг и защита</li><li>Больше часов на доработки</li></ul>
-            <a class="btn btn--block" href="#calc" data-base="webapp">Рассчитать</a>
-          </article>
-          <article class="card plan">
-            <h3>Мобильное приложение Android</h3><p class="plan__desc">Приложение для смартфонов и планшетов</p>
-            <p class="plan__price"><span>от</span> 29 900 ₽<small>/мес</small></p>
-            <ul class="ticks"><li>Первая версия — до 30 дней</li><li>Сервер и хранение данных</li><li>Модули: push, публикация в Google Play и RuStore, офлайн, камера</li><li>Обновления под новые версии Android</li><li>Поддержка пользователей</li></ul>
-            <a class="btn btn--ghost btn--block" href="#calc" data-base="android">Рассчитать</a>
-          </article>
-          <article class="card plan">
-            <h3>Десктоп-приложение</h3><p class="plan__desc">Программа для Windows и других ОС</p>
-            <p class="plan__price"><span>от</span> 34 900 ₽<small>/мес</small></p>
-            <ul class="ticks"><li>Первая версия — до 30 дней</li><li>Сборка под Windows</li><li>Модули: автообновление, офлайн, лицензирование</li><li>Сервер и хранение данных</li><li>Поддержка пользователей</li><li>Приоритетные доработки</li></ul>
-            <a class="btn btn--ghost btn--block" href="#calc" data-base="desktop">Рассчитать</a>
-          </article>
-          </div>
-          <div class="carousel__controls">
-            <button class="carousel__btn" type="button" data-dir="-1" aria-label="Предыдущий тариф"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
-            <div class="carousel__dots" role="group" aria-label="Выбор тарифа"></div>
-            <button class="carousel__btn" type="button" data-dir="1" aria-label="Следующий тариф"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
-          </div>
-        </div>
-        <p class="note"><b>Пакет можно расширять:</b> новые модули подключаются в любой момент, не нужно заказывать всё сразу. Часы сверх лимита тарифа и крупные новые функции оцениваются отдельно и согласуются заранее.</p>
-      </div>
-    </section>
-
-    <section class="section section--alt" id="calc">
-      <div class="container">
-        <div class="section__head">
-          <p class="eyebrow">Калькулятор</p>
-          <h2>Соберите свой продукт и узнайте цену</h2>
-          <p class="section__sub">Выберите основу, добавьте нужные модули и срок подписки. Расчёт предварительный: точную цену зафиксируем в договоре после обсуждения задачи. Начните с необходимого — новые модули можно подключить позже в любой момент.</p>
-        </div>
-        <div class="calc" id="calculator">
-          <div class="calc__config">
-            <fieldset class="calc__group">
-              <legend>1. Основа продукта</legend>
-              <div class="calc__bases" id="calc-bases"><p class="calc__loading">Загружаем цены…</p></div>
-            </fieldset>
-            <fieldset class="calc__group">
-              <legend>2. Модули</legend>
-              <div class="calc__modules" id="calc-modules"></div>
-            </fieldset>
-            <fieldset class="calc__group">
-              <legend>3. Срок подписки</legend>
-              <div class="calc__terms" id="calc-terms"></div>
-            </fieldset>
-          </div>
-          <aside class="card calc__summary" aria-live="polite">
-            <p class="calc__summary-title">Ваш расчёт</p>
-            <div class="calc__big"><span id="r-monthly">—</span><small>/мес</small></div>
-            <p class="calc__discount" id="r-discount"></p>
-            <p class="calc__fromnote" id="r-fromnote"></p>
-            <div class="calc-row"><span>Стартовый платёж<br><small>первый и последний месяц</small></span><b id="r-start">—</b></div>
-            <div class="calc-row"><span>Итого за срок<br><small>включая стартовый платёж</small></span><b id="r-total">—</b></div>
-            <div class="calc-row calc-row--total"><span>Выкуп в конце срока</span><b id="r-buyout">—</b></div>
-            <p class="calc__formula" id="r-formula"></p>
-            <p class="calc__selected" id="r-selected"></p>
-            <button class="btn btn--lg btn--block" type="button" id="calc-send">Отправить расчёт</button>
-            <p class="calc__hint">Цены указаны «от» и не являются публичной офертой.</p>
-          </aside>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="buyout">
+    <section class="section" id="buyout-teaser">
       <div class="container buyout">
         <div class="buyout__text">
           <p class="eyebrow">Модель выкупа</p>
           <h2>Платите за подписку, а получаете актив</h2>
-          <p>Подписка позволяет запустить продукт без крупных вложений и проверить его в деле: он работает на нашей инфраструктуре, а мы его обслуживаем и развиваем. Когда проект начнёт приносить прибыль и вы будете готовы развивать его своей командой, выкупите исходный код и права.</p>
+          <p>Когда проект начнёт приносить прибыль, выкупите исходный код и права и развивайте его своей командой. А если продукт стал не нужен — передайте его другому владельцу или продайте через наш каталог.</p>
           <ul class="ticks ticks--lg">
             <li><b>Цена выкупа фиксируется в договоре</b> заранее, без сюрпризов.</li>
-            <li><b>30% оплаченных подписок засчитывается</b> в цену выкупа: чем дольше вы с нами, тем дешевле выкуп.</li>
-            <li><b>Базовая цена выкупа</b> — 12 месячных платежей без скидки, минимальная — 3 месячных платежа.</li>
-            <li><b>После выкупа</b> передаём код, доступы и документацию. Поддержку можно продолжить по отдельному договору.</li>
+            <li><b>30% оплаченных подписок засчитывается</b> в цену выкупа.</li>
+            <li><b>Проект можно переуступить или продать</b>, он не пропадёт.</li>
           </ul>
+          <a class="btn btn--lg" href="/buyout">Как работает выкуп</a>
         </div>
         <div class="card buyout__calc">
-          <p class="buyout__calc-title">Как считается выкуп</p>
+          <p class="buyout__calc-title">Коротко об условиях</p>
           <div class="calc-row"><span>Базовая цена выкупа</span><b id="b-base">12 × платёж без скидки</b></div>
           <div class="calc-row"><span>Зачёт оплаченных подписок</span><b id="b-credit">−30% оплаченного</b></div>
           <div class="calc-row"><span>Минимальная цена выкупа</span><b id="b-min">3 × платёж</b></div>
-          <div class="calc-row calc-row--total"><span>К оплате</span><b>база − зачёт</b></div>
-          <p class="buyout__hint">Посчитать выкуп для своего проекта можно в <a href="#calc">калькуляторе</a>. Точные условия прописываются в договоре.</p>
+          <div class="calc-row"><span>Переуступка проекта</span><b><span data-transfer-share>15%</span>, от <span data-transfer-min>30 000 ₽</span></b></div>
+          <div class="calc-row"><span>Продажа через каталог</span><b><span data-sale-commission>10%</span> комиссия</b></div>
+          <p class="buyout__hint">Подробнее — на странице <a href="/buyout">«Выкуп и переуступка»</a>.</p>
         </div>
-      </div>
-      <div class="container transfer" id="transfer">
-        <div class="section__head">
-          <p class="eyebrow">Переуступка и продажа</p>
-          <h3 class="transfer__title">Проект можно передать или продать</h3>
-          <p class="section__sub">Если продукт стал не нужен или вы хотите заработать на нём, проект не пропадёт: его можно передать другому владельцу или выставить на продажу.</p>
-        </div>
-        <div class="grid transfer__grid">
-          <div class="card transfer__card">
-            <p class="transfer__label">Переуступка проекта</p>
-            <p class="transfer__big"><span data-transfer-share>15%</span> <small>от остаточной стоимости</small></p>
-            <p>Вы сами нашли нового владельца — мы переоформляем на него договор подписки и права на проект. Комиссия — <span data-transfer-share>15%</span> от остаточной стоимости проекта, но не менее <span data-transfer-min>30 000 ₽</span>.</p>
-          </div>
-          <div class="card transfer__card">
-            <p class="transfer__label">Продажа через наш каталог</p>
-            <p class="transfer__big"><span data-sale-commission>10%</span> <small>комиссия с продажи</small></p>
-            <p>Разместим проект в разделе «<a href="#solutions">Готовые решения</a>», покажем его покупателям и проведём передачу. Комиссия — <span data-sale-commission>10%</span> от суммы продажи, берётся только если проект продан.</p>
-          </div>
-        </div>
-        <p class="transfer__hint">Остаточная стоимость — это цена выкупа проекта на момент сделки по формуле выше: 12 месячных платежей без скидки минус 30% уже оплаченных подписок, но не меньше 3 месячных платежей.</p>
       </div>
     </section>
 
-    <section class="section section--alt" id="faq">
-      <div class="container">
-        <div class="section__head"><p class="eyebrow">FAQ</p><h2>Частые вопросы</h2></div>
-        <div class="faq">
-            <div class="faq__col">
-              <details><summary>Почему не нужно платить за разработку?</summary><p>Разработка входит в подписку. Вместо одного крупного платежа вы платите фиксированную сумму каждый месяц и получаете продукт вместе с хостингом, обновлениями и поддержкой.</p></details>
-              <details><summary>Как быстро будет готова первая версия?</summary><p>Сайты, интернет-магазины и веб-приложения — за 3–7 дней, мобильные приложения Android и десктоп-приложения — до 30 дней. Мы используем современные инструменты разработки с ИИ и проверенные готовые решения. Это сильно сокращает время и стоимость, а выгода остаётся у клиента в виде низкой цены подписки.</p></details>
-              <details><summary>Что входит в подписку?</summary><p>Создание продукта, хостинг, домен в зоне .ru, .рф или .online, SSL-сертификат, обновления, резервные копии, защита, техническая поддержка и ежемесячный лимит часов на правки и доработки.</p></details>
-              <details><summary>Какой минимальный срок подписки?</summary><p>12 месяцев. На старте оплачиваются первый и последний месяц подписки, дальше — ежемесячно. При подписке на 24 месяца ежемесячный платёж ниже на 25%, на 36 месяцев — на 35%. Условия досрочного расторжения прописываются в договоре.</p></details>
-              <details><summary>Кому принадлежит продукт?</summary><p>До выкупа права на код остаются у нас, вы пользуетесь продуктом по лицензии. После выкупа исходный код, права и доступы передаются вам. Домен принадлежит вам с самого начала.</p></details>
-              <details><summary>Сколько стоит выкуп?</summary><p>Базовая цена выкупа — 12 месячных платежей без учёта скидки за срок. Из неё вычитается 30% уже оплаченных подписок, но итог не опускается ниже 3 месячных платежей. Цена выкупа фиксируется в договоре на старте, а посчитать её для своего проекта можно в калькуляторе.</p></details>
-              <details><summary>Можно ли продать или передать проект другому владельцу?</summary><p>Да. При переуступке мы переоформляем договор и права на нового владельца — комиссия 15% от остаточной стоимости проекта, но не менее 30 000 ₽. Остаточная стоимость — цена выкупа на момент сделки: 12 месячных платежей без скидки минус 30% оплаченных подписок, не меньше 3 платежей. Если покупателя ещё нет, можно выставить проект на продажу в нашем каталоге «Готовые решения» — комиссия 10% от суммы продажи.</p></details>
-            </div>
-            <div class="faq__col">
-              <details><summary>На кого регистрируется домен?</summary><p>Домен регистрируется на вас и остаётся вашим, в том числе после окончания подписки. В стоимость подписки входят регистрация и продление базового домена в зонах .ru, .рф и .online. Премиальные имена и другие доменные зоны оплачиваются отдельно.</p></details>
-              <details><summary>Что входит в покупку готового решения?</summary><p>Проект из раздела «Готовые решения» продаётся целиком: исходный код, домен (если он есть у проекта), доступы и помощь с переносом на ваш сервер. Если нужен такой же продукт под ваш бренд, сделаем копию по подписке — на готовой основе это быстрее, чем разработка с нуля. Цены на проекты — по запросу.</p></details>
-              <details><summary>Сколько правок входит в подписку?</summary><p>В тариф «Лендинг / сайт-визитка» входят 3 правки или 4 часа работы в месяц — что наступит раньше. Для многостраничных сайтов и приложений объём фиксируется в договоре в зависимости от проекта.</p></details>
-              <details><summary>Что входит в продвижение?</summary><p>В разделе «Продвижение» калькулятора — SEO-оптимизация, настройка и ведение рекламы в Яндекс Директе и VK, ведение соцсетей, карточки на Яндекс Картах и 2ГИС, статьи для блога, email-маркетинг, подключение метрик и A/B-тесты. Цены указаны «от» и зависят от объёма работ. Рекламный бюджет (оплата показов и кликов) в стоимость не входит и оплачивается вами отдельно, напрямую рекламной площадке.</p></details>
-              <details><summary>Можно ли добавить модули позже?</summary><p>Да. Пакет можно расширять в любой момент: начните с необходимого, а новые модули — оплату, запись, Telegram-бота, интеграции, продвижение и другие — подключим, когда они понадобятся. Ежемесячный платёж пересчитывается с момента подключения.</p></details>
-              <details><summary>Что если правок больше, чем часов в тарифе?</summary><p>Дополнительные часы оплачиваются отдельно по согласованной ставке. Мы всегда предупреждаем об оценке до начала работ.</p></details>
-              <details><summary>Можно ли перенести уже существующий сайт?</summary><p>Да. Оценим текущий сайт и предложим либо перенести и обслуживать его, либо сделать новый в рамках подписки.</p></details>
-            </div>
-          </div>
-      </div>
-    </section>
-
-    <section class="section" id="lead">
+    <section class="section section--alt" id="lead">
       <div class="container lead-box">
         <div class="lead-box__text">
           <p class="eyebrow">Заявка</p>
@@ -421,7 +263,7 @@
           <div class="hp" aria-hidden="true"><label for="f-website">Сайт</label><input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
           <label class="check">
             <input type="checkbox" name="consent" value="1" required>
-            <span>Согласен на обработку персональных данных в соответствии с <a href="/privacy.html" target="_blank" rel="noopener">политикой конфиденциальности</a></span>
+            <span>Согласен на обработку персональных данных в соответствии с <a href="/privacy" target="_blank" rel="noopener">политикой конфиденциальности</a></span>
           </label>
           <button class="btn btn--lg btn--block" type="submit">Отправить заявку</button>
           <p class="form__status" id="form-status" role="status" aria-live="polite"></p>
@@ -433,11 +275,16 @@
   <footer class="footer">
     <div class="container footer__inner">
       <div>
-        <a class="logo" href="#top"><img src="/favicon.svg" alt="" width="28" height="28"><span>Digital<b>Sub</b></span></a>
+        <a class="logo" href="/"><img src="/favicon.svg" alt="" width="28" height="28"><span>Digital<b>Sub</b></span></a>
         <p class="footer__tag">Сайты и приложения по подписке с правом выкупа.</p>
       </div>
-      <nav class="footer__nav" aria-label="Навигация в подвале">
-        <a href="#how">Как это работает</a><a href="#solutions">Готовые решения</a><a href="#pricing">Тарифы</a><a href="#calc">Калькулятор</a><a href="#buyout">Выкуп</a><a href="#faq">FAQ</a><a href="/privacy.html">Политика конфиденциальности</a>
+      <nav class="footer__nav" aria-label="Услуги">
+        <p class="footer__title">Услуги</p>
+        <a href="/services/landing">Лендинг и сайт-визитка</a><a href="/services/website">Многостраничный сайт</a><a href="/services/shop">Интернет-магазин</a><a href="/services/web-app">Веб-приложение</a><a href="/services/android">Мобильное приложение Android</a><a href="/services/desktop">Десктоп-приложение</a>
+      </nav>
+      <nav class="footer__nav" aria-label="Разделы сайта">
+        <p class="footer__title">Разделы</p>
+        <a href="/prices">Цены и калькулятор</a><a href="/solutions">Готовые решения</a><a href="/buyout">Выкуп и переуступка</a><a href="/faq">Частые вопросы</a><a href="/#lead">Оставить заявку</a><a href="/privacy">Политика конфиденциальности</a>
       </nav>
       <p class="footer__copy">© <span id="year">2026</span> DigitalSub · digitalsub.ru</p>
     </div>

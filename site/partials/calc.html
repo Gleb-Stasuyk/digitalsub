@@ -1,0 +1,38 @@
+    <section class="section section--alt" id="calc">
+      <div class="container">
+        <div class="section__head">
+          <p class="eyebrow">Калькулятор</p>
+          <h2>Соберите свой продукт и узнайте цену</h2>
+          <p class="section__sub">Выберите основу, добавьте нужные модули и срок подписки. Расчёт предварительный: точную цену зафиксируем в договоре после обсуждения задачи. Начните с необходимого — новые модули можно подключить позже в любой момент.</p>
+        </div>
+        <div class="calc" id="calculator">
+          <div class="calc__config">
+            <fieldset class="calc__group">
+              <legend>1. Основа продукта</legend>
+              <div class="calc__bases" id="calc-bases"><p class="calc__loading">Загружаем цены…</p></div>
+            </fieldset>
+            <fieldset class="calc__group">
+              <legend>2. Модули</legend>
+              <div class="calc__modules" id="calc-modules"></div>
+            </fieldset>
+            <fieldset class="calc__group">
+              <legend>3. Срок подписки</legend>
+              <div class="calc__terms" id="calc-terms"></div>
+            </fieldset>
+          </div>
+          <aside class="card calc__summary" aria-live="polite">
+            <p class="calc__summary-title">Ваш расчёт</p>
+            <div class="calc__big"><span id="r-monthly">—</span><small>/мес</small></div>
+            <p class="calc__discount" id="r-discount"></p>
+            <p class="calc__fromnote" id="r-fromnote"></p>
+            <div class="calc-row"><span>Стартовый платёж<br><small>первый и последний месяц</small></span><b id="r-start">—</b></div>
+            <div class="calc-row"><span>Итого за срок<br><small>включая стартовый платёж</small></span><b id="r-total">—</b></div>
+            <div class="calc-row calc-row--total"><span>Выкуп в конце срока</span><b id="r-buyout">—</b></div>
+            <p class="calc__formula" id="r-formula"></p>
+            <p class="calc__selected" id="r-selected"></p>
+            <button class="btn btn--lg btn--block" type="button" id="calc-send">Отправить расчёт</button>
+            <p class="calc__hint">Цены указаны «от» и не являются публичной офертой.</p>
+          </aside>
+        </div>
+      </div>
+    </section>

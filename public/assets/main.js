@@ -222,6 +222,8 @@
   function build() {
     const cur = P.currency || '₽';
     state.base = P.defaultBase || P.bases[0].id; state.term = P.defaultTerm || P.terms[0].months;
+    const qb = new URLSearchParams(location.search).get('base');
+    if (qb && P.bases.some((b) => b.id === qb)) state.base = qb;
     const bases = $('#calc-bases'); bases.textContent = '';
     P.bases.forEach((b) => bases.append(option('radio', 'calc-base', b.id, b.id === state.base, b.name, b.desc, `от ${fmt(b.price, cur)}/мес`)));
     const terms = $('#calc-terms'); terms.textContent = '';
@@ -304,7 +306,7 @@
   /* ---------- Готовые решения ---------- */
   let PR = null;
   const prPrice = (id) => { const p = PR && PR.projects.find((x) => x.id === id); return p && typeof p.price === 'number' ? fmt(p.price, PR.currency || '₽') : 'Цена по запросу'; };
-  fetch('/assets/projects.json', { cache: 'no-cache' })
+  if ($('[data-price],[data-transfer-share],[data-transfer-min],[data-sale-commission],[data-project-buy]')) fetch('/assets/projects.json', { cache: 'no-cache' })
     .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
     .then((data) => {
       PR = data;
@@ -336,9 +338,19 @@
   $$('[data-project-buy]').forEach((b) => b.addEventListener('click', () => attachProject(b.dataset.projectBuy, b.dataset.name, 'buy')));
   $$('[data-project-copy]').forEach((b) => b.addEventListener('click', () => attachProject(b.dataset.projectCopy, b.dataset.name, 'copy')));
 
-  fetch('/assets/pricing.json', { cache: 'no-cache' })
+  // Цены на карточках и страницах услуг берутся из pricing.json, чтобы не расходиться с калькулятором
+  function hydratePrices() {
+    const cur = P.currency || '₽';
+    $$('[data-base-price]').forEach((el) => { const b = P.bases.find((x) => x.id === el.dataset.basePrice); if (b) el.textContent = fmt(b.price, cur); });
+    $$('[data-mod-price]').forEach((el) => {
+      const m = modById(el.dataset.modPrice); if (!m) return;
+      el.textContent = `+${m.from ? 'от ' : ''}${fmt(m.price, cur)}/мес${m.qty ? ` за ${m.qty.short || unit1(m.qty.unit)}` : ''}`;
+    });
+  }
+  const needCalc = !!$('#calc-bases'), needPrices = !!$('[data-base-price],[data-mod-price]');
+  if (needCalc || needPrices) fetch('/assets/pricing.json', { cache: 'no-cache' })
     .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
-    .then((data) => { P = data; build(); })
+    .then((data) => { P = data; hydratePrices(); if (needCalc) build(); })
     .catch((e) => { console.error(e); const b = $('#calc-bases'); if (b) b.textContent = 'Не удалось загрузить цены. Оставьте заявку, и мы сделаем расчёт вручную.'; });
 
   /* ---------- Форма заявки ---------- */

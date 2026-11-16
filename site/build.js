@@ -1,0 +1,466 @@
+'use strict';
+// Генератор статических страниц сайта: node site/build.js
+// Общие шапка, подвал и форма заявки собираются здесь; крупные блоки лежат в site/partials/.
+// Результат — готовые HTML-файлы в public/ (их и раздаёт server.js). После правок запустите сборку заново.
+const fs = require('node:fs');
+const path = require('node:path');
+
+const ROOT = path.join(__dirname, '..');
+const PUB = path.join(ROOT, 'public');
+const SITE = 'https://digitalsub.ru';
+const P = JSON.parse(fs.readFileSync(path.join(PUB, 'assets/pricing.json'), 'utf8'));
+const PR = JSON.parse(fs.readFileSync(path.join(PUB, 'assets/projects.json'), 'utf8'));
+const SERVICES = require('./services');
+const part = (n) => fs.readFileSync(path.join(__dirname, 'partials', n + '.html'), 'utf8').replace(/\s+$/, '');
+const LASTMOD = new Date().toISOString().slice(0, 10);
+
+const nb = (n) => new Intl.NumberFormat('ru-RU').format(n).replace(/\s/g, '\u00a0');
+const rub = (n) => `${nb(n)}\u00a0₽`;
+const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const strip = (s) => String(s).replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+const baseById = (id) => { const b = P.bases.find((x) => x.id === id); if (!b) throw new Error('base ' + id); return b; };
+const modById = (id) => { const m = P.modules.find((x) => x.id === id); if (!m) throw new Error('module ' + id); return m; };
+const unit1 = (u) => (Array.isArray(u) ? u[0] : u);
+const modPrice = (m) => `+${m.from ? 'от ' : ''}${rub(m.price)}/мес${m.qty ? ` за ${m.qty.short || unit1(m.qty.unit)}` : ''}`;
+const minPrice = Math.min(...P.bases.map((b) => b.price));
+const disc = P.terms.filter((t) => t.discount);
+const pct = (v) => Math.round(v * 100) + '%';
+// «при подписке на 24 месяца скидка 25%, на 36 месяцев — 35%»
+const discText = disc.map((t, i) => (i === 0 ? `при подписке на ${t.months} месяц${t.months % 10 >= 2 && t.months % 10 <= 4 ? 'а' : 'ев'} скидка ${pct(t.discount)}` : `на ${t.months} месяц${t.months % 10 >= 2 && t.months % 10 <= 4 ? 'а' : 'ев'} — ${pct(t.discount)}`)).join(', ');
+const ld = (o) => `  <script type="application/ld+json">${JSON.stringify(o)}</script>`;
+const svg = (inner) => `<svg viewBox="0 0 24 24" aria-hidden="true">${inner}</svg>`;
+
+/* ---------- Общие блоки ---------- */
+const NAV = [
+  ['/prices', 'Цены', 'prices'], ['/solutions', 'Готовые решения', 'solutions'], ['/buyout', 'Выкуп', 'buyout'], ['/faq', 'FAQ', 'faq'],
+];
+function header(active) {
+  const a = (href, text, key, extra = '') => `<a href="${href}"${key === active ? ' class="is-active" aria-current="page"' : ''}${extra}>${text}</a>`;
+  const svc = SERVICES.map((s) => `<a href="/services/${s.slug}"${active === 'svc-' + s.slug ? ' class="is-active" aria-current="page"' : ''}>${s.short}</a>`).join('');
+  const svcActive = active === 'services' || String(active).startsWith('svc-');
+  return `  <a class="skip" href="#main">Перейти к содержанию</a>
+  <header class="header" id="top">
+    <div class="container header__inner">
+      <a class="logo" href="/" aria-label="DigitalSub — на главную"><img src="/favicon.svg" alt="" width="32" height="32"><span>Digital<b>Sub</b></span></a>
+      <nav class="nav" id="nav" aria-label="Основная навигация">
+        <div class="nav__drop">
+          <a class="nav__droplink${svcActive ? ' is-active' : ''}" href="/services"${active === 'services' ? ' aria-current="page"' : ''}>Услуги</a>
+          <div class="nav__menu">${svc}</div>
+        </div>
+        ${NAV.map(([h, t, k]) => a(h, t, k)).join('\n        ')}
+        <a class="btn nav__cta" href="#lead">Оставить заявку</a>
+      </nav>
+      <a class="btn btn--sm header__cta" href="#lead">Оставить заявку</a>
+      <button class="burger" id="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
+    </div>
+  </header>`;
+}
+const FOOTER = `  <footer class="footer">
+    <div class="container footer__inner">
+      <div>
+        <a class="logo" href="/"><img src="/favicon.svg" alt="" width="28" height="28"><span>Digital<b>Sub</b></span></a>
+        <p class="footer__tag">Сайты и приложения по подписке с правом выкупа.</p>
+      </div>
+      <nav class="footer__nav" aria-label="Услуги">
+        <p class="footer__title">Услуги</p>
+        ${SERVICES.map((s) => `<a href="/services/${s.slug}">${s.short}</a>`).join('')}
+      </nav>
+      <nav class="footer__nav" aria-label="Разделы сайта">
+        <p class="footer__title">Разделы</p>
+        <a href="/prices">Цены и калькулятор</a><a href="/solutions">Готовые решения</a><a href="/buyout">Выкуп и переуступка</a><a href="/faq">Частые вопросы</a><a href="/#lead">Оставить заявку</a><a href="/privacy">Политика конфиденциальности</a>
+      </nav>
+      <p class="footer__copy">© <span id="year">2026</span> DigitalSub · digitalsub.ru</p>
+    </div>
+  </footer>`;
+
+function lead({ product, title, text } = {}) {
+  let h = part('lead');
+  if (product) {
+    if (!h.includes(`<option value="${product}">`)) throw new Error('no option ' + product);
+    h = h.replace(`<option value="${product}">`, `<option value="${product}" selected>`);
+  }
+  if (title) h = h.replace('<h2>Расскажите о задаче</h2>', `<h2>${title}</h2>`);
+  if (text) h = h.replace(/(<h2>[^<]*<\/h2>\s*<p>)[^<]*(<\/p>)/, `$1${text}$2`);
+  return h;
+}
+
+function crumbs(list) {
+  const items = [['/', 'Главная'], ...list];
+  const html = `<nav class="crumbs" aria-label="Навигационная цепочка"><ol>${items.map(([h, t], i) => i === items.length - 1 ? `<li aria-current="page">${t}</li>` : `<li><a href="${h}">${t}</a></li>`).join('')}</ol></nav>`;
+  const json = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: items.map(([h, t], i) => ({ '@type': 'ListItem', position: i + 1, name: t, item: SITE + h })) };
+  return { html, json };
+}
+
+function pageHead({ crumbsHtml, eyebrow, h1, lead: leadText, points, actions }) {
+  return `    <section class="page-head">
+      <div class="hero__glow" aria-hidden="true"></div>
+      <div class="container page-head__inner">
+        ${crumbsHtml}
+        <p class="eyebrow">${eyebrow}</p>
+        <h1>${h1}</h1>
+        ${leadText ? `<p class="lead">${leadText}</p>` : ''}
+        ${points ? `<ul class="hero__points">${points.map((p) => `<li>${p}</li>`).join('')}</ul>` : ''}
+        ${actions ? `<div class="hero__actions">${actions}</div>` : ''}
+      </div>
+    </section>`;
+}
+
+// Чередование фона секций: первая после шапки — обычная, дальше через одну
+function sections(list) {
+  return list.map((h, i) => h.replace(/class="section( section--alt)?"/, `class="section${i % 2 ? ' section--alt' : ''}"`)).join('\n\n');
+}
+const dropHead = (h) => h.replace(/\s*<div class="section__head">[\s\S]*?<\/div>\n/, '\n');
+
+function faqItems(html) {
+  return [...html.matchAll(/<details><summary>([\s\S]*?)<\/summary><p>([\s\S]*?)<\/p><\/details>/g)].map((m) => [m[1], m[2]]);
+}
+function faqLd(items) {
+  return { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: items.map(([q, a]) => ({ '@type': 'Question', name: strip(q), acceptedAnswer: { '@type': 'Answer', text: strip(a) } })) };
+}
+function faqBlock(items, { id = 'faq', eyebrow = 'FAQ', title = 'Частые вопросы' } = {}) {
+  const half = Math.ceil(items.length / 2);
+  const col = (arr) => `            <div class="faq__col">\n${arr.map(([q, a]) => `              <details><summary>${q}</summary><p>${a}</p></details>`).join('\n')}\n            </div>`;
+  return `    <section class="section" id="${id}">
+      <div class="container">
+        <div class="section__head"><p class="eyebrow">${eyebrow}</p><h2>${title}</h2></div>
+        <div class="faq">
+${col(items.slice(0, half))}
+${col(items.slice(half))}
+          </div>
+      </div>
+    </section>`;
+}
+
+const ORG = { '@type': 'Organization', name: 'DigitalSub', url: SITE + '/' };
+
+function layout({ url, title, desc, active, body, jsonld = [], head = '', ogTitle, ogDesc, robots = 'index, follow' }) {
+  const canon = SITE + url;
+  return `<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>${esc(title)}</title>
+  <meta name="description" content="${esc(desc)}">
+  <link rel="canonical" href="${canon}">
+  <meta name="theme-color" content="#0b1020">
+  <meta name="robots" content="${robots}">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:site_name" content="DigitalSub">
+  <meta property="og:url" content="${canon}">
+  <meta property="og:title" content="${esc(ogTitle || title)}">
+  <meta property="og:description" content="${esc(ogDesc || desc)}">
+  <meta property="og:image" content="${SITE}/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+${head}  <link rel="stylesheet" href="/assets/styles.css">
+${jsonld.map(ld).join('\n')}
+</head>
+<body>
+${header(active)}
+
+  <main id="main">
+${body}
+  </main>
+
+${FOOTER}
+  <script src="/assets/main.js" defer></script>
+</body>
+</html>
+`;
+}
+
+/* ---------- Карточки ---------- */
+function productCards() {
+  return `<div class="grid grid--3 products">
+${SERVICES.map((s) => { const b = baseById(s.base); return `          <article class="card feature">
+            <div class="feature__icon">${svg(s.icon)}</div>
+            <h3><a class="feature__link" href="/services/${s.slug}">${s.short}</a></h3>
+            <p>${s.card}</p>
+            <div class="feature__foot"><span class="feature__price">от <b data-base-price="${b.id}">${rub(b.price)}</b>/мес</span><span class="feature__more" aria-hidden="true">Подробнее →</span></div>
+          </article>`; }).join('\n')}
+        </div>`;
+}
+
+const projectsHtml = part('solutions');
+function projectTeasers() {
+  const arts = [...projectsHtml.matchAll(/<article class="card project" data-project="([^"]+)">([\s\S]*?)<\/article>/g)];
+  return arts.map(([, id, inner]) => {
+    const img = inner.match(/<img [^>]+>/)[0];
+    const niche = inner.match(/<p class="project__niche">([^<]+)<\/p>/)[1];
+    const name = inner.match(/<h3>([^<]+?)\s*(<span|<\/h3>)/)[1];
+    const desc = inner.match(/<\/h3>\s*<p>([^<]+)<\/p>/)[1];
+    return `          <article class="card project project--mini">
+            <div class="project__shot">${img}</div>
+            <div class="project__body">
+              <p class="project__niche">${niche}</p>
+              <h3><a class="feature__link" href="/solutions#solutions">${name}</a></h3>
+              <p>${desc}</p>
+              <p class="project__row"><span class="feature__more">Подробнее →</span><span class="project__price" data-price="${id}">Цена по запросу</span></p>
+            </div>
+          </article>`;
+  }).join('\n');
+}
+
+/* ---------- Страницы ---------- */
+const pages = [];
+const add = (file, url, html, prio, freq = 'monthly') => pages.push({ file, url, html, prio, freq });
+
+// Главная
+{
+  const hero = part('hero');
+  const how = part('how');
+  const what = `    <section class="section" id="what">
+      <div class="container">
+        <div class="section__head">
+          <p class="eyebrow">Что делаем</p>
+          <h2>Продукты для малого бизнеса и сферы услуг</h2>
+          <p class="section__sub">Салоны красоты, клиники, автосервисы, школы и курсы, локальная розница: всем, кому нужен понятный цифровой инструмент без крупных вложений.</p>
+        </div>
+        ${productCards()}
+      </div>
+    </section>`;
+  const tariffs = `    <section class="section" id="tariffs">
+      <div class="container">
+        <div class="section__head">
+          <p class="eyebrow">Тарифы</p>
+          <h2>От ${rub(minPrice)} в месяц</h2>
+          <p class="section__sub">Итоговая стоимость зависит от задачи и фиксируется в договоре. Начните с необходимого — новые модули подключаются в любой момент.</p>
+        </div>
+        <div class="grid grid--3">
+          <div class="card fact"><p class="fact__big">до ${Math.round(Math.max(...P.terms.map((t) => t.discount)) * 100)}%</p><h3>Скидка за срок</h3><p>Минимальный срок подписки — 12 месяцев, ${discText}.</p></div>
+          <div class="card fact"><p class="fact__big">${P.startPayment.months} платежа</p><h3>Оплата на старте</h3><p>На старте оплачиваются только первый и последний месяц подписки, дальше — ежемесячно.</p></div>
+          <div class="card fact"><p class="fact__big">${P.bases.length} основ</p><h3>Модули по необходимости</h3><p>Онлайн-оплата, запись, Telegram, интеграции, продвижение — подключаются к основе, когда понадобятся.</p></div>
+        </div>
+        <div class="teaser__actions"><a class="btn btn--lg" href="/prices">Все тарифы и модули</a><a class="btn btn--ghost btn--lg" href="/prices#calc">Рассчитать стоимость</a></div>
+      </div>
+    </section>`;
+  const sol = `    <section class="section" id="solutions-teaser">
+      <div class="container">
+        <div class="section__head">
+          <p class="eyebrow">Готовые решения</p>
+          <h2>Работающие проекты, которые можно купить или повторить</h2>
+          <p class="section__sub">Каждый проект можно купить целиком — с исходным кодом и доменом — или заказать такой же под свой бренд по подписке.</p>
+        </div>
+        <div class="grid grid--3 projects">
+${projectTeasers()}
+        </div>
+        <div class="teaser__actions"><a class="btn btn--ghost btn--lg" href="/solutions">Все готовые решения</a></div>
+      </div>
+    </section>`;
+  const bo = `    <section class="section" id="buyout-teaser">
+      <div class="container buyout">
+        <div class="buyout__text">
+          <p class="eyebrow">Модель выкупа</p>
+          <h2>Платите за подписку, а получаете актив</h2>
+          <p>Когда проект начнёт приносить прибыль, выкупите исходный код и права и развивайте его своей командой. А если продукт стал не нужен — передайте его другому владельцу или продайте через наш каталог.</p>
+          <ul class="ticks ticks--lg">
+            <li><b>Цена выкупа фиксируется в договоре</b> заранее, без сюрпризов.</li>
+            <li><b>30% оплаченных подписок засчитывается</b> в цену выкупа.</li>
+            <li><b>Проект можно переуступить или продать</b>, он не пропадёт.</li>
+          </ul>
+          <a class="btn btn--lg" href="/buyout">Как работает выкуп</a>
+        </div>
+        <div class="card buyout__calc">
+          <p class="buyout__calc-title">Коротко об условиях</p>
+          <div class="calc-row"><span>Базовая цена выкупа</span><b id="b-base">${P.buyout.multiplier} × платёж без скидки</b></div>
+          <div class="calc-row"><span>Зачёт оплаченных подписок</span><b id="b-credit">−${Math.round(P.buyout.creditShare * 100)}% оплаченного</b></div>
+          <div class="calc-row"><span>Минимальная цена выкупа</span><b id="b-min">${P.buyout.minMonths} × платёж</b></div>
+          <div class="calc-row"><span>Переуступка проекта</span><b><span data-transfer-share>${Math.round(PR.transfer.share * 100)}%</span>, от <span data-transfer-min>${rub(PR.transfer.min)}</span></b></div>
+          <div class="calc-row"><span>Продажа через каталог</span><b><span data-sale-commission>${Math.round(PR.saleCommission * 100)}%</span> комиссия</b></div>
+          <p class="buyout__hint">Подробнее — на странице <a href="/buyout">«Выкуп и переуступка»</a>.</p>
+        </div>
+      </div>
+    </section>`;
+  const body = hero + '\n\n' + sections([how, what, tariffs, sol, bo, lead()]);
+  add('index.html', '/', layout({
+    url: '/', active: 'home',
+    title: 'DigitalSub — сайты и приложения по подписке с правом выкупа',
+    desc: 'Сайт, интернет-магазин, веб-приложение, мобильное приложение Android или десктоп-программа для вашего бизнеса без оплаты разработки. Подписка от 4 900 ₽/мес: хостинг, домен, обновления и поддержка включены. Первая версия сайта за 3–7 дней, мобильного и десктоп-приложения — до 30 дней. Право выкупа продукта.',
+    ogDesc: 'Не платите за разработку — подпишитесь на готовый продукт для своего бизнеса. От 4 900 ₽/мес, первая версия сайта за 3–7 дней.',
+    head: '  <meta name="keywords" content="сайт по подписке, сайт в рассрочку, разработка сайтов, CRM для бизнеса, онлайн-запись, веб-приложение, мобильное приложение Android, десктоп-приложение, выкуп сайта">\n  <script src="/assets/legacy-hash.js"></script>\n',
+    jsonld: [
+      { '@context': 'https://schema.org', '@type': 'ProfessionalService', name: 'DigitalSub', url: SITE + '/', image: SITE + '/assets/og-image.png', description: 'Разработка сайтов, интернет-магазинов, веб-, мобильных и десктоп-приложений по подписке с правом выкупа.', areaServed: 'RU', priceRange: `от ${nb(minPrice)} ₽/мес` },
+      { '@context': 'https://schema.org', '@type': 'WebSite', name: 'DigitalSub', url: SITE + '/', inLanguage: 'ru' },
+    ],
+    body,
+  }), '1.0', 'weekly');
+}
+
+// Цены
+{
+  const c = crumbs([['/prices', 'Цены']]);
+  const pricing = part('pricing').replace('<div class="carousel"', `<div class="grid grid--3 price-facts">
+          <div class="card fact"><h3>Скидка за срок</h3><p>${P.terms.map((t) => `${t.months} мес. — ${t.discount ? `скидка ${Math.round(t.discount * 100)}%` : 'базовая цена'}`).join('; ')}.</p></div>
+          <div class="card fact"><h3>Стартовый платёж</h3><p>${P.startPayment.months} месячных платежа: первый и последний месяц подписки. Входит в итог за срок, а не добавляется сверху.</p></div>
+          <div class="card fact"><h3>Выкуп</h3><p>${P.buyout.multiplier} платежей без скидки минус ${Math.round(P.buyout.creditShare * 100)}% оплаченного, но не меньше ${P.buyout.minMonths} платежей. <a href="/buyout">Подробнее</a></p></div>
+        </div>
+        <div class="carousel"`);
+  const body = pageHead({ crumbsHtml: c.html, eyebrow: 'Цены', h1: 'Цены на сайты и приложения <span class="grad">по подписке</span>',
+    lead: `Ежемесячная подписка от ${rub(minPrice)}: разработка, хостинг, домен, обновления и поддержка включены. Выберите основу, добавьте модули и узнайте точную цену в калькуляторе.`,
+    actions: '<a class="btn btn--lg" href="#calc">Открыть калькулятор</a><a class="btn btn--ghost btn--lg" href="#lead">Обсудить проект</a>' })
+    + '\n\n' + sections([pricing, part('calc'), lead({ text: 'Отправьте расчёт из калькулятора или опишите задачу — ответим в течение рабочего дня, уточним детали и зафиксируем цену в договоре.' })]);
+  const offers = { '@context': 'https://schema.org', '@type': 'OfferCatalog', name: 'Тарифы DigitalSub', url: SITE + '/prices', itemListElement: SERVICES.map((s) => { const b = baseById(s.base); return { '@type': 'Offer', name: b.name, url: `${SITE}/services/${s.slug}`, priceCurrency: 'RUB', price: b.price, priceSpecification: { '@type': 'UnitPriceSpecification', price: b.price, priceCurrency: 'RUB', unitText: 'месяц', unitCode: 'MON' } }; }) };
+  add('prices.html', '/prices', layout({ url: '/prices', active: 'prices',
+    title: 'Цены на разработку сайтов и приложений по подписке — калькулятор | DigitalSub',
+    desc: `Тарифы DigitalSub: лендинг от 4 900 ₽/мес, многостраничный сайт от 9 900 ₽, интернет-магазин от 14 900 ₽, веб-приложение от 19 900 ₽, Android от 29 900 ₽, десктоп от 34 900 ₽. Модули, скидки до 35% и калькулятор стоимости с выкупом.`,
+    head: '  <link rel="preload" href="/assets/pricing.json" as="fetch" crossorigin>\n',
+    jsonld: [c.json, offers], body }), '0.9', 'weekly');
+}
+
+// Готовые решения
+{
+  const c = crumbs([['/solutions', 'Готовые решения']]);
+  const head = projectsHtml.match(/<div class="section__head">([\s\S]*?)<\/div>/)[1];
+  const sub = head.match(/<p class="section__sub">([\s\S]*?)<\/p>/)[1];
+  const list = dropHead(projectsHtml).replace(/\s*<p class="projects__note">[\s\S]*?<\/p>/, '');
+  const sell = `    <section class="section" id="sell">
+      <div class="container buyout">
+        <div class="buyout__text">
+          <p class="eyebrow">Продать свой проект</p>
+          <h2>Разместим ваш проект в каталоге</h2>
+          <p>Если продукт, сделанный по подписке, стал не нужен или вы хотите на нём заработать, выставим его на продажу в этом разделе, покажем покупателям и проведём передачу. Если покупатель уже есть, переоформим проект на него.</p>
+          <a class="btn btn--lg" href="/buyout#transfer">Условия продажи и переуступки</a>
+        </div>
+        <div class="card buyout__calc">
+          <p class="buyout__calc-title">Условия</p>
+          <div class="calc-row"><span>Продажа через каталог</span><b><span data-sale-commission>${Math.round(PR.saleCommission * 100)}%</span> от суммы продажи</b></div>
+          <div class="calc-row"><span>Переуступка своему покупателю</span><b><span data-transfer-share>${Math.round(PR.transfer.share * 100)}%</span> от остаточной стоимости</b></div>
+          <div class="calc-row"><span>Минимальная комиссия переуступки</span><b data-transfer-min>${rub(PR.transfer.min)}</b></div>
+          <p class="buyout__hint">Комиссия за продажу через каталог берётся, только если проект продан.</p>
+        </div>
+      </div>
+    </section>`;
+  const body = pageHead({ crumbsHtml: c.html, eyebrow: 'Готовые решения', h1: 'Готовые сайты и приложения: <span class="grad">купить или повторить</span>', lead: sub })
+    + '\n\n' + sections([list, sell, lead({ product: 'Готовое решение', title: 'Интересует проект?', text: 'Нажмите «Купить проект целиком» или «Хочу такой же по подписке» в карточке — проект добавится в заявку. Ответим в течение рабочего дня.' })]);
+  const items = [...projectsHtml.matchAll(/data-project="([^"]+)">[\s\S]*?<img src="([^"]+)"[\s\S]*?<h3>([^<]+?)\s*(?:<span class="project__host">([^<]+)<\/span>)?<\/h3>\s*<p>([^<]+)<\/p>/g)]
+    .map(([, id, img, name, host, d], i) => ({ '@type': 'ListItem', position: i + 1, item: { '@type': 'CreativeWork', name: name.trim(), description: d, image: SITE + img, ...(host ? { url: `https://${host}/` } : {}) } }));
+  add('solutions.html', '/solutions', layout({ url: '/solutions', active: 'solutions',
+    title: 'Готовые решения: сайты и веб-приложения на продажу | DigitalSub',
+    desc: 'Работающие проекты DigitalSub: веб-приложение SimpleAB, сайт игрового проекта L2Start и интернет-магазин ARM Game. Купите проект целиком с исходным кодом и доменом или закажите такой же по подписке.',
+    jsonld: [c.json, { '@context': 'https://schema.org', '@type': 'ItemList', name: 'Готовые решения DigitalSub', itemListElement: items }], body }), '0.8');
+}
+
+// Выкуп
+{
+  const c = crumbs([['/buyout', 'Выкуп и переуступка']]);
+  const buyout = part('buyout');
+  const compare = part('compare');
+  const faqAll = faqItems(part('faq'));
+  const boFaq = faqAll.filter(([q]) => /принадлежит продукт|стоит выкуп|продать или передать/.test(q));
+  const body = pageHead({ crumbsHtml: c.html, eyebrow: 'Выкуп и переуступка', h1: 'Выкуп, переуступка <span class="grad">и продажа проекта</span>',
+    lead: 'Продукт по подписке можно выкупить в собственность с зачётом оплаченных месяцев, передать другому владельцу или продать через наш каталог. Все условия фиксируются в договоре заранее.',
+    actions: '<a class="btn btn--lg" href="/prices#calc">Посчитать выкуп</a><a class="btn btn--ghost btn--lg" href="#lead">Задать вопрос</a>' })
+    + '\n\n' + sections([buyout, compare, faqBlock(boFaq, { id: 'buyout-faq', title: 'Вопросы о выкупе' }), lead()]);
+  add('buyout.html', '/buyout', layout({ url: '/buyout', active: 'buyout',
+    title: 'Выкуп сайта или приложения по подписке, переуступка и продажа проекта | DigitalSub',
+    desc: 'Как выкупить продукт по подписке: 12 платежей без скидки минус 30% оплаченного, минимум 3 платежа. Переуступка проекта — 15% от остаточной стоимости, от 30 000 ₽; продажа через каталог — 10%. Сравнение с разработкой под ключ.',
+    jsonld: [c.json, faqLd(boFaq)], body }), '0.8');
+}
+
+// FAQ
+{
+  const c = crumbs([['/faq', 'FAQ']]);
+  const faq = part('faq');
+  const items = faqItems(faq);
+  const body = pageHead({ crumbsHtml: c.html, eyebrow: 'FAQ', h1: 'Частые вопросы <span class="grad">о подписке</span>',
+    lead: 'Как устроена подписка, сроки, что входит в тариф, выкуп, домен, правки и продвижение. Не нашли ответ — спросите в заявке внизу страницы.' })
+    + '\n\n' + sections([dropHead(faq), lead({ title: 'Остались вопросы?' })]);
+  add('faq.html', '/faq', layout({ url: '/faq', active: 'faq',
+    title: 'Частые вопросы о сайтах и приложениях по подписке | DigitalSub',
+    desc: 'Ответы на вопросы о подписке DigitalSub: сроки разработки, что входит в подписку, минимальный срок, выкуп и переуступка проекта, домен, правки, продвижение и готовые решения.',
+    jsonld: [c.json, faqLd(items)], body }), '0.7');
+}
+
+// Услуги: список
+{
+  const c = crumbs([['/services', 'Услуги']]);
+  const body = pageHead({ crumbsHtml: c.html, eyebrow: 'Услуги', h1: 'Сайты и приложения <span class="grad">по подписке</span>',
+    lead: 'Шесть основ продукта — от лендинга до программы для Windows. Выберите подходящую: на странице каждой услуги — что входит, сроки, цена, модули и ответы на вопросы.' })
+    + '\n\n' + sections([`    <section class="section" id="what">
+      <div class="container">
+        ${productCards()}
+      </div>
+    </section>`, part('how'), lead()]);
+  add('services.html', '/services', layout({ url: '/services', active: 'services',
+    title: 'Услуги DigitalSub: разработка сайтов и приложений по подписке',
+    desc: 'Лендинги, многостраничные сайты, интернет-магазины, веб-приложения, Android-приложения и десктоп-программы по подписке от 4 900 ₽/мес с хостингом, поддержкой и правом выкупа.',
+    jsonld: [c.json, { '@context': 'https://schema.org', '@type': 'ItemList', name: 'Услуги DigitalSub', itemListElement: SERVICES.map((s, i) => ({ '@type': 'ListItem', position: i + 1, url: `${SITE}/services/${s.slug}`, name: s.name })) }], body }), '0.9');
+}
+
+// Услуги: страницы
+for (const s of SERVICES) {
+  const b = baseById(s.base);
+  const allowed = new Set(b.modules);
+  s.modules.forEach((id) => { if (!allowed.has(id)) throw new Error(`module ${id} not allowed for ${b.id}`); });
+  const url = `/services/${s.slug}`;
+  const c = crumbs([['/services', 'Услуги'], [url, s.short]]);
+  const buyoutEx = Math.round(Math.max(P.buyout.multiplier * b.price - P.buyout.creditShare * b.price * 12, P.buyout.minMonths * b.price) / (P.roundTo || 1)) * (P.roundTo || 1);
+  const head = pageHead({ crumbsHtml: c.html, eyebrow: s.short + ' · по подписке', h1: `${s.h1} <span class="grad">${s.h1grad}</span>`, lead: s.lead,
+    points: [`<b>от <span data-base-price="${b.id}">${rub(b.price)}</span></b> в месяц`, `<b>${s.time}</b> до первой версии`, `<b>${P.startPayment.months} месяца</b> оплаты на старте`, '<b>право выкупа</b>'],
+    actions: `<a class="btn btn--lg" href="#lead">Обсудить проект</a><a class="btn btn--ghost btn--lg" href="/prices?base=${b.id}#calc">Рассчитать стоимость</a>` });
+  const inc = `    <section class="section" id="included">
+      <div class="container">
+        <div class="section__head"><p class="eyebrow">Что входит</p><h2>${s.name}: что вы получаете</h2></div>
+        <div class="grid grid--3 svc-info">
+          <div class="card"><h3>В подписке</h3><ul class="ticks">${s.included.map((x) => `<li>${x}</li>`).join('')}</ul></div>
+          <div class="card"><h3>Кому подходит</h3><p>${s.forWhom}</p><ul class="ticks">${s.forList.map((x) => `<li>${x}</li>`).join('')}</ul></div>
+          <div class="card"><h3>Сроки и оплата</h3><ul class="ticks">
+            <li>Первая версия — ${s.time}</li>
+            <li>от ${rub(b.price)}/мес при подписке на 12 месяцев</li>
+            <li>Срок 12 месяцев, ${discText}</li>
+            <li>На старте — первый и последний месяц подписки</li>
+            <li>Выкуп: ${P.buyout.multiplier} платежей без скидки минус ${Math.round(P.buyout.creditShare * 100)}% оплаченного; после 12 месяцев на базовом тарифе — около ${rub(buyoutEx)}</li>
+          </ul></div>
+        </div>
+        ${s.related ? `<p class="note"><b>Пример:</b> <a href="/solutions">${s.related.name}</a> — ${s.related.text} Его можно купить целиком или заказать такой же по подписке.</p>` : ''}
+      </div>
+    </section>`;
+  const mods = `    <section class="section" id="modules">
+      <div class="container">
+        <div class="section__head"><p class="eyebrow">Модули</p><h2>Что можно добавить</h2><p class="section__sub">Модули подключаются к основе в любой момент и увеличивают ежемесячный платёж. Полный список и точный расчёт — в калькуляторе.</p></div>
+        <div class="grid svc-mods">
+${s.modules.map((id) => { const m = modById(id); return `          <div class="card svc-mod"><h3>${m.name}</h3>${m.note ? `<p>${m.note}</p>` : ''}<p class="svc-mod__price" data-mod-price="${m.id}">${modPrice(m)}</p></div>`; }).join('\n')}
+        </div>
+        ${s.base === 'android' || s.modules.some((id) => modById(id).adBudget) || s.modules.some((id) => ['direct', 'appads', 'vkads'].includes(id)) ? '<p class="note">Рекламный бюджет оплачивается отдельно, напрямую рекламной площадке.</p>' : ''}
+        <div class="teaser__actions"><a class="btn btn--lg" href="/prices?base=${b.id}#calc">Рассчитать в калькуляторе</a><a class="btn btn--ghost btn--lg" href="/prices">Все тарифы</a></div>
+      </div>
+    </section>`;
+  const faq = faqBlock(s.faq, { id: 'faq', title: `Вопросы: ${s.short.toLowerCase()}` });
+  const body = head + '\n\n' + sections([inc, mods, faq, lead({ product: s.product, title: 'Обсудим ваш проект', text: `Расскажите о задаче — ответим в течение рабочего дня, предложим решение и зафиксируем цену. В заявке уже выбрано: «${s.short}».` })]);
+  const service = { '@context': 'https://schema.org', '@type': 'Service', name: s.name, serviceType: s.serviceType, description: s.desc, url: SITE + url, areaServed: 'RU', provider: ORG,
+    offers: { '@type': 'Offer', url: SITE + url, priceCurrency: 'RUB', price: b.price, priceSpecification: { '@type': 'UnitPriceSpecification', price: b.price, priceCurrency: 'RUB', unitText: 'месяц', unitCode: 'MON' } } };
+  add(`services/${s.slug}.html`, url, layout({ url, active: 'svc-' + s.slug, title: s.title, desc: s.desc, jsonld: [c.json, service, faqLd(s.faq)], body }), '0.9');
+}
+
+// Политика
+{
+  const c = crumbs([['/privacy', 'Политика конфиденциальности']]);
+  const body = part('privacy').replace('<main class="legal">', '<div class="legal">').replace('</main>', '</div>').replace('<div class="container container--narrow">', `<div class="container container--narrow">\n      ${c.html}`);
+  add('privacy.html', '/privacy', layout({ url: '/privacy', active: '', title: 'Политика конфиденциальности — DigitalSub', desc: 'Политика обработки персональных данных сайта digitalsub.ru', jsonld: [c.json], body }), '0.2', 'yearly');
+}
+
+// 404
+fs.writeFileSync(path.join(PUB, '404.html'), layout({ url: '/404', active: '', robots: 'noindex', title: 'Страница не найдена — DigitalSub', desc: 'Такой страницы нет на digitalsub.ru',
+  body: `    <div class="legal"><div class="container container--narrow"><p class="eyebrow">Ошибка 404</p><h1>Такой страницы нет</h1><p>Возможно, ссылка устарела. Вот основные разделы сайта:</p>
+      <div class="hero__actions"><a class="btn" href="/">На главную</a><a class="btn btn--ghost" href="/services">Услуги</a><a class="btn btn--ghost" href="/prices">Цены</a><a class="btn btn--ghost" href="/faq">FAQ</a></div></div></div>` })
+  .replace(/\s*<link rel="canonical"[^>]+>/, '').replace(/\s*<meta property="og:url"[^>]+>/, '')
+  .replace(/\s*<a class="btn btn--sm header__cta" href="#lead">[^<]+<\/a>/, '\n      <a class="btn btn--sm header__cta" href="/#lead">Оставить заявку</a>').replace('class="btn nav__cta" href="#lead"', 'class="btn nav__cta" href="/#lead"'));
+
+for (const p of pages) {
+  const f = path.join(PUB, p.file);
+  fs.mkdirSync(path.dirname(f), { recursive: true });
+  fs.writeFileSync(f, p.html);
+}
+fs.writeFileSync(path.join(PUB, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${pages.map((p) => `  <url><loc>${SITE}${p.url}</loc><lastmod>${LASTMOD}</lastmod><changefreq>${p.freq}</changefreq><priority>${p.prio}</priority></url>`).join('\n')}
+</urlset>
+`);
+console.log(`Собрано страниц: ${pages.length}\n` + pages.map((p) => `  ${p.url} -> public/${p.file}`).join('\n'));

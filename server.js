@@ -107,9 +107,23 @@ async function handleLead(req, res) {
   return json(res, 200, { ok: true, id: lead.id });
 }
 
-async function serveStatic(req, res, pathname) {
-  let rel = decodeURIComponent(pathname);
+const isFile = (f) => { try { return fs.statSync(f).isFile(); } catch { return false; } };
+const redirect = (res, location) => send(res, 301, '', { Location: location, 'Cache-Control': 'public, max-age=3600' });
+
+// Чистые адреса страниц: /prices -> public/prices.html, /services/shop -> public/services/shop.html.
+// Старые адреса с .html и со слешем на конце перенаправляются на чистые (301).
+async function serveStatic(req, res, pathname, search) {
+  let rel;
+  try { rel = decodeURIComponent(pathname); } catch { return send(res, 400, 'Bad request'); }
+  if (rel.includes('\0')) return send(res, 400, 'Bad request');
+  if (rel === '/index.html') return redirect(res, '/' + search);
+  if (rel.endsWith('.html') && rel !== '/404.html' && isFile(path.join(PUBLIC_DIR, rel))) return redirect(res, rel.slice(0, -5) + search);
+  if (rel.length > 1 && rel.endsWith('/')) {
+    const clean = rel.replace(/\/+$/, '');
+    if (isFile(path.join(PUBLIC_DIR, clean + '.html'))) return redirect(res, clean + search);
+  }
   if (rel.endsWith('/')) rel += 'index.html';
+  else if (!path.extname(rel) && isFile(path.join(PUBLIC_DIR, rel + '.html'))) rel += '.html';
   const file = path.normalize(path.join(PUBLIC_DIR, rel));
   if (!file.startsWith(PUBLIC_DIR)) return send(res, 403, 'Forbidden');
   try {
@@ -128,14 +142,14 @@ async function serveStatic(req, res, pathname) {
 
 const server = http.createServer(async (req, res) => {
   try {
-    const { pathname } = new URL(req.url, 'http://localhost');
+    const { pathname, search } = new URL(req.url, 'http://localhost');
     if (pathname === '/api/health') return json(res, 200, { ok: true });
     if (pathname === '/api/lead') {
       if (req.method !== 'POST') return json(res, 405, { ok: false, error: 'Method not allowed' });
       return await handleLead(req, res);
     }
     if (req.method !== 'GET' && req.method !== 'HEAD') return send(res, 405, 'Method not allowed');
-    return await serveStatic(req, res, pathname);
+    return await serveStatic(req, res, pathname, search);
   } catch (e) { console.error(e); if (!res.headersSent) json(res, 500, { ok: false, error: 'Server error' }); }
 });
 
