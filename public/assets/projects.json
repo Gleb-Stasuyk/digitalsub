@@ -2,11 +2,45 @@
   "_comment": "Готовые решения: цены продажи проектов и условия переуступки. price: null — показывается «Цена по запросу», число — цена в рублях (попадает и в разметку Schema.org после пересборки: node site/build.js). subscriptionFrom: null или цена копии по подписке, ₽/мес. slug — адрес страницы /solutions/<slug>. Тексты карточек — в site/projects.js. После изменений: node site/build.js && docker compose up -d --build.",
   "currency": "₽",
   "projects": [
-    {"id": "simpleab", "slug": "simpleab", "name": "SimpleAB", "price": null, "subscriptionFrom": null},
-    {"id": "l2start", "slug": "l2start", "name": "L2Start", "price": null, "subscriptionFrom": null},
-    {"id": "armgame", "slug": "arm-game", "name": "ARM Game", "price": null, "subscriptionFrom": null},
-    {"id": "personal-vpn", "slug": "personal-vpn", "name": "Личный VPN", "price": null, "subscriptionFrom": null}
+    {
+      "id": "simpleab",
+      "slug": "simpleab",
+      "name": "SimpleAB",
+      "price": null,
+      "subscriptionFrom": null
+    },
+    {
+      "id": "l2start",
+      "slug": "l2start",
+      "name": "L2Start",
+      "price": null,
+      "subscriptionFrom": null
+    },
+    {
+      "id": "armgame",
+      "slug": "arm-game",
+      "name": "ARM Game",
+      "price": null,
+      "subscriptionFrom": null
+    },
+    {
+      "id": "alias",
+      "slug": "alias",
+      "name": "Alias",
+      "price": null,
+      "subscriptionFrom": null
+    },
+    {
+      "id": "personal-vpn",
+      "slug": "personal-vpn",
+      "name": "Личный VPN",
+      "price": null,
+      "subscriptionFrom": null
+    }
   ],
-  "transfer": {"share": 0.15, "min": 30000},
-  "saleCommission": 0.10
+  "transfer": {
+    "share": 0.15,
+    "min": 30000
+  },
+  "saleCommission": 0.1
 }

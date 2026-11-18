@@ -190,7 +190,15 @@ ${SERVICES.map((s) => { const b = baseById(s.base); return `          <article c
 }
 
 const PROJ = require('./projects');
-const projects = PR.projects.map((p) => { const d = PROJ[p.id]; if (!d) throw new Error('no text for project ' + p.id); return { ...p, ...d }; });
+const projects = PR.projects.map((p) => {
+  const d = PROJ[p.id]; if (!d) throw new Error('no text for project ' + p.id);
+  // Картинки, которых ещё нет в public/assets/projects, пропускаются; если нет ни одной — берётся fallback
+  const have = d.images.filter(([f]) => fs.existsSync(path.join(PUB, 'assets/projects', f)));
+  const images = have.length ? have : (d.fallback || []);
+  if (!images.length) throw new Error('no images for project ' + p.id);
+  return { ...p, ...d, images };
+});
+const imgDims = (p) => (p.portrait ? 'width="540" height="1170"' : 'width="960" height="600"');
 const projPrice = (p) => (typeof p.price === 'number' ? rub(p.price) : 'Цена по запросу');
 const imgSrc = (f) => `/assets/projects/${f}`;
 // Кнопки готового решения: подставляют проект в форму заявки на этой же странице (см. attachProject в main.js)
@@ -204,7 +212,7 @@ function projectCard(p) {
   const url = `/solutions/${p.slug}`;
   const [img, alt] = p.images[0];
   return `          <article class="card project" data-project="${p.id}">
-            <a class="project__shot" href="${url}" tabindex="-1" aria-hidden="true"><img src="${imgSrc(img)}" alt="" width="960" height="600" loading="lazy" decoding="async"></a>
+            <a class="project__shot${p.portrait ? ' project__shot--phone' : ''}" href="${url}" tabindex="-1" aria-hidden="true"><img src="${imgSrc(img)}" alt="" ${imgDims(p)} loading="lazy" decoding="async"></a>
             <div class="project__body">
               <p class="project__niche">${p.niche}</p>
               <h3><a class="project__title" href="${url}">${p.name}</a>${p.host ? ` <span class="project__host">${p.host}</span>` : ''}</h3>
@@ -340,7 +348,7 @@ ${projects.map(projectCard).join('\n')}
   const items = projects.map((p, i) => ({ '@type': 'ListItem', position: i + 1, url: `${SITE}/solutions/${p.slug}`, name: p.name }));
   add('solutions.html', '/solutions', layout({ url: '/solutions', active: 'solutions',
     title: 'Готовые решения: сайты, приложения и сервисы на продажу | DigitalSub',
-    desc: 'Готовые проекты DigitalSub: веб-приложение SimpleAB, игровой проект L2Start с собственным сервером, интернет-магазин ARM Game и личный VPN по запросу. Купите проект целиком или закажите такой же по подписке.',
+    desc: 'Готовые проекты DigitalSub: веб-приложение SimpleAB, игровой проект L2Start с собственным сервером, интернет-магазин ARM Game, мобильная игра Alias и личный VPN по запросу. Купите проект целиком или закажите такой же по подписке.',
     jsonld: [c.json, { '@context': 'https://schema.org', '@type': 'ItemList', name: 'Готовые решения DigitalSub', itemListElement: items }], body }), '0.8');
 }
 
@@ -350,13 +358,13 @@ for (const p of projects) {
   const c = crumbs([['/solutions', 'Готовые решения'], [url, p.name]]);
   const svc = p.kind === 'service';
   const [main, mainAlt] = p.images[0];
-  const gallery = `<div class="gallery">
-          <div class="gallery__main card"><img id="gallery-main" src="${imgSrc(main)}" alt="${esc(p.name + ': ' + mainAlt)}" width="960" height="600" decoding="async"></div>
-          ${p.images.length > 1 ? `<div class="gallery__thumbs" role="group" aria-label="Скриншоты">${p.images.map(([f, alt], i) => `<button class="gallery__thumb" type="button" data-src="${imgSrc(f)}" data-alt="${esc(p.name + ': ' + alt)}" aria-label="${esc(alt)}"${i === 0 ? ' aria-current="true"' : ''}><img src="${imgSrc(f)}" alt="" width="160" height="100" loading="lazy" decoding="async"></button>`).join('')}</div>` : ''}
+  const gallery = `<div class="gallery${p.portrait ? ' gallery--phone' : ''}">
+          <div class="gallery__main card"><img id="gallery-main" src="${imgSrc(main)}" alt="${esc(p.name + ': ' + mainAlt)}" ${imgDims(p)} decoding="async"></div>
+          ${p.images.length > 1 ? `<div class="gallery__thumbs" role="group" aria-label="Скриншоты">${p.images.map(([f, alt], i) => `<button class="gallery__thumb" type="button" data-src="${imgSrc(f)}" data-alt="${esc(p.name + ': ' + alt)}" aria-label="${esc(alt)}"${i === 0 ? ' aria-current="true"' : ''}><img src="${imgSrc(f)}" alt="" ${p.portrait ? 'width="108" height="234"' : 'width="160" height="100"'} loading="lazy" decoding="async"></button>`).join('')}</div>` : ''}
         </div>`;
-  const included = svc
+  const included = p.included || (svc
     ? ['Развёртывание и настройка сервера на вашем VPS', 'Подключение ваших устройств и инструкции', 'Передача всех доступов', 'Обслуживание — по подписке, если нужно']
-    : [`Исходный код${p.host ? ` и домен ${p.host}` : ''}`, 'Доступы к проекту и инструкции', 'Помощь с переносом на ваш сервер', 'Или копия под ваш бренд по подписке'];
+    : [`Исходный код${p.host ? ` и домен ${p.host}` : ''}`, 'Доступы к проекту и инструкции', 'Помощь с переносом на ваш сервер', 'Или копия под ваш бренд по подписке']);
   const top = `    <section class="page-head product-page">
       <div class="hero__glow" aria-hidden="true"></div>
       <div class="container page-head__inner">
@@ -402,6 +410,7 @@ for (const p of projects) {
     </section>`;
   const body = top + '\n\n' + sections([details, lead({ product: 'Готовое решение', title: svc ? 'Заказать личный VPN' : `Интересует ${p.name}?`, text: 'Нажмите кнопку выше или опишите задачу — ответим в течение рабочего дня.' })]);
   const product = { '@context': 'https://schema.org', '@type': 'Product', name: p.name, description: strip(p.about), url: SITE + url, category: p.niche, image: p.images.filter(([f]) => !f.endsWith('.svg')).map(([f]) => SITE + imgSrc(f)), brand: ORG };
+  if (p.schemaType) product.additionalType = p.schemaType;
   if (!product.image.length) delete product.image;
   // Цена указывается в разметке только если она задана в projects.json (без выдуманной цены для «по запросу»)
   if (typeof p.price === 'number') product.offers = { '@type': 'Offer', price: p.price, priceCurrency: 'RUB', availability: 'https://schema.org/InStock', url: SITE + url, seller: ORG };

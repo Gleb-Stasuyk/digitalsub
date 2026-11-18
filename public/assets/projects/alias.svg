@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 1170" width="540" height="1170" role="img" aria-label="Иллюстрация игры Alias: карточка со словом, свайп вверх — угадано, вниз — пропуск">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2e1065"/><stop offset="1" stop-color="#0b1020"/></linearGradient>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6d5dfc"/><stop offset="1" stop-color="#22d3ee"/></linearGradient>
+  </defs>
+  <rect width="540" height="1170" rx="48" fill="url(#bg)"/>
+  <text x="270" y="170" text-anchor="middle" font-family="system-ui,Segoe UI,Arial,sans-serif" font-size="76" font-weight="800" fill="#fff">Alias</text>
+  <text x="270" y="220" text-anchor="middle" font-family="system-ui,Segoe UI,Arial,sans-serif" font-size="19" fill="#c4bcff">Объясни слово — не называй однокоренные</text>
+  <g font-family="system-ui,Segoe UI,Arial,sans-serif" text-anchor="middle">
+    <path d="M270 300 l-26 30 h52 z" fill="#34d399"/>
+    <text x="270" y="370" font-size="22" fill="#34d399">Вверх — угадали</text>
+    <rect x="70" y="410" width="400" height="330" rx="36" fill="#fff"/>
+    <rect x="70" y="410" width="400" height="330" rx="36" fill="none" stroke="url(#g)" stroke-width="6"/>
+    <text x="270" y="560" font-size="26" fill="#6b7280">Объясните слово</text>
+    <text x="270" y="620" font-size="52" font-weight="800" fill="#1e1b4b">СЛОВО</text>
+    <text x="270" y="790" font-size="22" fill="#f87171">Вниз — пропуск</text>
+    <path d="M270 850 l-26 -30 h52 z" fill="#f87171"/>
+    <rect x="70" y="900" width="400" height="80" rx="40" fill="url(#g)"/>
+    <text x="270" y="950" font-size="28" font-weight="700" fill="#fff">0:42</text>
+    <text x="270" y="1060" font-size="22" fill="#9aa5c4">Команды · таймер · один телефон</text>
+  </g>
+</svg>
