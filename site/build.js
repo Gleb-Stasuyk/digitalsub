@@ -21,7 +21,7 @@ const strip = (s) => String(s).replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim
 const baseById = (id) => { const b = P.bases.find((x) => x.id === id); if (!b) throw new Error('base ' + id); return b; };
 const modById = (id) => { const m = P.modules.find((x) => x.id === id); if (!m) throw new Error('module ' + id); return m; };
 const unit1 = (u) => (Array.isArray(u) ? u[0] : u);
-const modPrice = (m) => `+${m.from ? 'от ' : ''}${rub(m.price)}/мес${m.qty ? ` за ${m.qty.short || unit1(m.qty.unit)}` : ''}`;
+const modPrice = (m) => `${m.once ? '' : '+'}${m.from ? 'от ' : ''}${rub(m.price)}${m.once ? ' разово' : '/мес'}${m.qty ? ` за ${m.qty.short || unit1(m.qty.unit)}` : ''}`;
 const minPrice = Math.min(...P.bases.map((b) => b.price));
 const disc = P.terms.filter((t) => t.discount);
 const pct = (v) => Math.round(v * 100) + '%';
@@ -200,7 +200,7 @@ const projects = PR.projects.map((p) => {
   return { ...p, ...d, images };
 });
 const imgDims = (p) => (p.portrait ? 'width="540" height="1170"' : 'width="960" height="600"');
-const NDA = (P.extras || []).find((x) => x.id === 'nda');
+const NDA = P.modules.find((x) => x.id === 'nda');
 const projPrice = (p) => (typeof p.price === 'number' ? rub(p.price) : 'Цена по запросу');
 const imgSrc = (f) => `/assets/projects/${f}`;
 // Кнопки готового решения: подставляют проект в форму заявки на этой же странице (см. attachProject в main.js)
@@ -304,11 +304,7 @@ const add = (file, url, html, prio, freq = 'monthly') => pages.push({ file, url,
 // Цены
 {
   const c = crumbs([['/prices', 'Цены']]);
-  const pricing = part('pricing').replace(/(<p class="note"><b>Пакет можно расширять:<\/b>[\s\S]*?<\/p>)/, `$1
-        <div class="extras" id="extras">
-          <h3 class="extras__title">Дополнительно</h3>
-          ${(P.extras || []).map((x) => `<div class="card extra"><div class="extra__text"><p class="extra__name">${x.name}</p><p>${x.desc} <a href="/faq#${x.id}">Подробнее</a></p></div><p class="extra__price">${rub(x.price)}</p></div>`).join('\n          ')}
-        </div>`);
+  const pricing = part('pricing');
   const body = pageHead({ crumbsHtml: c.html, eyebrow: 'Цены', h1: 'Цены на сайты и приложения <span class="grad">по подписке</span>',
     lead: `Ежемесячная подписка от ${rub(minPrice)}: разработка, хостинг, домен, обновления и поддержка включены. Выберите основу, добавьте модули и узнайте точную цену в калькуляторе.`,
     actions: '<a class="btn btn--lg" href="#calc">Открыть калькулятор</a><a class="btn btn--ghost btn--lg" href="#lead">Обсудить проект</a>' })

@@ -83,7 +83,7 @@
     return a > 10 && a < 20 ? u[2] : b === 1 ? u[0] : b >= 2 && b <= 4 ? u[1] : u[2];
   };
   const unit1 = (u) => (Array.isArray(u) ? u[0] : u);
-  const modLabel = (m, q) => (m.qty ? `${m.name}: ${q} ${plural(m.qty.unit, q)}` : m.from ? `${m.name} (от ${fmt(m.price)})` : m.name);
+  const modLabel = (m, q) => (m.qty ? `${m.name}: ${q} ${plural(m.qty.unit, q)}` : m.from ? `${m.name} (от ${fmt(m.price)})` : m.once ? `${m.name} (разово)` : m.name);
 
   function compute() {
     const base = curBase();
@@ -92,7 +92,8 @@
     state.modules.forEach((q, id) => { const m = modById(id); if (m && allowed.has(id)) mods.push({ ...m, q, cost: m.price * q }); });
     mods.sort((a, b) => P.modules.findIndex((x) => x.id === a.id) - P.modules.findIndex((x) => x.id === b.id));
     const term = P.terms.find((t) => t.months === state.term) || P.terms[0];
-    const fullMonthly = base.price + mods.reduce((s, m) => s + m.cost, 0);
+    const fullMonthly = base.price + mods.filter((m) => !m.once).reduce((s, m) => s + m.cost, 0);
+    const once = mods.filter((m) => m.once).reduce((s, m) => s + m.cost, 0); // разовые услуги (раздел «Юридическое»)
     const monthly = round(fullMonthly * (1 - (term.discount || 0)));
     const start = monthly * ((P.startPayment && P.startPayment.months) || 2);
     const paidSubs = monthly * term.months;
@@ -102,13 +103,14 @@
     const credit = bo.creditShare * paidSubs;
     const buyoutMin = bo.minMonths * fullMonthly;
     const buyout = round(Math.max(buyoutBase - credit, buyoutMin));
-    return { base, mods, term, fullMonthly, monthly, start, paidSubs, total, buyoutBase, credit, buyoutMin, buyout };
+    return { base, mods, once, term, fullMonthly, monthly, start, paidSubs, total, buyoutBase, credit, buyoutMin, buyout };
   }
 
   function render() {
     const c = compute(); lastCalc = c; const cur = P.currency || '₽';
     updateTabCounts(); attachCalc();
-    const hasFrom = c.mods.some((m) => m.from);
+    const hasFrom = c.mods.some((m) => m.from && !m.once);
+    const onceRow = $('#r-once-row'); if (onceRow) { onceRow.hidden = !c.once; $('#r-once').textContent = fmt(c.once, cur); }
     $('#r-monthly').textContent = (hasFrom ? 'от ' : '') + fmt(c.monthly, cur);
     const notes = [];
     if (hasFrom) notes.push('Часть модулей указана «от»: итоговая цена уточняется после обсуждения задачи.');
@@ -141,7 +143,7 @@
     const checked = state.modules.has(m.id);
     const wrap = document.createElement('div'); wrap.className = 'mod' + (m.qty ? ' mod--qty' : '') + (checked ? ' mod--on' : '');
     wrap.dataset.id = m.id;
-    const pr = `+${m.from ? 'от ' : ''}${fmt(m.price, cur)}`;
+    const pr = m.once ? `${fmt(m.price, cur)} разово` : `+${m.from ? 'от ' : ''}${fmt(m.price, cur)}`;
     wrap.append(option('checkbox', 'calc-mod', m.id, checked, m.name, m.note || '', m.qty ? `${pr} / ${m.qty.short || unit1(m.qty.unit)}` : pr));
     if (m.qty) {
       const q = document.createElement('div'); q.className = 'qty';
@@ -276,6 +278,7 @@
       `Срок: ${c.term.months} мес.`,
       `Платёж: ${c.mods.some((m) => m.from) ? 'от ' : ''}${fmt(c.monthly, cur)}/мес, старт (первый и последний месяц): ${fmt(c.start, cur)}`,
       `Итого за срок: ${fmt(c.total, cur)}, выкуп в конце срока: ${fmt(c.buyout, cur)}`,
+      ...(c.once ? [`Разовые услуги: ${fmt(c.once, cur)}`] : []),
     ].join('\n');
   }
 
@@ -285,7 +288,7 @@
     const c = lastCalc;
     $('#f-calc').value = JSON.stringify({
       base: c.base.id, modules: Object.fromEntries(c.mods.map((m) => [m.id, m.q])), term: c.term.months,
-      monthly: c.monthly, start: c.start, total: c.total, buyout: c.buyout, from: c.mods.some((m) => m.from),
+      monthly: c.monthly, once: c.once, start: c.start, total: c.total, buyout: c.buyout, from: c.mods.some((m) => m.from),
       summary: calcSummary(c),
     });
   }
@@ -351,7 +354,7 @@
     $$('[data-base-price]').forEach((el) => { const b = P.bases.find((x) => x.id === el.dataset.basePrice); if (b) el.textContent = fmt(b.price, cur); });
     $$('[data-mod-price]').forEach((el) => {
       const m = modById(el.dataset.modPrice); if (!m) return;
-      el.textContent = `+${m.from ? 'от ' : ''}${fmt(m.price, cur)}/мес${m.qty ? ` за ${m.qty.short || unit1(m.qty.unit)}` : ''}`;
+      el.textContent = `${m.once ? '' : '+'}${m.from ? 'от ' : ''}${fmt(m.price, cur)}${m.once ? ' разово' : '/мес'}${m.qty ? ` за ${m.qty.short || unit1(m.qty.unit)}` : ''}`;
     });
   }
   const needCalc = !!$('#calc-bases'), needPrices = !!$('[data-base-price],[data-mod-price]');
