@@ -386,3 +386,9 @@
     } finally { btn.disabled = false; btn.textContent = 'Отправить заявку'; }
   });
 })();
+
+/* Ссылка вида /faq#nda раскрывает нужный вопрос */
+(() => {
+  const open = () => { const id = decodeURIComponent(location.hash.slice(1)); const d = id && document.getElementById(id); if (d && d.tagName === 'DETAILS') { d.open = true; d.scrollIntoView({ block: 'center' }); } };
+  window.addEventListener('hashchange', open); open();
+})();

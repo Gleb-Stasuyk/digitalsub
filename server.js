@@ -62,7 +62,7 @@ function parseCalc(v) {
 async function notifyTelegram(lead) {
   if (!TG_TOKEN || !TG_CHAT) return false;
   const esc = (s) => s.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
-  const text = `<b>Новая заявка DigitalSub</b>\n\n<b>Имя:</b> ${esc(lead.name)}\n<b>Контакт:</b> ${esc(lead.contact)}\n<b>Тип:</b> ${esc(lead.product || '—')}\n<b>Задача:</b> ${esc(lead.message || '—')}${lead.calc && lead.calc.summary ? `\n\n<b>${lead.calc.kind === 'project' ? 'Готовое решение' : 'Расчёт'}:</b>\n${esc(lead.calc.summary.replace(/^(Расчёт с калькулятора|Готовое решение):\s?\n?/, ''))}` : ''}\n\n<i>${lead.createdAt}</i>`;
+  const text = `<b>Новая заявка DigitalSub</b>\n\n<b>Имя:</b> ${esc(lead.name)}\n<b>Контакт:</b> ${esc(lead.contact)}\n<b>Тип:</b> ${esc(lead.product || '—')}\n<b>Задача:</b> ${esc(lead.message || '—')}${lead.nda ? '\n<b>NDA:</b> подписать соглашение о неконкуренции и неразглашении' : ''}${lead.calc && lead.calc.summary ? `\n\n<b>${lead.calc.kind === 'project' ? 'Готовое решение' : 'Расчёт'}:</b>\n${esc(lead.calc.summary.replace(/^(Расчёт с калькулятора|Готовое решение):\s?\n?/, ''))}` : ''}\n\n<i>${lead.createdAt}</i>`;
   try {
     const r = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -94,6 +94,7 @@ async function handleLead(req, res) {
     product: clean(data.product, 60),
     message: clean(data.message, 2000, true),
     calc: parseCalc(data.calc),
+    nda: data.nda === true || data.nda === '1' || data.nda === 'on', // соглашение о неконкуренции и неразглашении
     ip, userAgent: clean(req.headers['user-agent'], 300),
   };
   if (lead.name.length < 2) return json(res, 422, { ok: false, error: 'Укажите имя' });

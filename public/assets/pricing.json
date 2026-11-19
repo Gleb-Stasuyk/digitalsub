@@ -1,91 +1,614 @@
 {
-  "_comment": "Все цены калькулятора в рублях в месяц. Меняйте значения и перезапустите контейнер (docker compose up -d --build). Подробнее в README.md.",
+  "_comment": "Все цены калькулятора в рублях в месяц. Меняйте значения и перезапустите контейнер (docker compose up -d --build). Подробнее в README.md. extras — дополнительные услуги вне калькулятора (показываются на /prices, в форме заявки и на страницах готовых решений после node site/build.js).",
   "currency": "₽",
   "roundTo": 100,
   "groups": [
-    {"id": "desktop", "name": "Десктоп"},
-    {"id": "mobile", "name": "Мобильное"},
-    {"id": "features", "name": "Функции"},
-    {"id": "integrations", "name": "Интеграции и уведомления"},
-    {"id": "promo", "name": "Продвижение", "note": "Рекламный бюджет (оплата показов и кликов в Яндекс Директ, VK Рекламе) оплачивается вами отдельно, напрямую рекламной площадке."}
+    {
+      "id": "desktop",
+      "name": "Десктоп"
+    },
+    {
+      "id": "mobile",
+      "name": "Мобильное"
+    },
+    {
+      "id": "features",
+      "name": "Функции"
+    },
+    {
+      "id": "integrations",
+      "name": "Интеграции и уведомления"
+    },
+    {
+      "id": "promo",
+      "name": "Продвижение",
+      "note": "Рекламный бюджет (оплата показов и кликов в Яндекс Директ, VK Рекламе) оплачивается вами отдельно, напрямую рекламной площадке."
+    }
   ],
   "bases": [
     {
-      "id": "landing", "name": "Лендинг", "desc": "Одностраничный сайт, сайт-визитка", "price": 4900,
-      "modules": ["cms", "booking", "payments", "i18n", "tgleads", "tgbot", "mailing", "integration", "ads", "metrics", "metricsetup", "ab", "seo", "direct", "vkads", "smm", "maps", "content", "emailmkt", "callback", "chat"]
+      "id": "landing",
+      "name": "Лендинг",
+      "desc": "Одностраничный сайт, сайт-визитка",
+      "price": 4900,
+      "modules": [
+        "cms",
+        "booking",
+        "payments",
+        "i18n",
+        "tgleads",
+        "tgbot",
+        "mailing",
+        "integration",
+        "ads",
+        "metrics",
+        "metricsetup",
+        "ab",
+        "seo",
+        "direct",
+        "vkads",
+        "smm",
+        "maps",
+        "content",
+        "emailmkt",
+        "callback",
+        "chat"
+      ]
     },
     {
-      "id": "site", "name": "Многостраничный сайт", "desc": "Сайт услуг, компании или школы, 5 страниц включено", "price": 9900,
-      "modules": ["cms", "pages", "auth", "social", "cabinet", "catalog", "booking", "payments", "i18n", "analytics", "ai", "tgleads", "tgbot", "mailing", "notify", "integration", "ads", "metrics", "metricsetup", "ab", "seo", "direct", "vkads", "smm", "maps", "content", "emailmkt", "callback", "chat"]
+      "id": "site",
+      "name": "Многостраничный сайт",
+      "desc": "Сайт услуг, компании или школы, 5 страниц включено",
+      "price": 9900,
+      "modules": [
+        "cms",
+        "pages",
+        "auth",
+        "social",
+        "cabinet",
+        "catalog",
+        "booking",
+        "payments",
+        "i18n",
+        "analytics",
+        "ai",
+        "tgleads",
+        "tgbot",
+        "mailing",
+        "notify",
+        "integration",
+        "ads",
+        "metrics",
+        "metricsetup",
+        "ab",
+        "seo",
+        "direct",
+        "vkads",
+        "smm",
+        "maps",
+        "content",
+        "emailmkt",
+        "callback",
+        "chat"
+      ]
     },
     {
-      "id": "shop", "name": "Интернет-магазин", "desc": "Каталог, корзина и оформление заказа", "price": 14900,
-      "modules": ["cms", "auth", "social", "cabinet", "payments", "i18n", "analytics", "ai", "tgleads", "tgbot", "mailing", "notify", "integration", "delivery", "marketplaces", "metrics", "metricsetup", "ab", "seo", "direct", "vkads", "smm", "maps", "content", "emailmkt", "callback", "chat"]
+      "id": "shop",
+      "name": "Интернет-магазин",
+      "desc": "Каталог, корзина и оформление заказа",
+      "price": 14900,
+      "modules": [
+        "cms",
+        "auth",
+        "social",
+        "cabinet",
+        "payments",
+        "i18n",
+        "analytics",
+        "ai",
+        "tgleads",
+        "tgbot",
+        "mailing",
+        "notify",
+        "integration",
+        "delivery",
+        "marketplaces",
+        "metrics",
+        "metricsetup",
+        "ab",
+        "seo",
+        "direct",
+        "vkads",
+        "smm",
+        "maps",
+        "content",
+        "emailmkt",
+        "callback",
+        "chat"
+      ]
     },
     {
-      "id": "webapp", "name": "Веб-приложение", "desc": "CRM, личный кабинет, онлайн-запись, каталог", "price": 19900,
-      "modules": ["cms", "auth", "social", "cabinet", "catalog", "booking", "payments", "i18n", "analytics", "ai", "tgbot", "mailing", "notify", "integration", "delivery", "marketplaces", "ads", "metrics", "metricsetup", "ab", "seo", "direct", "vkads", "smm", "maps", "content", "emailmkt", "callback", "chat"]
+      "id": "webapp",
+      "name": "Веб-приложение",
+      "desc": "CRM, личный кабинет, онлайн-запись, каталог",
+      "price": 19900,
+      "modules": [
+        "cms",
+        "auth",
+        "social",
+        "cabinet",
+        "catalog",
+        "booking",
+        "payments",
+        "i18n",
+        "analytics",
+        "ai",
+        "tgbot",
+        "mailing",
+        "notify",
+        "integration",
+        "delivery",
+        "marketplaces",
+        "ads",
+        "metrics",
+        "metricsetup",
+        "ab",
+        "seo",
+        "direct",
+        "vkads",
+        "smm",
+        "maps",
+        "content",
+        "emailmkt",
+        "callback",
+        "chat"
+      ]
     },
     {
-      "id": "android", "name": "Мобильное приложение Android", "desc": "Приложение для смартфонов, первая версия до 30 дней", "price": 29900,
-      "modules": ["fcm", "publish", "mobileoffline", "geo", "camera", "biometrics", "cms", "auth", "social", "cabinet", "catalog", "booking", "payments", "i18n", "analytics", "ai", "tgbot", "mailing", "integration", "delivery", "appmetrics", "aso", "appads", "smm", "content", "emailmkt", "chat"]
+      "id": "android",
+      "name": "Мобильное приложение Android",
+      "desc": "Приложение для смартфонов, первая версия до 30 дней",
+      "price": 29900,
+      "modules": [
+        "fcm",
+        "publish",
+        "mobileoffline",
+        "geo",
+        "camera",
+        "biometrics",
+        "cms",
+        "auth",
+        "social",
+        "cabinet",
+        "catalog",
+        "booking",
+        "payments",
+        "i18n",
+        "analytics",
+        "ai",
+        "tgbot",
+        "mailing",
+        "integration",
+        "delivery",
+        "appmetrics",
+        "aso",
+        "appads",
+        "smm",
+        "content",
+        "emailmkt",
+        "chat"
+      ]
     },
     {
-      "id": "desktop", "name": "Десктоп-приложение", "desc": "Программа для Windows с сервером, первая версия до 30 дней", "price": 34900,
-      "modules": ["installer", "autoupdate", "offline", "licensing", "hardware", "auth", "i18n", "analytics", "ai", "tgbot", "notify", "integration"]
+      "id": "desktop",
+      "name": "Десктоп-приложение",
+      "desc": "Программа для Windows с сервером, первая версия до 30 дней",
+      "price": 34900,
+      "modules": [
+        "installer",
+        "autoupdate",
+        "offline",
+        "licensing",
+        "hardware",
+        "auth",
+        "i18n",
+        "analytics",
+        "ai",
+        "tgbot",
+        "notify",
+        "integration"
+      ]
     }
   ],
   "modules": [
-    {"id": "cms", "name": "Админка / CMS", "price": 4000, "group": "features", "note": "Самостоятельное редактирование текстов и фото"},
-    {"id": "pages", "name": "Дополнительная страница", "price": 1000, "qty": {"unit": ["страница", "страницы", "страниц"], "label": "Страниц", "min": 1, "max": 50, "default": 1, "short": "стр."}, "group": "features", "note": "Сверх 5 страниц, входящих в основу"},
-    {"id": "auth", "name": "Регистрация и авторизация по email", "price": 3000, "group": "features", "note": "Вход по email и паролю, восстановление доступа"},
-    {"id": "social", "name": "Вход через соцсети / Telegram", "price": 2000, "group": "features", "note": "Быстрый вход через VK, Яндекс или Telegram"},
-    {"id": "cabinet", "name": "Личный кабинет", "price": 6000, "group": "features", "note": "История заказов, записи, профиль клиента"},
-    {"id": "catalog", "name": "Каталог / корзина", "price": 6000, "group": "features", "note": "Товары или услуги с фильтрами и корзиной"},
-    {"id": "booking", "name": "Онлайн-запись / календарь", "price": 5000, "group": "features", "note": "Выбор услуги, мастера и времени, напоминания"},
-    {"id": "payments", "name": "Онлайн-оплата", "price": 15000, "group": "features", "note": "Приём оплаты картой и СБП"},
-    {"id": "callback", "name": "Всплывающий блок «Мы перезвоним»", "price": 2000, "group": "features", "note": "Форма обратного звонка с уведомлением в Telegram или на почту"},
-    {"id": "chat", "name": "Онлайн-чат с поддержкой", "price": 5000, "group": "features", "note": "Чат на сайте или в приложении, ответы из Telegram"},
-    {"id": "i18n", "name": "Мультиязычность", "price": 2500, "qty": {"unit": ["язык", "языка", "языков"], "label": "Доп. языков", "min": 1, "max": 20, "default": 1}, "group": "features", "note": "Версии на других языках, цена за язык"},
-    {"id": "analytics", "name": "Аналитика и отчёты", "price": 5000, "group": "features", "note": "Отчёты по заявкам, продажам и клиентам"},
-    {"id": "ai", "name": "AI-ассистент / чат-бот", "price": 20000, "group": "features", "note": "Ответы клиентам и помощь 24/7"},
-    {"id": "tgleads", "name": "Уведомления о заявках и заказах в Telegram", "price": 2000, "group": "integrations", "note": "Мгновенные уведомления менеджеру"},
-    {"id": "tgbot", "name": "Telegram-бот", "price": 6000, "group": "integrations", "note": "Запись, заказы и уведомления в Telegram"},
-    {"id": "mailing", "name": "Email-рассылка", "price": 3000, "group": "integrations", "note": "Письма клиентам: подтверждения, новости"},
-    {"id": "notify", "name": "Уведомления (push / SMS)", "price": 3000, "group": "integrations", "note": "Напоминания и статусы клиентам"},
-    {"id": "integration", "name": "Интеграция с CRM / 1С или другим API", "price": 8000, "from": true, "note": "Итоговая цена зависит от системы", "group": "integrations"},
-    {"id": "delivery", "name": "Доставка: расчёт и интеграция (СДЭК, Почта России, Boxberry)", "price": 6000, "from": true, "note": "Цена зависит от числа служб доставки", "group": "integrations"},
-    {"id": "marketplaces", "name": "Выгрузка товаров на маркетплейсы (Ozon, Wildberries)", "price": 8000, "from": true, "note": "Цена зависит от числа площадок и товаров", "group": "integrations"},
-    {"id": "ads", "name": "Интеграция рекламы (РСЯ, Google AdSense)", "price": 5000, "qty": {"unit": ["сеть", "сети", "сетей"], "label": "Рекламных сетей", "min": 1, "max": 5, "default": 1}, "group": "integrations", "note": "Монетизация сайта рекламой, цена за сеть"},
-    {"id": "fcm", "name": "Push-уведомления", "price": 10000, "group": "mobile", "note": "Через Firebase Cloud Messaging"},
-    {"id": "publish", "name": "Публикация и поддержка в Google Play и RuStore", "price": 30000, "group": "mobile", "note": "Сборка, выпуск обновлений, работа с модерацией"},
-    {"id": "mobileoffline", "name": "Офлайн-режим и синхронизация", "price": 8000, "group": "mobile", "note": "Работа без интернета, синхронизация позже"},
-    {"id": "geo", "name": "Геолокация и карты", "price": 5000, "group": "mobile", "note": "Адреса, маршруты, точки на карте"},
-    {"id": "camera", "name": "Камера и QR-/штрихкод-сканер", "price": 4000, "group": "mobile", "note": "Фото, сканирование QR и штрихкодов"},
-    {"id": "biometrics", "name": "Вход по отпечатку", "price": 10000, "group": "mobile", "note": "Быстрый и безопасный вход в приложение"},
-    {"id": "installer", "name": "Установщик для Windows / macOS", "price": 4000, "group": "desktop", "note": "Удобная установка в пару кликов"},
-    {"id": "autoupdate", "name": "Автообновление", "price": 4000, "group": "desktop", "note": "Новые версии устанавливаются сами"},
-    {"id": "offline", "name": "Офлайн-режим и синхронизация", "price": 8000, "group": "desktop", "note": "Работа без интернета, синхронизация позже"},
-    {"id": "licensing", "name": "Лицензирование / активация", "price": 6000, "group": "desktop", "note": "Ключи, активация и контроль копий"},
-    {"id": "hardware", "name": "Интеграция с оборудованием / принтерами", "price": 10000, "group": "desktop", "note": "Принтеры, сканеры, кассы, весы"},
-    {"id": "metrics", "name": "Подключение метрик (Яндекс Метрика, Google Analytics)", "price": 1500, "qty": {"unit": ["счётчик", "счётчика", "счётчиков"], "label": "Счётчиков", "min": 1, "max": 10, "default": 1}, "note": "Только установка счётчика на сайт", "group": "promo"},
-    {"id": "metricsetup", "name": "Настройка метрик", "price": 5000, "group": "promo", "note": "Цели, электронная коммерция, отчёты"},
-    {"id": "ab", "name": "A/B-тестирование", "price": 10000, "group": "promo", "note": "Сравнение вариантов страниц и офферов"},
-    {"id": "appmetrics", "name": "Аналитика приложения (AppMetrica / Firebase Analytics)", "price": 3000, "group": "promo", "note": "События, воронки, отчёты"},
-    {"id": "aso", "name": "ASO: оптимизация страницы в Google Play и RuStore", "price": 8000, "from": true, "group": "promo", "note": "Ключевые слова, описание, скриншоты"},
-    {"id": "appads", "adBudget": true, "name": "Реклама приложения (Яндекс Директ, VK Реклама): настройка и ведение", "price": 12000, "from": true, "group": "promo", "note": "Рекламный бюджет оплачивается отдельно"},
-    {"id": "seo", "name": "SEO-оптимизация и продвижение в поиске", "price": 10000, "from": true, "note": "Техническое SEO, семантика, мета-теги, ежемесячные улучшения", "group": "promo"},
-    {"id": "direct", "adBudget": true, "name": "Контекстная реклама (Яндекс Директ): настройка и ведение", "price": 12000, "from": true, "note": "Рекламный бюджет оплачивается отдельно", "group": "promo"},
-    {"id": "vkads", "adBudget": true, "name": "Таргетированная реклама VK: настройка и ведение", "price": 10000, "from": true, "note": "Рекламный бюджет оплачивается отдельно", "group": "promo"},
-    {"id": "smm", "name": "Ведение соцсетей (VK / Telegram)", "price": 15000, "from": true, "note": "Контент-план, посты, оформление", "group": "promo"},
-    {"id": "maps", "name": "Размещение на Яндекс Картах и 2ГИС", "price": 3000, "note": "Оформление карточек, актуализация, ответы на отзывы", "group": "promo"},
-    {"id": "content", "name": "Контент и статьи для блога", "price": 8000, "from": true, "note": "До 4 статей в месяц", "group": "promo"},
-    {"id": "emailmkt", "name": "Email-маркетинг: стратегия и письма", "price": 8000, "from": true, "note": "Сегментация базы, цепочки и регулярные письма", "group": "promo"}
+    {
+      "id": "cms",
+      "name": "Админка / CMS",
+      "price": 4000,
+      "group": "features",
+      "note": "Самостоятельное редактирование текстов и фото"
+    },
+    {
+      "id": "pages",
+      "name": "Дополнительная страница",
+      "price": 1000,
+      "qty": {
+        "unit": [
+          "страница",
+          "страницы",
+          "страниц"
+        ],
+        "label": "Страниц",
+        "min": 1,
+        "max": 50,
+        "default": 1,
+        "short": "стр."
+      },
+      "group": "features",
+      "note": "Сверх 5 страниц, входящих в основу"
+    },
+    {
+      "id": "auth",
+      "name": "Регистрация и авторизация по email",
+      "price": 3000,
+      "group": "features",
+      "note": "Вход по email и паролю, восстановление доступа"
+    },
+    {
+      "id": "social",
+      "name": "Вход через соцсети / Telegram",
+      "price": 2000,
+      "group": "features",
+      "note": "Быстрый вход через VK, Яндекс или Telegram"
+    },
+    {
+      "id": "cabinet",
+      "name": "Личный кабинет",
+      "price": 6000,
+      "group": "features",
+      "note": "История заказов, записи, профиль клиента"
+    },
+    {
+      "id": "catalog",
+      "name": "Каталог / корзина",
+      "price": 6000,
+      "group": "features",
+      "note": "Товары или услуги с фильтрами и корзиной"
+    },
+    {
+      "id": "booking",
+      "name": "Онлайн-запись / календарь",
+      "price": 5000,
+      "group": "features",
+      "note": "Выбор услуги, мастера и времени, напоминания"
+    },
+    {
+      "id": "payments",
+      "name": "Онлайн-оплата",
+      "price": 15000,
+      "group": "features",
+      "note": "Приём оплаты картой и СБП"
+    },
+    {
+      "id": "callback",
+      "name": "Всплывающий блок «Мы перезвоним»",
+      "price": 2000,
+      "group": "features",
+      "note": "Форма обратного звонка с уведомлением в Telegram или на почту"
+    },
+    {
+      "id": "chat",
+      "name": "Онлайн-чат с поддержкой",
+      "price": 5000,
+      "group": "features",
+      "note": "Чат на сайте или в приложении, ответы из Telegram"
+    },
+    {
+      "id": "i18n",
+      "name": "Мультиязычность",
+      "price": 2500,
+      "qty": {
+        "unit": [
+          "язык",
+          "языка",
+          "языков"
+        ],
+        "label": "Доп. языков",
+        "min": 1,
+        "max": 20,
+        "default": 1
+      },
+      "group": "features",
+      "note": "Версии на других языках, цена за язык"
+    },
+    {
+      "id": "analytics",
+      "name": "Аналитика и отчёты",
+      "price": 5000,
+      "group": "features",
+      "note": "Отчёты по заявкам, продажам и клиентам"
+    },
+    {
+      "id": "ai",
+      "name": "AI-ассистент / чат-бот",
+      "price": 20000,
+      "group": "features",
+      "note": "Ответы клиентам и помощь 24/7"
+    },
+    {
+      "id": "tgleads",
+      "name": "Уведомления о заявках и заказах в Telegram",
+      "price": 2000,
+      "group": "integrations",
+      "note": "Мгновенные уведомления менеджеру"
+    },
+    {
+      "id": "tgbot",
+      "name": "Telegram-бот",
+      "price": 6000,
+      "group": "integrations",
+      "note": "Запись, заказы и уведомления в Telegram"
+    },
+    {
+      "id": "mailing",
+      "name": "Email-рассылка",
+      "price": 3000,
+      "group": "integrations",
+      "note": "Письма клиентам: подтверждения, новости"
+    },
+    {
+      "id": "notify",
+      "name": "Уведомления (push / SMS)",
+      "price": 3000,
+      "group": "integrations",
+      "note": "Напоминания и статусы клиентам"
+    },
+    {
+      "id": "integration",
+      "name": "Интеграция с CRM / 1С или другим API",
+      "price": 8000,
+      "from": true,
+      "note": "Итоговая цена зависит от системы",
+      "group": "integrations"
+    },
+    {
+      "id": "delivery",
+      "name": "Доставка: расчёт и интеграция (СДЭК, Почта России, Boxberry)",
+      "price": 6000,
+      "from": true,
+      "note": "Цена зависит от числа служб доставки",
+      "group": "integrations"
+    },
+    {
+      "id": "marketplaces",
+      "name": "Выгрузка товаров на маркетплейсы (Ozon, Wildberries)",
+      "price": 8000,
+      "from": true,
+      "note": "Цена зависит от числа площадок и товаров",
+      "group": "integrations"
+    },
+    {
+      "id": "ads",
+      "name": "Интеграция рекламы (РСЯ, Google AdSense)",
+      "price": 5000,
+      "qty": {
+        "unit": [
+          "сеть",
+          "сети",
+          "сетей"
+        ],
+        "label": "Рекламных сетей",
+        "min": 1,
+        "max": 5,
+        "default": 1
+      },
+      "group": "integrations",
+      "note": "Монетизация сайта рекламой, цена за сеть"
+    },
+    {
+      "id": "fcm",
+      "name": "Push-уведомления",
+      "price": 10000,
+      "group": "mobile",
+      "note": "Через Firebase Cloud Messaging"
+    },
+    {
+      "id": "publish",
+      "name": "Публикация и поддержка в Google Play и RuStore",
+      "price": 30000,
+      "group": "mobile",
+      "note": "Сборка, выпуск обновлений, работа с модерацией"
+    },
+    {
+      "id": "mobileoffline",
+      "name": "Офлайн-режим и синхронизация",
+      "price": 8000,
+      "group": "mobile",
+      "note": "Работа без интернета, синхронизация позже"
+    },
+    {
+      "id": "geo",
+      "name": "Геолокация и карты",
+      "price": 5000,
+      "group": "mobile",
+      "note": "Адреса, маршруты, точки на карте"
+    },
+    {
+      "id": "camera",
+      "name": "Камера и QR-/штрихкод-сканер",
+      "price": 4000,
+      "group": "mobile",
+      "note": "Фото, сканирование QR и штрихкодов"
+    },
+    {
+      "id": "biometrics",
+      "name": "Вход по отпечатку",
+      "price": 10000,
+      "group": "mobile",
+      "note": "Быстрый и безопасный вход в приложение"
+    },
+    {
+      "id": "installer",
+      "name": "Установщик для Windows / macOS",
+      "price": 4000,
+      "group": "desktop",
+      "note": "Удобная установка в пару кликов"
+    },
+    {
+      "id": "autoupdate",
+      "name": "Автообновление",
+      "price": 4000,
+      "group": "desktop",
+      "note": "Новые версии устанавливаются сами"
+    },
+    {
+      "id": "offline",
+      "name": "Офлайн-режим и синхронизация",
+      "price": 8000,
+      "group": "desktop",
+      "note": "Работа без интернета, синхронизация позже"
+    },
+    {
+      "id": "licensing",
+      "name": "Лицензирование / активация",
+      "price": 6000,
+      "group": "desktop",
+      "note": "Ключи, активация и контроль копий"
+    },
+    {
+      "id": "hardware",
+      "name": "Интеграция с оборудованием / принтерами",
+      "price": 10000,
+      "group": "desktop",
+      "note": "Принтеры, сканеры, кассы, весы"
+    },
+    {
+      "id": "metrics",
+      "name": "Подключение метрик (Яндекс Метрика, Google Analytics)",
+      "price": 1500,
+      "qty": {
+        "unit": [
+          "счётчик",
+          "счётчика",
+          "счётчиков"
+        ],
+        "label": "Счётчиков",
+        "min": 1,
+        "max": 10,
+        "default": 1
+      },
+      "note": "Только установка счётчика на сайт",
+      "group": "promo"
+    },
+    {
+      "id": "metricsetup",
+      "name": "Настройка метрик",
+      "price": 5000,
+      "group": "promo",
+      "note": "Цели, электронная коммерция, отчёты"
+    },
+    {
+      "id": "ab",
+      "name": "A/B-тестирование",
+      "price": 10000,
+      "group": "promo",
+      "note": "Сравнение вариантов страниц и офферов"
+    },
+    {
+      "id": "appmetrics",
+      "name": "Аналитика приложения (AppMetrica / Firebase Analytics)",
+      "price": 3000,
+      "group": "promo",
+      "note": "События, воронки, отчёты"
+    },
+    {
+      "id": "aso",
+      "name": "ASO: оптимизация страницы в Google Play и RuStore",
+      "price": 8000,
+      "from": true,
+      "group": "promo",
+      "note": "Ключевые слова, описание, скриншоты"
+    },
+    {
+      "id": "appads",
+      "adBudget": true,
+      "name": "Реклама приложения (Яндекс Директ, VK Реклама): настройка и ведение",
+      "price": 12000,
+      "from": true,
+      "group": "promo",
+      "note": "Рекламный бюджет оплачивается отдельно"
+    },
+    {
+      "id": "seo",
+      "name": "SEO-оптимизация и продвижение в поиске",
+      "price": 10000,
+      "from": true,
+      "note": "Техническое SEO, семантика, мета-теги, ежемесячные улучшения",
+      "group": "promo"
+    },
+    {
+      "id": "direct",
+      "adBudget": true,
+      "name": "Контекстная реклама (Яндекс Директ): настройка и ведение",
+      "price": 12000,
+      "from": true,
+      "note": "Рекламный бюджет оплачивается отдельно",
+      "group": "promo"
+    },
+    {
+      "id": "vkads",
+      "adBudget": true,
+      "name": "Таргетированная реклама VK: настройка и ведение",
+      "price": 10000,
+      "from": true,
+      "note": "Рекламный бюджет оплачивается отдельно",
+      "group": "promo"
+    },
+    {
+      "id": "smm",
+      "name": "Ведение соцсетей (VK / Telegram)",
+      "price": 15000,
+      "from": true,
+      "note": "Контент-план, посты, оформление",
+      "group": "promo"
+    },
+    {
+      "id": "maps",
+      "name": "Размещение на Яндекс Картах и 2ГИС",
+      "price": 3000,
+      "note": "Оформление карточек, актуализация, ответы на отзывы",
+      "group": "promo"
+    },
+    {
+      "id": "content",
+      "name": "Контент и статьи для блога",
+      "price": 8000,
+      "from": true,
+      "note": "До 4 статей в месяц",
+      "group": "promo"
+    },
+    {
+      "id": "emailmkt",
+      "name": "Email-маркетинг: стратегия и письма",
+      "price": 8000,
+      "from": true,
+      "note": "Сегментация базы, цепочки и регулярные письма",
+      "group": "promo"
+    }
   ],
   "terms": [
-    {"months": 12, "discount": 0},
-    {"months": 24, "discount": 0.25},
-    {"months": 36, "discount": 0.35}
+    {
+      "months": 12,
+      "discount": 0
+    },
+    {
+      "months": 24,
+      "discount": 0.25
+    },
+    {
+      "months": 36,
+      "discount": 0.35
+    }
   ],
   "defaultTerm": 12,
   "defaultBase": "landing",
@@ -98,5 +621,13 @@
     "multiplier": 12,
     "creditShare": 0.3,
     "minMonths": 3
-  }
+  },
+  "extras": [
+    {
+      "id": "nda",
+      "name": "Соглашение о неконкуренции и неразглашении (NDA)",
+      "price": 9900,
+      "desc": "Мы не разрабатываем конкурирующие копии вашего продукта и не раскрываем вашу идею и данные. Подписывается до начала работ, оплачивается отдельно от подписки."
+    }
+  ]
 }

@@ -6,14 +6,14 @@
       "id": "simpleab",
       "slug": "simpleab",
       "name": "SimpleAB",
-      "price": null,
+      "price": 250000,
       "subscriptionFrom": null
     },
     {
       "id": "l2start",
       "slug": "l2start",
       "name": "L2Start",
-      "price": null,
+      "price": 680000,
       "subscriptionFrom": null
     },
     {

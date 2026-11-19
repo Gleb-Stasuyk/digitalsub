@@ -80,6 +80,7 @@ function lead({ product, title, text } = {}) {
     if (!h.includes(`<option value="${product}">`)) throw new Error('no option ' + product);
     h = h.replace(`<option value="${product}">`, `<option value="${product}" selected>`);
   }
+  if (NDA) h = h.replace('+9&nbsp;900&nbsp;₽', '+' + rub(NDA.price));
   if (title) h = h.replace('<h2>Расскажите о задаче</h2>', `<h2>${title}</h2>`);
   if (text) h = h.replace(/(<h2>[^<]*<\/h2>\s*<p>)[^<]*(<\/p>)/, `$1${text}$2`);
   return h;
@@ -113,7 +114,7 @@ function sections(list) {
 const dropHead = (h) => h.replace(/\s*<div class="section__head">[\s\S]*?<\/div>\n/, '\n');
 
 function faqItems(html) {
-  return [...html.matchAll(/<details><summary>([\s\S]*?)<\/summary><p>([\s\S]*?)<\/p><\/details>/g)].map((m) => [m[1], m[2]]);
+  return [...html.matchAll(/<details[^>]*><summary>([\s\S]*?)<\/summary><p>([\s\S]*?)<\/p><\/details>/g)].map((m) => [m[1], m[2]]);
 }
 function faqLd(items) {
   return { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: items.map(([q, a]) => ({ '@type': 'Question', name: strip(q), acceptedAnswer: { '@type': 'Answer', text: strip(a) } })) };
@@ -199,6 +200,7 @@ const projects = PR.projects.map((p) => {
   return { ...p, ...d, images };
 });
 const imgDims = (p) => (p.portrait ? 'width="540" height="1170"' : 'width="960" height="600"');
+const NDA = (P.extras || []).find((x) => x.id === 'nda');
 const projPrice = (p) => (typeof p.price === 'number' ? rub(p.price) : 'Цена по запросу');
 const imgSrc = (f) => `/assets/projects/${f}`;
 // Кнопки готового решения: подставляют проект в форму заявки на этой же странице (см. attachProject в main.js)
@@ -302,7 +304,11 @@ const add = (file, url, html, prio, freq = 'monthly') => pages.push({ file, url,
 // Цены
 {
   const c = crumbs([['/prices', 'Цены']]);
-  const pricing = part('pricing');
+  const pricing = part('pricing').replace(/(<p class="note"><b>Пакет можно расширять:<\/b>[\s\S]*?<\/p>)/, `$1
+        <div class="extras" id="extras">
+          <h3 class="extras__title">Дополнительно</h3>
+          ${(P.extras || []).map((x) => `<div class="card extra"><div class="extra__text"><p class="extra__name">${x.name}</p><p>${x.desc} <a href="/faq#${x.id}">Подробнее</a></p></div><p class="extra__price">${rub(x.price)}</p></div>`).join('\n          ')}
+        </div>`);
   const body = pageHead({ crumbsHtml: c.html, eyebrow: 'Цены', h1: 'Цены на сайты и приложения <span class="grad">по подписке</span>',
     lead: `Ежемесячная подписка от ${rub(minPrice)}: разработка, хостинг, домен, обновления и поддержка включены. Выберите основу, добавьте модули и узнайте точную цену в калькуляторе.`,
     actions: '<a class="btn btn--lg" href="#calc">Открыть калькулятор</a><a class="btn btn--ghost btn--lg" href="#lead">Обсудить проект</a>' })
@@ -384,6 +390,7 @@ for (const p of projects) {
             </div>
             <p class="product__inc-title">${svc ? 'Что входит' : 'В покупку входит'}</p>
             <ul class="ticks">${included.map((x) => `<li>${x}</li>`).join('')}</ul>
+            ${NDA ? `<p class="product__nda">${svc ? 'Можно подписать' : 'При покупке можно подписать'} <a href="/faq#nda">соглашение о неконкуренции и неразглашении</a> — ${rub(NDA.price)}. Отметьте этот пункт в заявке.</p>` : ''}
           </div>
         </div>
         </div>

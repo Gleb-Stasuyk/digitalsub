@@ -479,3 +479,14 @@ a.project__shot{display:block}
 .gallery--phone .gallery__thumb{aspect-ratio:9/19.5}
 .gallery--phone .gallery__thumb img{object-fit:cover;object-position:top center}
 @media (max-width:600px){.gallery--phone .gallery__main{height:520px}.gallery--phone .gallery__thumbs{grid-template-columns:repeat(6,1fr);gap:6px}}
+
+/* Дополнительные услуги (NDA) */
+.extras{margin-top:32px;display:grid;gap:14px}
+.extras__title{margin:0}
+.extra{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:22px 26px}
+.extra__name{margin:0 0 6px;font-weight:700;color:var(--text)!important}
+.extra__text p:last-child{margin-bottom:0}
+.extra__price{margin:0;font-size:1.5rem;font-weight:800;color:var(--text)!important;white-space:nowrap}
+.product__nda{margin:6px 0 0;font-size:.9rem;padding-top:12px;border-top:1px dashed var(--line)}
+.check--nda span{color:var(--text)}
+@media (max-width:600px){.extra{flex-direction:column;align-items:flex-start;gap:10px}}
