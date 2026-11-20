@@ -310,7 +310,7 @@ const add = (file, url, html, prio, freq = 'monthly') => pages.push({ file, url,
     title: 'DigitalSub — сайты и приложения по подписке с правом выкупа',
     desc: 'Сайт, интернет-магазин, веб-приложение, мобильное приложение Android или десктоп-программа для вашего бизнеса без оплаты разработки. Подписка от 4 900 ₽/мес: хостинг, домен, обновления и поддержка включены. Первая версия сайта за 3–7 дней, мобильного и десктоп-приложения — до 30 дней. Право выкупа продукта.',
     ogDesc: 'Не платите за разработку — подпишитесь на готовый продукт для своего бизнеса. От 4 900 ₽/мес, первая версия сайта за 3–7 дней.',
-    head: '  <meta name="yandex-verification" content="913ff2d0a8379a8d" />\n  <meta name="keywords" content="сайт по подписке, сайт в рассрочку, разработка сайтов, CRM для бизнеса, онлайн-запись, веб-приложение, мобильное приложение Android, десктоп-приложение, выкуп сайта">\n  <script src="/assets/legacy-hash.js"></script>\n',
+    head: '  <meta name="yandex-verification" content="57df291596b35bf1" />\n  <meta name="keywords" content="сайт по подписке, сайт в рассрочку, разработка сайтов, CRM для бизнеса, онлайн-запись, веб-приложение, мобильное приложение Android, десктоп-приложение, выкуп сайта">\n  <script src="/assets/legacy-hash.js"></script>\n',
     jsonld: [
       { '@context': 'https://schema.org', '@type': 'ProfessionalService', name: 'DigitalSub', url: SITE + '/', image: SITE + '/assets/og-image.png', description: 'Разработка сайтов, интернет-магазинов, веб-, мобильных и десктоп-приложений по подписке с правом выкупа.', areaServed: 'RU', priceRange: `от ${nb(minPrice)} ₽/мес` },
       { '@context': 'https://schema.org', '@type': 'WebSite', name: 'DigitalSub', url: SITE + '/', inLanguage: 'ru' },
