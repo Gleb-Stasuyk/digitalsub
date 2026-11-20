@@ -135,6 +135,22 @@ ${col(items.slice(half))}
 
 const ORG = { '@type': 'Organization', name: 'DigitalSub', url: SITE + '/' };
 
+// Яндекс Метрика (сниппет Глеба без изменений): скрипт — в <head>, <noscript> — в начале <body>.
+// Хеши встроенного скрипта и style-атрибута пишутся в lib/csp.json для CSP-заголовка server.js.
+// Google Tag Manager (официальная установка): скрипт — в <head>, <noscript>-iframe — сразу после <body>.
+const splitNs = (t) => [t.slice(0, t.indexOf('<noscript>')).replace(/\s+$/, ''), t.slice(t.indexOf('<noscript>')).replace(/\s+$/, '')];
+const [gtmHead, gtmBody] = splitNs(fs.readFileSync(path.join(__dirname, 'partials', 'gtm.html'), 'utf8'));
+const [ymHead0, ymBody0] = splitNs(fs.readFileSync(path.join(__dirname, 'partials', 'metrika.html'), 'utf8'));
+const ymHead = gtmHead + '\n' + ymHead0;
+const ymBody = gtmBody + '\n' + ymBody0;
+{
+  const crypto = require('node:crypto');
+  const h = (t) => 'sha256-' + crypto.createHash('sha256').update(t, 'utf8').digest('base64');
+  const scripts = [...ymHead.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)].map((m) => h(m[1]));
+  const styles = [...ymBody.matchAll(/style="([^"]*)"/g)].map((m) => h(m[1]));
+  fs.writeFileSync(path.join(__dirname, '..', 'lib', 'csp.json'), JSON.stringify({ _comment: 'Генерируется site/build.js из site/partials/gtm.html и metrika.html', scriptHashes: scripts, styleAttrHashes: styles }, null, 2) + '\n');
+}
+
 function layout({ url, title, desc, active, body, jsonld = [], head = '', ogTitle, ogDesc, robots = 'index, follow' }) {
   const canon = SITE + url;
   return `<!doctype html>
@@ -162,9 +178,11 @@ function layout({ url, title, desc, active, body, jsonld = [], head = '', ogTitl
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
 ${head}  <link rel="stylesheet" href="/assets/styles.css">
+${ymHead}
 ${jsonld.map(ld).join('\n')}
 </head>
 <body>
+${ymBody}
 ${header(active)}
 
   <main id="main">
@@ -292,7 +310,7 @@ const add = (file, url, html, prio, freq = 'monthly') => pages.push({ file, url,
     title: 'DigitalSub — сайты и приложения по подписке с правом выкупа',
     desc: 'Сайт, интернет-магазин, веб-приложение, мобильное приложение Android или десктоп-программа для вашего бизнеса без оплаты разработки. Подписка от 4 900 ₽/мес: хостинг, домен, обновления и поддержка включены. Первая версия сайта за 3–7 дней, мобильного и десктоп-приложения — до 30 дней. Право выкупа продукта.',
     ogDesc: 'Не платите за разработку — подпишитесь на готовый продукт для своего бизнеса. От 4 900 ₽/мес, первая версия сайта за 3–7 дней.',
-    head: '  <meta name="keywords" content="сайт по подписке, сайт в рассрочку, разработка сайтов, CRM для бизнеса, онлайн-запись, веб-приложение, мобильное приложение Android, десктоп-приложение, выкуп сайта">\n  <script src="/assets/legacy-hash.js"></script>\n',
+    head: '  <meta name="yandex-verification" content="913ff2d0a8379a8d" />\n  <meta name="keywords" content="сайт по подписке, сайт в рассрочку, разработка сайтов, CRM для бизнеса, онлайн-запись, веб-приложение, мобильное приложение Android, десктоп-приложение, выкуп сайта">\n  <script src="/assets/legacy-hash.js"></script>\n',
     jsonld: [
       { '@context': 'https://schema.org', '@type': 'ProfessionalService', name: 'DigitalSub', url: SITE + '/', image: SITE + '/assets/og-image.png', description: 'Разработка сайтов, интернет-магазинов, веб-, мобильных и десктоп-приложений по подписке с правом выкупа.', areaServed: 'RU', priceRange: `от ${nb(minPrice)} ₽/мес` },
       { '@context': 'https://schema.org', '@type': 'WebSite', name: 'DigitalSub', url: SITE + '/', inLanguage: 'ru' },
@@ -518,6 +536,9 @@ ${s.modules.map((id) => { const m = modById(id); return `          <div class="c
   const body = part('privacy').replace('<main class="legal">', '<div class="legal">').replace('</main>', '</div>').replace('<div class="container container--narrow">', `<div class="container container--narrow">\n      ${c.html}`);
   add('privacy.html', '/privacy', layout({ url: '/privacy', active: '', title: 'Политика конфиденциальности — DigitalSub', desc: 'Политика обработки персональных данных сайта digitalsub.ru', jsonld: [c.json], body }), '0.2', 'yearly');
 }
+
+// Файлы подтверждения прав (Яндекс Вебмастер, Google Search Console) копируются как есть, без изменений
+for (const f of fs.readdirSync(path.join(__dirname, 'verification'))) fs.copyFileSync(path.join(__dirname, 'verification', f), path.join(PUB, f));
 
 // 404
 fs.writeFileSync(path.join(PUB, '404.html'), layout({ url: '/404', active: '', robots: 'noindex', title: 'Страница не найдена — DigitalSub', desc: 'Такой страницы нет на digitalsub.ru',

@@ -69,6 +69,22 @@
   }
   initCarousel($('#pricing-carousel'));
 
+  /* ---------- Цели Яндекс Метрики ---------- */
+  // Идентификаторы целей (тип «JavaScript-событие»): lead_submit, telegram_click, calc_used, buy_solution
+  // Те же события уходят в dataLayer для триггеров Google Tag Manager: { event: 'lead_submit' } и т. д.
+  const goal = (name) => {
+    try { if (typeof ym === 'function') ym(114405591, 'reachGoal', name); } catch (e) { /* метрика недоступна */ }
+    try { (window.dataLayer = window.dataLayer || []).push({ event: name }); } catch (e) { /* нет dataLayer */ }
+  };
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest && e.target.closest('a[href]');
+    if (a && /^(https?:)?\/\/(www\.)?(t\.me|telegram\.me)\//i.test(a.getAttribute('href'))) goal('telegram_click');
+    const b = e.target.closest && e.target.closest('[data-project-action="buy"]');
+    if (b) goal('buy_solution');
+  });
+  let calcUsed = false;
+  const calcTouched = () => { if (!calcUsed) { calcUsed = true; goal('calc_used'); } };
+
   /* ---------- Калькулятор ---------- */
   const fmt = (n, cur = '₽') => new Intl.NumberFormat('ru-RU').format(Math.round(n)) + '\u00a0' + cur;
   const state = { base: null, modules: new Map(), term: 12, tab: null }; // modules: id -> количество
@@ -232,6 +248,8 @@
     P.terms.forEach((t) => terms.append(option('radio', 'calc-term', String(t.months), t.months === state.term, `${t.months} мес.`, t.discount ? `скидка ${Math.round(t.discount * 100)}%` : 'базовая цена', '')));
     renderModules();
 
+    const calcRoot = $('#calc-bases').closest('section') || document;
+    ['change', 'click'].forEach((ev) => calcRoot.addEventListener(ev, (e) => { if (e.isTrusted && e.target.closest('input, button.qty__btn, .modtab')) calcTouched(); }));
     bases.addEventListener('change', (e) => { state.base = e.target.value; state.tab = null; renderModules(); render(); });
     $('#calc-modules').addEventListener('change', (e) => {
       if (e.target.type !== 'checkbox') return;
@@ -369,6 +387,7 @@
     e.preventDefault();
     const fd = new FormData(form);
     const data = Object.fromEntries(fd.entries());
+    data.page = location.pathname + location.search;
     const setStatus = (t, ok) => { status.className = 'form__status ' + (ok ? 'form__status--ok' : 'form__status--err'); status.textContent = t; };
     $$('.field--err', form).forEach((f) => f.classList.remove('field--err'));
     const bad = [];
@@ -384,6 +403,7 @@
       if (!r.ok || !j.ok) throw new Error(j.error || 'Ошибка отправки');
       form.reset(); $('#f-calc').value = ''; state.attached = false;
       setStatus('Спасибо! Заявка отправлена, мы свяжемся с вами в течение рабочего дня.', true);
+      goal('lead_submit');
     } catch (err) {
       setStatus((err && err.message) || 'Не удалось отправить заявку. Попробуйте ещё раз.', false);
     } finally { btn.disabled = false; btn.textContent = 'Отправить заявку'; }

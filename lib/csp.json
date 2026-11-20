@@ -1,0 +1,11 @@
+{
+  "_comment": "Генерируется site/build.js из site/partials/gtm.html и metrika.html",
+  "scriptHashes": [
+    "sha256-h2NAkO5JcY6IdTCsF7P+41ACpN9VrBXolUwJEZ9a7vE=",
+    "sha256-vpASqwM6vaZuYEQZShYviFiaqjSF8tAmyb1luIgJbBw="
+  ],
+  "styleAttrHashes": [
+    "sha256-kELgoK46JmGjLd8UHfzN0qJToDgIB+yMtRHG8PtGL7s=",
+    "sha256-TFji00OQLIf+ahKwThJ8H25NEFBxiNgwFPIuIdQHiqI="
+  ]
+}

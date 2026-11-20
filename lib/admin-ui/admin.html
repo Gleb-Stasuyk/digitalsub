@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Заявки — админка DigitalSub</title>
+  <link rel="stylesheet" href="/admin/assets/admin.css">
+</head>
+<body class="app">
+  <header class="top">
+    <h1>Заявки DigitalSub</h1>
+    <div class="top__tools">
+      <select id="f-status" aria-label="Статус">
+        <option value="">Все</option><option value="active">Активные</option>
+      </select>
+      <input id="f-q" type="search" placeholder="Поиск: имя, телефон, текст, заметки" aria-label="Поиск">
+      <a class="btn" id="csv" href="/admin/export.csv">Скачать CSV</a>
+      <form method="post" action="/admin/logout"><button class="btn btn--ghost" type="submit">Выйти</button></form>
+    </div>
+  </header>
+  <p class="warn" id="botwarn" hidden>Telegram-бот ещё не привязан: отправьте боту /start из своего аккаунта — первый написавший станет администратором.</p>
+  <p class="count" id="count"></p>
+  <div class="tablewrap">
+    <table class="leads">
+      <thead><tr><th>№</th><th>Дата, МСК</th><th>Клиент</th><th>Заявка</th><th>Сумма, ₽</th><th>Статус</th><th>Заметки</th><th></th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+  <script src="/admin/assets/admin.js"></script>
+</body>
+</html>

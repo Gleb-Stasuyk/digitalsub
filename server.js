@@ -1,6 +1,7 @@
 'use strict';
 // DigitalSub — минимальный сервер без внешних зависимостей:
-// раздаёт статику из ./public и принимает заявки на POST /api/lead.
+// раздаёт статику из ./public, принимает заявки на POST /api/lead,
+// отправляет их в Telegram-бот администратора (lib/bot.js) и обслуживает веб-админку /admin (lib/admin.js).
 const http = require('node:http');
 const fs = require('node:fs');
 const fsp = require('node:fs/promises');
@@ -9,13 +10,18 @@ const crypto = require('node:crypto');
 
 const PORT = parseInt(process.env.PORT || '8080', 10);
 const DATA_DIR = path.resolve(process.env.DATA_DIR || path.join(__dirname, 'data'));
-const LEADS_FILE = path.join(DATA_DIR, 'leads.jsonl');
+const LEADS_FILE = path.join(DATA_DIR, 'leads-db.json');
 const PUBLIC_DIR = path.join(__dirname, 'public');
 const TG_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
-const TG_CHAT = process.env.TELEGRAM_CHAT_ID || '';
+const TG_ADMIN = process.env.TELEGRAM_ADMIN_CHAT_ID || process.env.TELEGRAM_CHAT_ID || '';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
 const MAX_BODY = 16 * 1024;
 
 fs.mkdirSync(DATA_DIR, { recursive: true });
+const { createStore } = require('./lib/store');
+const { createBot } = require('./lib/bot');
+const { createAdmin } = require('./lib/admin');
+const store = createStore(DATA_DIR);
 
 const MIME = {
   '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8',
@@ -26,10 +32,30 @@ const MIME = {
 
 const SECURITY_HEADERS = {
   'X-Content-Type-Options': 'nosniff',
-  'X-Frame-Options': 'SAMEORIGIN',
   'Referrer-Policy': 'strict-origin-when-cross-origin',
-  'Content-Security-Policy': "default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'",
+  'Content-Security-Policy': cspHeader(),
 };
+
+// CSP: свои файлы + Яндекс Метрика + Google Tag Manager / Analytics. Хеши встроенных скриптов счётчиков пишет site/build.js в lib/csp.json.
+function cspHeader() {
+  let hashes = [], styleHashes = [];
+  try { const c = JSON.parse(fs.readFileSync(path.join(__dirname, 'lib', 'csp.json'), 'utf8')); hashes = c.scriptHashes || []; styleHashes = c.styleAttrHashes || []; } catch {}
+  const ym = 'https://mc.yandex.ru https://mc.yandex.com';
+  const g = 'https://www.googletagmanager.com https://*.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com';
+  return [
+    "default-src 'self'",
+    `img-src 'self' data: ${ym} ${g} https://www.google.com https://*.g.doubleclick.net`,
+    "style-src 'self'",
+    styleHashes.length ? `style-src-attr 'unsafe-hashes' ${styleHashes.map((h) => `'${h}'`).join(' ')}` : '',
+    `script-src 'self' ${hashes.map((h) => `'${h}'`).join(' ')} ${ym} https://yastatic.net ${g}`.replace(/\s+/g, ' '),
+    `connect-src 'self' ${ym} wss://mc.yandex.ru wss://mc.yandex.com ${g} https://*.g.doubleclick.net`,
+    `frame-src blob: ${ym} https://www.googletagmanager.com`,
+    `child-src blob: ${ym}`,
+    "frame-ancestors 'self' https://metrika.yandex.ru https://metrika.yandex.by https://metrica.yandex.com https://metrica.yandex.com.tr https://webvisor.com https://*.webvisor.com",
+    "base-uri 'self'",
+    "form-action 'self'",
+  ].filter(Boolean).join('; ');
+}
 
 // Простой rate limit: не больше 5 заявок за 10 минут с одного IP
 const hits = new Map();
@@ -59,23 +85,21 @@ function parseCalc(v) {
   catch { return null; }
 }
 
-async function notifyTelegram(lead) {
-  if (!TG_TOKEN || !TG_CHAT) return false;
-  const esc = (s) => s.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
-  const text = `<b>Новая заявка DigitalSub</b>\n\n<b>Имя:</b> ${esc(lead.name)}\n<b>Контакт:</b> ${esc(lead.contact)}\n<b>Тип:</b> ${esc(lead.product || '—')}\n<b>Задача:</b> ${esc(lead.message || '—')}${lead.nda ? '\n<b>NDA:</b> подписать соглашение о неконкуренции и неразглашении' : ''}${lead.calc && lead.calc.summary ? `\n\n<b>${lead.calc.kind === 'project' ? 'Готовое решение' : 'Расчёт'}:</b>\n${esc(lead.calc.summary.replace(/^(Расчёт с калькулятора|Готовое решение):\s?\n?/, ''))}` : ''}\n\n<i>${lead.createdAt}</i>`;
-  try {
-    const r = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: TG_CHAT, text, parse_mode: 'HTML', disable_web_page_preview: true }),
-      signal: AbortSignal.timeout(8000),
-    });
-    if (!r.ok) console.error('Telegram error', r.status, await r.text());
-    return r.ok;
-  } catch (e) { console.error('Telegram request failed:', e.message); return false; }
+function clientIp(req) {
+  return String(req.headers['x-real-ip'] || (req.headers['x-forwarded-for'] || '').split(',')[0] || req.socket.remoteAddress || '').trim();
+}
+function refPath(ref) { try { const u = new URL(ref); return (u.pathname + u.search).slice(0, 300); } catch { return ''; } }
+async function readBody(req, max) {
+  let size = 0; const chunks = [];
+  for await (const c of req) { size += c.length; if (size > max) return null; chunks.push(c); }
+  return Buffer.concat(chunks).toString('utf8');
 }
 
+const bot = TG_TOKEN ? createBot({ token: TG_TOKEN, adminChatId: TG_ADMIN, dataDir: DATA_DIR, store, apiBase: process.env.TELEGRAM_API_BASE || undefined }) : null;
+const admin = createAdmin({ password: ADMIN_PASSWORD, store, bot, clientIp, readBody, securityHeaders: { 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'same-origin' } });
+
 async function handleLead(req, res) {
-  const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket.remoteAddress || '';
+  const ip = clientIp(req);
   if (rateLimited(ip)) return json(res, 429, { ok: false, error: 'Слишком много заявок. Попробуйте позже.' });
   let size = 0; const chunks = [];
   for await (const c of req) { size += c.length; if (size > MAX_BODY) return json(res, 413, { ok: false, error: 'Слишком большой запрос' }); chunks.push(c); }
@@ -95,16 +119,18 @@ async function handleLead(req, res) {
     message: clean(data.message, 2000, true),
     calc: parseCalc(data.calc),
     nda: data.nda === true || data.nda === '1' || data.nda === 'on', // соглашение о неконкуренции и неразглашении
+    page: clean(data.page, 300) || refPath(req.headers.referer),
     ip, userAgent: clean(req.headers['user-agent'], 300),
   };
   if (lead.name.length < 2) return json(res, 422, { ok: false, error: 'Укажите имя' });
   if (lead.contact.length < 3) return json(res, 422, { ok: false, error: 'Укажите телефон или Telegram' });
   if (!data.consent || data.consent === 'false') return json(res, 422, { ok: false, error: 'Нужно согласие на обработку данных' });
 
-  try { await fsp.appendFile(LEADS_FILE, JSON.stringify(lead) + '\n', 'utf8'); }
+  let saved;
+  try { saved = await store.add(lead); }
   catch (e) { console.error('Save failed:', e); return json(res, 500, { ok: false, error: 'Не удалось сохранить заявку' }); }
-  console.log(`[lead] ${lead.createdAt} ${lead.name} / ${lead.contact}`);
-  notifyTelegram(lead); // не блокируем ответ
+  console.log(`[lead] #${saved.num} ${lead.createdAt}`);
+  if (bot) bot.notifyLead(saved); // не блокируем ответ
   return json(res, 200, { ok: true, id: lead.id });
 }
 
@@ -118,7 +144,8 @@ async function serveStatic(req, res, pathname, search) {
   try { rel = decodeURIComponent(pathname); } catch { return send(res, 400, 'Bad request'); }
   if (rel.includes('\0')) return send(res, 400, 'Bad request');
   if (rel === '/index.html') return redirect(res, '/' + search);
-  if (rel.endsWith('.html') && rel !== '/404.html' && isFile(path.join(PUBLIC_DIR, rel))) return redirect(res, rel.slice(0, -5) + search);
+  const verification = /^\/(yandex_[0-9a-f]+|google[0-9a-z]+)\.html$/.test(rel); // отдаются как есть, без 301
+  if (rel.endsWith('.html') && rel !== '/404.html' && !verification && isFile(path.join(PUBLIC_DIR, rel))) return redirect(res, rel.slice(0, -5) + search);
   if (rel.length > 1 && rel.endsWith('/')) {
     const clean = rel.replace(/\/+$/, '');
     if (isFile(path.join(PUBLIC_DIR, clean + '.html'))) return redirect(res, clean + search);
@@ -145,6 +172,7 @@ const server = http.createServer(async (req, res) => {
   try {
     const { pathname, search } = new URL(req.url, 'http://localhost');
     if (pathname === '/api/health') return json(res, 200, { ok: true });
+    if (pathname === '/admin' || pathname.startsWith('/admin/')) return await admin(req, res, new URL(req.url, 'http://localhost'));
     if (pathname === '/api/lead') {
       if (req.method !== 'POST') return json(res, 405, { ok: false, error: 'Method not allowed' });
       return await handleLead(req, res);
@@ -154,5 +182,9 @@ const server = http.createServer(async (req, res) => {
   } catch (e) { console.error(e); if (!res.headersSent) json(res, 500, { ok: false, error: 'Server error' }); }
 });
 
-server.listen(PORT, () => console.log(`DigitalSub запущен на порту ${PORT}. Заявки: ${LEADS_FILE}. Telegram: ${TG_TOKEN && TG_CHAT ? 'включён' : 'выключен'}`));
-for (const s of ['SIGINT', 'SIGTERM']) process.on(s, () => server.close(() => process.exit(0)));
+server.listen(PORT, () => {
+  console.log(`DigitalSub запущен на порту ${PORT}. Заявки: ${LEADS_FILE} (${store.all().length}). Telegram-бот: ${bot ? 'включён' : 'выключен'}. Админка: ${ADMIN_PASSWORD ? 'включена' : 'выключена (нет ADMIN_PASSWORD)'}`);
+  if (bot) bot.start();
+});
+process.on('unhandledRejection', (e) => console.error('[unhandledRejection]', e));
+for (const s of ['SIGINT', 'SIGTERM']) process.on(s, () => { if (bot) bot.stop(); server.close(() => process.exit(0)); setTimeout(() => process.exit(0), 3000).unref(); });
