@@ -32,7 +32,7 @@ const svg = (inner) => `<svg viewBox="0 0 24 24" aria-hidden="true">${inner}</sv
 
 /* ---------- Общие блоки ---------- */
 const NAV = [
-  ['/', 'Главная', 'home'], ['/prices', 'Цены', 'prices'], ['/solutions', 'Готовые решения', 'solutions'], ['/buyout', 'Выкуп', 'buyout'], ['/faq', 'Вопросы', 'faq'],
+  ['/', 'Главная', 'home'], ['/prices', 'Цены', 'prices'], ['/solutions', 'Готовые решения', 'solutions'], ['/buyout', 'Выкуп', 'buyout'], ['/faq', 'Вопросы', 'faq'], ['/blog', 'Блог', 'blog'],
 ];
 function header(active) {
   const a = (href, text, key, extra = '') => `<a href="${href}"${key === active ? ' class="is-active" aria-current="page"' : ''}${extra}>${text}</a>`;
@@ -68,19 +68,20 @@ const FOOTER = `  <footer class="footer">
       </nav>
       <nav class="footer__nav" aria-label="Разделы сайта">
         <p class="footer__title">Разделы</p>
-        <a href="/prices">Цены и калькулятор</a><a href="/solutions">Готовые решения</a><a href="/buyout">Выкуп и переуступка</a><a href="/faq">Вопросы</a><a href="/#lead">Оставить заявку</a><a href="/privacy">Политика конфиденциальности</a>
+        <a href="/prices">Цены и калькулятор</a><a href="/dlya-biznesa">Для бизнеса по отраслям</a><a href="/solutions">Готовые решения</a><a href="/buyout">Выкуп и переуступка</a><a href="/faq">Вопросы</a><a href="/blog">Блог</a><a href="/#lead">Оставить заявку</a><a href="/privacy">Политика конфиденциальности</a>
       </nav>
       <p class="footer__copy">© <span id="year">2026</span> DigitalSub · digitalsub.ru</p>
     </div>
   </footer>`;
 
-function lead({ product, title, text } = {}) {
+function lead({ product, title, text, niche } = {}) {
   let h = part('lead');
   if (product) {
     if (!h.includes(`<option value="${product}">`)) throw new Error('no option ' + product);
     h = h.replace(`<option value="${product}">`, `<option value="${product}" selected>`);
   }
   if (NDA) h = h.replace('+9&nbsp;900&nbsp;₽', '+' + rub(NDA.price));
+  if (niche) h = h.replace(/(<textarea id="f-message"[^>]*>)(<\/textarea>)/, `$1Сфера: ${esc(niche)}. $2`);
   if (title) h = h.replace('<h2>Расскажите о задаче</h2>', `<h2>${title}</h2>`);
   if (text) h = h.replace(/(<h2>[^<]*<\/h2>\s*<p>)[^<]*(<\/p>)/, `$1${text}$2`);
   return h;
@@ -246,6 +247,26 @@ function projectCard(p) {
             </div>
           </article>`;
 }
+
+/* ---------- Расчёты подписки (та же логика, что в калькуляторе main.js) ---------- */
+const rnd = (n) => Math.round(n / (P.roundTo || 1)) * (P.roundTo || 1);
+function subCalc(baseId, months = 12) {
+  const price = baseById(baseId).price;
+  const t = P.terms.find((x) => x.months === months) || P.terms[0];
+  const monthly = rnd(price * (1 - (t.discount || 0)));
+  const total = monthly * t.months;
+  const buyout = rnd(Math.max(P.buyout.multiplier * price - P.buyout.creditShare * total, P.buyout.minMonths * price));
+  return { monthly, total, buyout, start: monthly * P.startPayment.months, own: total + buyout };
+}
+const NICHE_HELPERS = {
+  p: (id) => rub(baseById(id).price),
+  m: (id) => modPrice(modById(id)),
+  buyout12: (id) => rub(subCalc(id).buyout),
+  start: (id) => rub(subCalc(id).start),
+};
+const NICHES = require('./niches')(NICHE_HELPERS);
+const NICHES_LIST = NICHES;
+const ICON_NICHE = '<path d="M4 20V9l8-5 8 5v11"/><path d="M9 20v-6h6v6"/>';
 
 /* ---------- Страницы ---------- */
 const pages = [];
@@ -478,6 +499,12 @@ for (const p of projects) {
       <div class="container">
         ${productCards()}
       </div>
+    </section>`, `    <section class="section" id="niches">
+      <div class="container">
+        <div class="section__head"><p class="eyebrow">По отраслям</p><h2>Решения для вашей сферы</h2><p class="section__sub">Типовые наборы функций и тарифы для конкретных видов бизнеса.</p></div>
+        <ul class="niche-links">${NICHES_LIST.map((n) => `<li><a href="/dlya-biznesa/${n.slug}">${n.h1} ${n.h1grad}</a></li>`).join('')}</ul>
+        <div class="teaser__actions"><a class="btn btn--ghost btn--lg" href="/dlya-biznesa">Все отрасли</a></div>
+      </div>
     </section>`, part('how'), lead()]);
   add('services.html', '/services', layout({ url: '/services', active: 'services',
     title: 'Услуги DigitalSub: разработка сайтов и приложений по подписке',
@@ -528,6 +555,165 @@ ${s.modules.map((id) => { const m = modById(id); return `          <div class="c
   const service = { '@context': 'https://schema.org', '@type': 'Service', name: s.name, serviceType: s.serviceType, description: s.desc, url: SITE + url, areaServed: 'RU', provider: ORG,
     offers: { '@type': 'Offer', url: SITE + url, priceCurrency: 'RUB', price: b.price, priceSpecification: { '@type': 'UnitPriceSpecification', price: b.price, priceCurrency: 'RUB', unitText: 'месяц', unitCode: 'MON' } } };
   add(`services/${s.slug}.html`, url, layout({ url, active: 'svc-' + s.slug, title: s.title, desc: s.desc, jsonld: [c.json, service, faqLd(s.faq)], body }), '0.9');
+}
+
+// Отрасли: хаб
+{
+  const c = crumbs([['/dlya-biznesa', 'Для бизнеса']]);
+  const cards = `<div class="grid grid--3 products">
+${NICHES.map((n) => { const b = baseById(n.base); return `          <article class="card feature">
+            <div class="feature__icon">${svg(ICON_NICHE)}</div>
+            <h3><a class="feature__link" href="/dlya-biznesa/${n.slug}">${n.short}</a></h3>
+            <p>${n.card}</p>
+            <div class="feature__foot"><span class="feature__price">от <b data-base-price="${b.id}">${rub(b.price)}</b>/мес</span><span class="feature__more" aria-hidden="true">Подробнее →</span></div>
+          </article>`; }).join('\n')}
+        </div>`;
+  const body = pageHead({ crumbsHtml: c.html, eyebrow: 'Для бизнеса', h1: 'Сайты и приложения <span class="grad">для вашей отрасли</span>',
+    lead: 'Готовые наборы функций для типовых задач: онлайн-запись для салонов, услуги и врачи для клиник, портфолио и замер для ремонта, меню и доставка для кафе. Всё — по подписке, без оплаты разработки и с правом выкупа.' })
+    + '\n\n' + sections([`    <section class="section" id="niches">
+      <div class="container">
+        ${cards}
+        <p class="note">Не нашли свою сферу? Это не значит, что мы её не делаем: <a href="/services">посмотрите все услуги</a> или опишите задачу в заявке.</p>
+      </div>
+    </section>`, lead()]);
+  add('dlya-biznesa.html', '/dlya-biznesa', layout({ url: '/dlya-biznesa', active: 'niches',
+    title: 'Сайты для бизнеса по отраслям — по подписке | DigitalSub',
+    desc: 'Сайты и приложения для салонов красоты, стоматологий, ремонтных компаний, кафе с доставкой и интернет-магазинов по подписке: без оплаты разработки, с хостингом, поддержкой и правом выкупа.',
+    jsonld: [c.json, { '@context': 'https://schema.org', '@type': 'ItemList', name: 'Решения DigitalSub по отраслям', itemListElement: NICHES.map((n, i) => ({ '@type': 'ListItem', position: i + 1, url: `${SITE}/dlya-biznesa/${n.slug}`, name: n.h1 + ' ' + n.h1grad })) }], body }), '0.8');
+}
+
+// Отрасли: страницы
+for (const n of NICHES) {
+  const b = baseById(n.base);
+  const allowed = new Set(b.modules);
+  n.modules.forEach((id) => { if (!allowed.has(id)) throw new Error(`niche ${n.slug}: module ${id} not allowed for ${b.id}`); });
+  const url = `/dlya-biznesa/${n.slug}`;
+  const c = crumbs([['/dlya-biznesa', 'Для бизнеса'], [url, n.short]]);
+  const svc = SERVICES.find((s) => s.base === n.base);
+  const sc = subCalc(n.base);
+  const head = pageHead({ crumbsHtml: c.html, eyebrow: `${n.short} · по подписке`, h1: `${n.h1} <span class="grad">${n.h1grad}</span>`, lead: n.lead,
+    points: [`<b>от <span data-base-price="${b.id}">${rub(b.price)}</span></b> в месяц`, `<b>${svc ? svc.time : '3–7 дней'}</b> до первой версии`, `<b>${P.startPayment.months} месяца</b> оплаты на старте`, '<b>право выкупа</b>'],
+    actions: `<a class="btn btn--lg" href="#lead">Обсудить проект</a><a class="btn btn--ghost btn--lg" href="/prices?base=${b.id}#calc">Рассчитать стоимость</a>` });
+  const pains = `    <section class="section" id="tasks">
+      <div class="container">
+        <div class="section__head"><p class="eyebrow">Задачи</p><h2>С чем приходят: ${n.niche}</h2></div>
+        <div class="grid grid--2 niche-pains">
+${n.pains.map(([t, x]) => `          <div class="card"><h3>${t}</h3><p>${x}</p></div>`).join('\n')}
+        </div>
+      </div>
+    </section>`;
+  const plan = `    <section class="section" id="included">
+      <div class="container">
+        <div class="section__head"><p class="eyebrow">Решение</p><h2>Что будет на сайте и сколько это стоит</h2></div>
+        <div class="grid grid--3 svc-info">
+          <div class="card"><h3>Что сделаем</h3><ul class="ticks">${n.solution.map((x) => `<li>${x}</li>`).join('')}</ul></div>
+          <div class="card"><h3>Какой тариф подходит</h3><p>${n.planText}</p><p><a href="/services/${svc ? svc.slug : ''}">Подробнее о тарифе «${svc ? svc.short : b.name}» →</a></p></div>
+          <div class="card"><h3>Оплата и выкуп</h3><ul class="ticks">
+            <li>Хостинг, домен, SSL, обновления и правки — в подписке</li>
+            <li>На старте — ${rub(sc.start)}: первый и последний месяц</li>
+            <li>Срок 12 месяцев, ${discText}</li>
+            <li>Выкуп: ${P.buyout.multiplier} платежей без скидки минус ${Math.round(P.buyout.creditShare * 100)}% оплаченного; после 12 месяцев на базовом тарифе — около ${rub(sc.buyout)}</li>
+            <li>Домен оформляется на вас</li>
+          </ul><p><a href="/buyout">Как устроен выкуп →</a></p></div>
+        </div>
+      </div>
+    </section>`;
+  const mods = `    <section class="section" id="modules">
+      <div class="container">
+        <div class="section__head"><p class="eyebrow">Модули</p><h2>Что пригодится в вашей сфере</h2><p class="section__sub">Модули подключаются в любой момент — начните с необходимого. Полный список и точный расчёт — в калькуляторе.</p></div>
+        <div class="grid svc-mods">
+${n.modules.map((id) => { const m = modById(id); return `          <div class="card svc-mod"><h3>${m.name}</h3>${m.note ? `<p>${m.note}</p>` : ''}<p class="svc-mod__price" data-mod-price="${m.id}">${modPrice(m)}</p></div>`; }).join('\n')}
+        </div>
+        <div class="teaser__actions"><a class="btn btn--lg" href="/prices?base=${b.id}#calc">Рассчитать в калькуляторе</a><a class="btn btn--ghost btn--lg" href="/dlya-biznesa">Другие отрасли</a></div>
+      </div>
+    </section>`;
+  const rel = n.related ? projects.find((p) => p.id === n.related) : null;
+  const related = rel ? `    <section class="section" id="example">
+      <div class="container">
+        <div class="section__head"><p class="eyebrow">Пример</p><h2>Готовое решение, на основе которого можно начать</h2><p class="section__sub">Его можно купить целиком или заказать такой же под ваш бренд по подписке — на готовой основе это быстрее, чем с нуля.</p></div>
+        <div class="grid grid--3 projects">
+${projectCard(rel)}
+        </div>
+      </div>
+    </section>` : '';
+  const faq = faqBlock(n.faq, { id: 'faq', title: `Вопросы: ${n.short.toLowerCase()}` });
+  const body = head + '\n\n' + sections([pains, plan, mods, related, faq, lead({ product: n.product, niche: n.niche, title: 'Обсудим ваш проект', text: `Расскажите о задаче — ответим в течение рабочего дня, предложим решение и зафиксируем цену. Сфера «${n.niche}» уже указана в заявке.` })].filter(Boolean));
+  const service = { '@context': 'https://schema.org', '@type': 'Service', name: strip(`${n.h1} ${n.h1grad}`), serviceType: n.query, description: n.desc, url: SITE + url, areaServed: 'RU', provider: ORG,
+    offers: { '@type': 'Offer', url: SITE + url, priceCurrency: 'RUB', price: b.price, priceSpecification: { '@type': 'UnitPriceSpecification', price: b.price, priceCurrency: 'RUB', unitText: 'месяц', unitCode: 'MON' } } };
+  add(`dlya-biznesa/${n.slug}.html`, url, layout({ url, active: 'niches', title: n.title, desc: n.desc, jsonld: [c.json, service, faqLd(n.faq)], body }), '0.8');
+}
+
+/* ---------- Блог: статьи — файлы site/blog/<slug>.html с метаданными в комментарии <!--meta {...} --> ---------- */
+// В тексте статьи можно использовать подстановки из pricing.json: {{p:landing}}, {{start:site}}, {{total12:shop}},
+// {{buyout12:landing}}, {{own12:landing}}, {{m24:landing}}, {{start24:...}}, {{total24:...}}, {{buyout24:...}}, {{own24:...}}, {{disc}}, {{bo_mult}}, {{bo_credit}}, {{bo_min}}.
+function blogSubst(html) {
+  return html.replace(/\{\{(\w+)(?::(\w+))?\}\}/g, (all, k, id) => {
+    if (k === 'p') return rub(baseById(id).price);
+    if (k === 'disc') return discText;
+    if (k === 'bo_mult') return String(P.buyout.multiplier);
+    if (k === 'bo_credit') return Math.round(P.buyout.creditShare * 100) + '%';
+    if (k === 'bo_min') return String(P.buyout.minMonths);
+    const mm = /^(start|total|buyout|own)(12|24|36)?$|^m(12|24|36)$/.exec(k);
+    if (mm) { const months = Number(mm[2] || mm[3] || 12); const c = subCalc(id, months); return rub(mm[3] ? c.monthly : c[mm[1]]); }
+    throw new Error('blog: неизвестная подстановка ' + all);
+  });
+}
+const BLOG_DIR = path.join(__dirname, 'blog');
+const MONTHS = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+const ruDate = (d) => { const [y, m, dd] = d.split('-').map(Number); return `${dd} ${MONTHS[m - 1]} ${y}`; };
+const posts = fs.readdirSync(BLOG_DIR).filter((f) => f.endsWith('.html')).map((f) => {
+  const raw = fs.readFileSync(path.join(BLOG_DIR, f), 'utf8');
+  const mt = /^<!--meta\s*([\s\S]*?)-->\s*/.exec(raw); if (!mt) throw new Error('blog: нет метаданных в ' + f);
+  const meta = JSON.parse(mt[1]);
+  const html = blogSubst(raw.slice(mt[0].length)).trim();
+  const words = strip(html).split(' ').length;
+  return { ...meta, slug: meta.slug || f.replace(/\.html$/, ''), html, minutes: Math.max(1, Math.round(words / 180)) };
+}).sort((a, b) => b.date.localeCompare(a.date));
+
+// Блог: статьи
+for (const a of posts) {
+  const url = `/blog/${a.slug}`;
+  const c = crumbs([['/blog', 'Блог'], [url, a.h1]]);
+  const others = posts.filter((x) => x !== a).slice(0, 3);
+  const body = pageHead({ crumbsHtml: c.html, eyebrow: 'Блог', h1: a.h1, lead: a.lead })
+    .replace('<p class="lead">', `<p class="post__meta"><time datetime="${a.date}">${ruDate(a.date)}</time>${a.updated && a.updated !== a.date ? ` · обновлено <time datetime="${a.updated}">${ruDate(a.updated)}</time>` : ''} · ${a.minutes} мин чтения</p>\n        <p class="lead">`)
+    + `\n\n    <article class="section post">
+      <div class="container container--narrow prose">
+${a.html.split('\n').map((l) => '        ' + l).join('\n')}
+      </div>
+    </article>`
+    + (others.length ? `\n\n    <section class="section section--alt">
+      <div class="container container--narrow">
+        <div class="section__head"><p class="eyebrow">Читать дальше</p><h2>Другие статьи</h2></div>
+        <ul class="post-list">${others.map((o) => `<li><a href="/blog/${o.slug}">${o.h1}</a><p>${o.desc}</p></li>`).join('')}</ul>
+      </div>
+    </section>` : '')
+    + '\n\n' + lead({ title: 'Посчитаем ваш проект', text: 'Расскажите о задаче — ответим в течение рабочего дня, предложим формат и зафиксируем цену.' }).replace(/class="section( section--alt)?"/, 'class="section"');
+  const article = { '@context': 'https://schema.org', '@type': 'BlogPosting', headline: a.h1, description: a.desc, datePublished: a.date, dateModified: a.updated || a.date, inLanguage: 'ru',
+    mainEntityOfPage: { '@type': 'WebPage', '@id': SITE + url }, url: SITE + url, image: SITE + '/assets/og-image.png', author: ORG, publisher: { ...ORG, logo: { '@type': 'ImageObject', url: SITE + '/apple-touch-icon.png' } } };
+  add(`blog/${a.slug}.html`, url, layout({ url, active: 'blog', title: a.title, desc: a.desc, ogTitle: a.h1, jsonld: [c.json, article], body,
+    head: `  <meta property="article:published_time" content="${a.date}">\n  <meta property="article:modified_time" content="${a.updated || a.date}">\n` }), '0.7');
+}
+
+// Блог: список статей
+{
+  const c = crumbs([['/blog', 'Блог']]);
+  const body = pageHead({ crumbsHtml: c.html, eyebrow: 'Блог', h1: 'Блог DigitalSub', lead: 'Разбираем, сколько стоят сайты и приложения, как выбрать формат и подрядчика и как устроена разработка по подписке. Без воды и выдуманных кейсов.' })
+    + `\n\n    <section class="section">
+      <div class="container">
+        <div class="grid grid--2 posts">
+${posts.map((a) => `          <article class="card feature post-card">
+            <p class="post__meta"><time datetime="${a.date}">${ruDate(a.date)}</time> · ${a.minutes} мин чтения</p>
+            <h2 class="post-card__title"><a class="feature__link" href="/blog/${a.slug}">${a.h1}</a></h2>
+            <p>${a.desc}</p>
+            <div class="feature__foot"><span></span><span class="feature__more" aria-hidden="true">Читать →</span></div>
+          </article>`).join('\n')}
+        </div>
+      </div>
+    </section>`;
+  add('blog.html', '/blog', layout({ url: '/blog', active: 'blog', title: 'Блог DigitalSub: цены на сайты, подписка, выбор подрядчика', desc: 'Статьи о стоимости сайтов и приложений, разработке по подписке и выборе подрядчика для малого бизнеса.',
+    jsonld: [c.json, { '@context': 'https://schema.org', '@type': 'Blog', name: 'Блог DigitalSub', url: SITE + '/blog', inLanguage: 'ru', publisher: ORG,
+      blogPost: posts.map((a) => ({ '@type': 'BlogPosting', headline: a.h1, url: `${SITE}/blog/${a.slug}`, datePublished: a.date })) }], body }), '0.7', 'weekly');
 }
 
 // Политика
