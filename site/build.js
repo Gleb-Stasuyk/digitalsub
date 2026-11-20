@@ -147,7 +147,7 @@ const ymBody = gtmBody + '\n' + ymBody0;
 {
   const crypto = require('node:crypto');
   const h = (t) => 'sha256-' + crypto.createHash('sha256').update(t, 'utf8').digest('base64');
-  const scripts = [...ymHead.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)].map((m) => h(m[1]));
+  const scripts = [...ymHead.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)].filter((m) => m[1].trim()).map((m) => h(m[1]));
   const styles = [...ymBody.matchAll(/style="([^"]*)"/g)].map((m) => h(m[1]));
   fs.writeFileSync(path.join(__dirname, '..', 'lib', 'csp.json'), JSON.stringify({ _comment: 'Генерируется site/build.js из site/partials/gtm.html и metrika.html', scriptHashes: scripts, styleAttrHashes: styles }, null, 2) + '\n');
 }

@@ -161,7 +161,7 @@ digitalsub/
 
 ## Аналитика
 
-- Google Tag Manager `GTM-MN55PMP7` (`site/partials/gtm.html`) и Яндекс Метрика `114405591` (`site/partials/metrika.html`) подключаются на всех страницах сайта при сборке (не в `/admin`).
-- Цели (JavaScript-события Метрики и события `dataLayer` для GTM): `lead_submit` — заявка отправлена, `telegram_click` — клик по ссылке t.me, `calc_used` — первое действие в калькуляторе, `buy_solution` — «Купить проект целиком».
+- Google Analytics 4 `G-9QMXBVJ80D` (gtag.js) и Google Tag Manager `GTM-MN55PMP7` (`site/partials/gtm.html`) и Яндекс Метрика `114405591` (`site/partials/metrika.html`) подключаются на всех страницах сайта при сборке (не в `/admin`).
+- Цели (JavaScript-события Метрики, события `dataLayer` для GTM и события GA4 `gtag('event', …)`): `lead_submit` — заявка отправлена, `telegram_click` — клик по ссылке t.me, `calc_used` — первое действие в калькуляторе, `buy_solution` — «Купить проект целиком».
 - CSP-заголовок задаётся в `server.js`; хеши встроенных скриптов счётчиков `site/build.js` пишет в `lib/csp.json`. Если в GTM добавить теги «Пользовательский HTML» или сервисы с других доменов, их нужно разрешить в CSP.
 - Файлы подтверждения (Яндекс Вебмастер и т. п.) лежат в `site/verification/` и копируются в `public/` при сборке без изменений.

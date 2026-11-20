@@ -71,10 +71,11 @@
 
   /* ---------- Цели Яндекс Метрики ---------- */
   // Идентификаторы целей (тип «JavaScript-событие»): lead_submit, telegram_click, calc_used, buy_solution
-  // Те же события уходят в dataLayer для триггеров Google Tag Manager: { event: 'lead_submit' } и т. д.
+  // Те же события уходят в dataLayer для триггеров Google Tag Manager ({ event: 'lead_submit' } и т. д.) и в GA4 через gtag('event', …)
   const goal = (name) => {
     try { if (typeof ym === 'function') ym(114405591, 'reachGoal', name); } catch (e) { /* метрика недоступна */ }
     try { (window.dataLayer = window.dataLayer || []).push({ event: name }); } catch (e) { /* нет dataLayer */ }
+    try { if (typeof gtag === 'function') gtag('event', name); } catch (e) { /* нет gtag (GA4) */ }
   };
   document.addEventListener('click', (e) => {
     const a = e.target.closest && e.target.closest('a[href]');
