@@ -294,7 +294,7 @@ const add = (file, url, html, prio, freq = 'monthly') => pages.push({ file, url,
           <p class="section__sub">Итоговая стоимость зависит от задачи и фиксируется в договоре. Начните с необходимого — новые модули подключаются в любой момент.</p>
         </div>
         <div class="grid grid--3">
-          <div class="card fact"><p class="fact__big">до ${Math.round(Math.max(...P.terms.map((t) => t.discount)) * 100)}%</p><h3>Скидка за срок</h3><p>Минимальный срок подписки — 12 месяцев, ${discText}.</p></div>
+          <div class="card fact"><p class="fact__big">до ${Math.round(Math.max(...P.terms.map((t) => t.discount)) * 100)}%</p><h3>Скидка за срок</h3><p>Минимальный срок подписки — 12 месяцев, ${discText}. Срок отсчитывается с запуска первой версии.</p></div>
           <div class="card fact"><p class="fact__big">${P.startPayment.months} платежа</p><h3>Оплата на старте</h3><p>На старте оплачиваются только первый и последний месяц подписки, дальше — ежемесячно.</p></div>
           <div class="card fact"><p class="fact__big">${P.bases.length} основ</p><h3>Модули по необходимости</h3><p>Онлайн-оплата, запись, Telegram, интеграции, продвижение — подключаются к основе, когда понадобятся.</p></div>
         </div>
