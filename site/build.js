@@ -325,7 +325,7 @@ const add = (file, url, html, prio, freq = 'monthly') => pages.push({ file, url,
         </div>
       </div>
     </section>`;
-  const body = hero + '\n\n' + sections([how, what, tariffs, bo, lead()]);
+  const body = hero + '\n\n' + sections([how, part('remote'), what, tariffs, bo, lead()]);
   add('index.html', '/', layout({
     url: '/', active: 'home',
     title: 'DigitalSub — сайты и приложения по подписке с правом выкупа',
@@ -347,7 +347,7 @@ const add = (file, url, html, prio, freq = 'monthly') => pages.push({ file, url,
   const body = pageHead({ crumbsHtml: c.html, eyebrow: 'Цены', h1: 'Цены на сайты и приложения <span class="grad">по подписке</span>',
     lead: `Ежемесячная подписка от ${rub(minPrice)}: разработка, хостинг, домен, обновления и поддержка включены. Выберите основу, добавьте модули и узнайте точную цену в калькуляторе.`,
     actions: '<a class="btn btn--lg" href="#calc">Открыть калькулятор</a><a class="btn btn--ghost btn--lg" href="#lead">Обсудить проект</a>' })
-    + '\n\n' + sections([pricing, part('calc'), lead({ text: 'Отправьте расчёт из калькулятора или опишите задачу — ответим в течение рабочего дня, уточним детали и зафиксируем цену в договоре.' })]);
+    + '\n\n' + sections([pricing, part('calc'), part('remote'), lead({ text: 'Отправьте расчёт из калькулятора или опишите задачу — ответим в течение рабочего дня, уточним детали и зафиксируем цену в договоре.' })]);
   const offers = { '@context': 'https://schema.org', '@type': 'OfferCatalog', name: 'Тарифы DigitalSub', url: SITE + '/prices', itemListElement: SERVICES.map((s) => { const b = baseById(s.base); return { '@type': 'Offer', name: b.name, url: `${SITE}/services/${s.slug}`, priceCurrency: 'RUB', price: b.price, priceSpecification: { '@type': 'UnitPriceSpecification', price: b.price, priceCurrency: 'RUB', unitText: 'месяц', unitCode: 'MON' } }; }) };
   add('prices.html', '/prices', layout({ url: '/prices', active: 'prices',
     title: 'Цены на разработку сайтов и приложений по подписке — калькулятор | DigitalSub',
