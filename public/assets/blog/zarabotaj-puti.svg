@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 660" width="1200" height="660" role="img" aria-label="Четыре способа заработать: подписка, выкуп, переуступка, продажа через каталог" font-family="system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6d5dfc"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs>
+<rect width="1200" height="660" rx="24" fill="#10172b"/>
+<text x="60" y="80" font-size="34" font-weight="700" fill="#e8ecf7" text-anchor="start">Четыре способа заработать на своём продукте</text>
+<rect x="60" y="120" width="520" height="230" rx="16" fill="#141c33" stroke="#26304f" stroke-width="2"/>
+<circle cx="120" cy="182" r="26" fill="#6d5dfc"/>
+<text x="120" y="191" font-size="26" font-weight="700" fill="#10172b" text-anchor="middle">1</text>
+<text x="164" y="192" font-size="30" font-weight="700" fill="#e8ecf7" text-anchor="start">Подписка</text>
+<text x="100" y="270" font-size="24" font-weight="400" fill="#9aa5c4" text-anchor="start">Запускаете продукт без</text>
+<text x="100" y="306" font-size="24" font-weight="400" fill="#9aa5c4" text-anchor="start">оплаты разработки</text>
+<rect x="620" y="120" width="520" height="230" rx="16" fill="#141c33" stroke="#26304f" stroke-width="2"/>
+<circle cx="680" cy="182" r="26" fill="#22d3ee"/>
+<text x="680" y="191" font-size="26" font-weight="700" fill="#10172b" text-anchor="middle">2</text>
+<text x="724" y="192" font-size="30" font-weight="700" fill="#e8ecf7" text-anchor="start">Выкуп</text>
+<text x="660" y="270" font-size="24" font-weight="400" fill="#9aa5c4" text-anchor="start">12 платежей без скидки</text>
+<text x="660" y="306" font-size="24" font-weight="400" fill="#9aa5c4" text-anchor="start">минус 30% оплаченного</text>
+<rect x="60" y="380" width="520" height="230" rx="16" fill="#141c33" stroke="#26304f" stroke-width="2"/>
+<circle cx="120" cy="442" r="26" fill="#34d399"/>
+<text x="120" y="451" font-size="26" font-weight="700" fill="#10172b" text-anchor="middle">3</text>
+<text x="164" y="452" font-size="30" font-weight="700" fill="#e8ecf7" text-anchor="start">Переуступка</text>
+<text x="100" y="530" font-size="24" font-weight="400" fill="#9aa5c4" text-anchor="start">15% остаточной стоимости,</text>
+<text x="100" y="566" font-size="24" font-weight="400" fill="#9aa5c4" text-anchor="start">но не менее 30 000 ₽</text>
+<rect x="620" y="380" width="520" height="230" rx="16" fill="#141c33" stroke="#26304f" stroke-width="2"/>
+<circle cx="680" cy="442" r="26" fill="#f59e0b"/>
+<text x="680" y="451" font-size="26" font-weight="700" fill="#10172b" text-anchor="middle">4</text>
+<text x="724" y="452" font-size="30" font-weight="700" fill="#e8ecf7" text-anchor="start">Продажа в каталоге</text>
+<text x="660" y="530" font-size="24" font-weight="400" fill="#9aa5c4" text-anchor="start">10% от суммы продажи —</text>
+<text x="660" y="566" font-size="24" font-weight="400" fill="#9aa5c4" text-anchor="start">только если проект продан</text>
+</svg>

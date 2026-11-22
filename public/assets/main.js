@@ -150,11 +150,6 @@
     $('#r-discount').textContent = c.term.discount ? `скидка ${Math.round(c.term.discount * 100)}% на основу за срок ${c.term.months} мес. (без скидки ${fmt(c.fullMonthly, cur)})` : `цена без скидки при сроке ${c.term.months} мес.`;
     $('#r-start').textContent = (hasFrom ? 'от ' : '') + fmt(c.start, cur);
     $('#r-buyout').textContent = (hasFrom ? 'от ' : '') + fmt(c.buyout, cur);
-    const pct = Math.round(P.buyout.creditShare * 100);
-    const f = $('#r-formula'); f.textContent = '';
-    f.append(`Выкуп = ${P.buyout.multiplier} × ${fmt(c.boMonthly, cur)} (платёж без скидки${c.boExcluded ? ', без поддержки и продвижения' : ''}) − ${pct}% × ${fmt(c.boPaid, cur)} (оплачено за ${c.term.months} мес.)`);
-    f.append(document.createElement('br'));
-    f.append(`= ${fmt(c.buyoutBase, cur)} − ${fmt(c.credit, cur)}, но не меньше ${P.buyout.minMonths} × платёж без скидки (${fmt(c.buyoutMin, cur)}).`);
     $('#r-selected').textContent = c.mods.length ? `Модули: ${c.mods.map((m) => modLabel(m, m.q)).join(', ')}` : 'Модули не выбраны';
   }
 
@@ -340,7 +335,7 @@
 
   /* ---------- Готовые решения ---------- */
   let PR = null;
-  const prPrice = (id) => { const p = PR && PR.projects.find((x) => x.id === id); return p && typeof p.price === 'number' ? fmt(p.price, PR.currency || '₽') : 'Цена по запросу'; };
+  const prPrice = (id) => { const p = PR && PR.projects.find((x) => x.id === id); return p && typeof p.price === 'number' ? (p.priceFrom ? 'от ' : '') + fmt(p.price, PR.currency || '₽') : 'Цена по запросу'; };
   if ($('[data-price],[data-transfer-share],[data-transfer-min],[data-sale-commission],[data-project-action]')) fetch('/assets/projects.json', { cache: 'no-cache' })
     .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
     .then((data) => {

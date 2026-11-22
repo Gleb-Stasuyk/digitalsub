@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" width="1200" height="720" role="img" aria-label="Схема платежей за 12 месяцев: разовая оплата и подписка" font-family="system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6d5dfc"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs>
+<rect width="1200" height="720" rx="24" fill="#10172b"/>
+<text x="60" y="80" font-size="34" font-weight="700" fill="#e8ecf7" text-anchor="start">Как распределяются платежи за год</text>
+<text x="60" y="150" font-size="26" font-weight="700" fill="#e8ecf7" text-anchor="start">Разовая оплата</text>
+<line x1="60" y1="350" x2="1140" y2="350" stroke="#26304f" stroke-width="2"/>
+<rect x="70" y="170" width="64" height="180" rx="8" fill="#6d5dfc" opacity="1"/>
+<text x="102" y="380" font-size="18" font-weight="400" fill="#9aa5c4" text-anchor="middle">1</text>
+<text x="191" y="380" font-size="18" font-weight="400" fill="#9aa5c4" text-anchor="middle">2</text>
+<text x="280" y="380" font-size="18" font-weight="400" fill="#9aa5c4" text-anchor="middle">3</text>
+<rect x="337" y="310" width="64" height="40" rx="8" fill="#6d5dfc" opacity="0.75"/>
+<text x="369" y="380" font-size="18" font-weight="400" fill="#9aa5c4" text-anchor="middle">4</text>
+<text x="458" y="380" font-size="18" font-weight="400" fill="#9aa5c4" text-anchor="middle">5</text>
+<text x="547" y="380" font-size="18" font-weight="400" fill="#9aa5c4" text-anchor="middle">6</text>
+<rect x="604" y="290" width="64" height="60" rx="8" fill="#6d5dfc" opacity="0.75"/>
+<text x="636" y="380" font-size="18" font-weight="400" fill="#9aa5c4" text-anchor="middle">7</text>
+<text x="725" y="380" font-size="18" font-weight="400" fill="#9aa5c4" text-anchor="middle">8</text>
+<text x="814" y="380" font-size="18" font-weight="400" fill="#9aa5c4" text-anchor="middle">9</text>
+<rect x="871" y="310" width="64" height="40" rx="8" fill="#6d5dfc" opacity="0.75"/>
+<text x="903" y="380" font-size="18" font-weight="400" fill="#9aa5c4" text-anchor="middle">10</text>
+<text x="992" y="380" font-size="18" font-weight="400" fill="#9aa5c4" text-anchor="middle">11</text>
+<rect x="1049" y="300" width="64" height="50" rx="8" fill="#6d5dfc" opacity="0.75"/>
+<text x="1081" y="380" font-size="18" font-weight="400" fill="#9aa5c4" text-anchor="middle">12</text>
+<text x="60" y="410" font-size="26" font-weight="700" fill="#e8ecf7" text-anchor="start">Подписка</text>
+<line x1="60" y1="610" x2="1140" y2="610" stroke="#26304f" stroke-width="2"/>
+<rect x="70" y="490" width="64" height="120" rx="8" fill="#22d3ee" opacity="1"/>
+<text x="102" y="640" font-size="18" font-weight="400" fill="#9aa5c4" text-anchor="middle">1</text>
+<rect x="159" y="550" width="64" height="60" rx="8" fill="#22d3ee" opacity="0.75"/>
+<text x="191" y="640" font-size="18" font-weight="400" fill="#9aa5c4" text-anchor="middle">2</text>
+<rect x="248" y="550" width="64" height="60" rx="8" fill="#22d3ee" opacity="0.75"/>
+<text x="280" y="640" font-size="18" font-weight="400" fill="#9aa5c4" text-anchor="middle">3</text>
+<rect x="337" y="550" width="64" height="60" rx="8" fill="#22d3ee" opacity="0.75"/>
+<text x="369" y="640" font-size="18" font-weight="400" fill="#9aa5c4" text-anchor="middle">4</text>
+<rect x="426" y="550" width="64" height="60" rx="8" fill="#22d3ee" opacity="0.75"/>
+<text x="458" y="640" font-size="18" font-weight="400" fill="#9aa5c4" text-anchor="middle">5</text>
+<rect x="515" y="550" width="64" height="60" rx="8" fill="#22d3ee" opacity="0.75"/>
+<text x="547" y="640" font-size="18" font-weight="400" fill="#9aa5c4" text-anchor="middle">6</text>
+<rect x="604" y="550" width="64" height="60" rx="8" fill="#22d3ee" opacity="0.75"/>
+<text x="636" y="640" font-size="18" font-weight="400" fill="#9aa5c4" text-anchor="middle">7</text>
+<rect x="693" y="550" width="64" height="60" rx="8" fill="#22d3ee" opacity="0.75"/>
+<text x="725" y="640" font-size="18" font-weight="400" fill="#9aa5c4" text-anchor="middle">8</text>
+<rect x="782" y="550" width="64" height="60" rx="8" fill="#22d3ee" opacity="0.75"/>
+<text x="814" y="640" font-size="18" font-weight="400" fill="#9aa5c4" text-anchor="middle">9</text>
+<rect x="871" y="550" width="64" height="60" rx="8" fill="#22d3ee" opacity="0.75"/>
+<text x="903" y="640" font-size="18" font-weight="400" fill="#9aa5c4" text-anchor="middle">10</text>
+<rect x="960" y="550" width="64" height="60" rx="8" fill="#22d3ee" opacity="0.75"/>
+<text x="992" y="640" font-size="18" font-weight="400" fill="#9aa5c4" text-anchor="middle">11</text>
+<text x="1081" y="640" font-size="18" font-weight="400" fill="#9aa5c4" text-anchor="middle">12</text>
+<text x="60" y="660" font-size="20" font-weight="400" fill="#9aa5c4" text-anchor="start">Разовая оплата: крупный платёж до запуска и отдельные счета за поддержку.</text>
+<text x="60" y="690" font-size="20" font-weight="400" fill="#9aa5c4" text-anchor="start">Подписка: на старте первый и последний месяц, дальше — равные платежи.</text>
+</svg>

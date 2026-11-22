@@ -34,7 +34,7 @@ const svg = (inner) => `<svg viewBox="0 0 24 24" aria-hidden="true">${inner}</sv
 
 /* ---------- Общие блоки ---------- */
 const NAV = [
-  ['/', 'Главная', 'home'], ['/prices', 'Цены', 'prices'], ['/solutions', 'Готовые решения', 'solutions'], ['/buyout', 'Выкуп', 'buyout'], ['/faq', 'Вопросы', 'faq'], ['/blog', 'Блог', 'blog'],
+  ['/', 'Главная', 'home'], ['/prices', 'Цены', 'prices'], ['/solutions', 'Готовые решения', 'solutions'], ['/keysy', 'Кейсы', 'cases'], ['/buyout', 'Выкуп', 'buyout'], ['/faq', 'Вопросы', 'faq'], ['/blog', 'Блог', 'blog'],
 ];
 function header(active) {
   const a = (href, text, key, extra = '') => `<a href="${href}"${key === active ? ' class="is-active" aria-current="page"' : ''}${extra}>${text}</a>`;
@@ -158,7 +158,7 @@ const ymBody = gtmBody + '\n' + ymBody0;
   fs.writeFileSync(path.join(__dirname, '..', 'lib', 'csp.json'), JSON.stringify({ _comment: 'Генерируется site/build.js из site/partials/gtm.html и metrika.html', scriptHashes: scripts, styleAttrHashes: styles }, null, 2) + '\n');
 }
 
-function layout({ url, title, desc, active, body, jsonld = [], head = '', ogTitle, ogDesc, robots = 'index, follow' }) {
+function layout({ url, title, desc, active, body, jsonld = [], head = '', ogTitle, ogDesc, robots = 'index, follow', image = '/assets/og-image.png' }) {
   const canon = SITE + url;
   return `<!doctype html>
 <html lang="ru">
@@ -176,7 +176,7 @@ function layout({ url, title, desc, active, body, jsonld = [], head = '', ogTitl
   <meta property="og:url" content="${canon}">
   <meta property="og:title" content="${esc(ogTitle || title)}">
   <meta property="og:description" content="${esc(ogDesc || desc)}">
-  <meta property="og:image" content="${SITE}/assets/og-image.png">
+  <meta property="og:image" content="${SITE}${image}">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
@@ -227,7 +227,7 @@ const projects = PR.projects.map((p) => {
 });
 const imgDims = (p) => (p.portrait ? 'width="540" height="1170"' : 'width="960" height="600"');
 const NDA = P.modules.find((x) => x.id === 'nda');
-const projPrice = (p) => (typeof p.price === 'number' ? rub(p.price) : 'Цена по запросу');
+const projPrice = (p) => (typeof p.price === 'number' ? (p.priceFrom ? 'от ' : '') + rub(p.price) : 'Цена по запросу');
 const imgSrc = (f) => `/assets/projects/${f}`;
 // Кнопки готового решения: подставляют проект в форму заявки на этой же странице (см. attachProject в main.js)
 function projectButtons(p) {
@@ -347,20 +347,7 @@ const add = (file, url, html, prio, freq = 'monthly') => pages.push({ file, url,
         <div class="teaser__actions"><a class="btn btn--ghost btn--lg" href="/dlya-biznesa">Все отрасли</a></div>
       </div>
     </section>`;
-  const casesBlock = `    <section class="section" id="cases">
-      <div class="container">
-        <div class="section__head">
-          <p class="eyebrow">Кейсы</p>
-          <h2>Что мы уже сделали</h2>
-          <p class="section__sub">Сайты, веб-сервисы, интернет-магазин и мобильная игра — с задачей, решением и стеком.</p>
-        </div>
-        <div class="grid grid--2 cases-mini">
-${CASES.map((k) => `          <a class="card case-mini" href="/keysy#${k.id}"><span class="project__niche">${k.niche}</span><b class="case-mini__title">${k.name}</b><span class="case-mini__text">${k.short}</span></a>`).join('\n')}
-        </div>
-        <div class="teaser__actions"><a class="btn btn--ghost btn--lg" href="/keysy">Все кейсы</a></div>
-      </div>
-    </section>`;
-  const body = hero + '\n\n' + sections([how, part('remote'), what, niches, casesBlock, tariffs, bo, lead()]);
+  const body = hero + '\n\n' + sections([how, part('remote'), what, niches, tariffs, bo, lead()]);
   add('index.html', '/', layout({
     url: '/', active: 'home',
     title: 'DigitalSub — сайты и приложения по подписке с правом выкупа',
@@ -433,7 +420,7 @@ ${projects.map(projectCard).join('\n')}
   const items = projects.map((p, i) => ({ '@type': 'ListItem', position: i + 1, url: `${SITE}/solutions/${p.slug}`, name: p.name }));
   add('solutions.html', '/solutions', layout({ url: '/solutions', active: 'solutions',
     title: 'Готовые решения: сайты, приложения и сервисы на продажу | DigitalSub',
-    desc: 'Готовые проекты DigitalSub: веб-приложение SimpleAB, игровой проект L2Start с собственным сервером, интернет-магазин ARM Game, мобильная игра Alias и личный VPN по запросу. Купите проект целиком или закажите такой же по подписке.',
+    desc: 'Готовые проекты DigitalSub: личный VPN на Xray-core от 30 000 ₽, интернет-магазин ARM Game, мобильная игра Alias, веб-приложение SimpleAB и игровой проект L2Start. Купите проект целиком или закажите такой же по подписке.',
     jsonld: [c.json, { '@context': 'https://schema.org', '@type': 'ItemList', name: 'Готовые решения DigitalSub', itemListElement: items }], body }), '0.8');
 }
 
@@ -501,7 +488,7 @@ for (const p of projects) {
   // Цена указывается в разметке только если она задана в projects.json (без выдуманной цены для «по запросу»)
   if (typeof p.price === 'number') product.offers = { '@type': 'Offer', price: p.price, priceCurrency: 'RUB', availability: 'https://schema.org/InStock', url: SITE + url, seller: ORG };
   add(`solutions/${p.slug}.html`, url, layout({ url, active: 'solutions',
-    title: svc ? 'Личный VPN на вашем сервере — развёртывание и настройка | DigitalSub' : `${p.name} — купить готовый проект: ${p.niche.split(' · ')[0].toLowerCase()} | DigitalSub`,
+    title: p.title || (svc ? 'Личный VPN на вашем сервере — развёртывание и настройка | DigitalSub' : `${p.name} — купить готовый проект: ${p.niche.split(' · ')[0].toLowerCase()} | DigitalSub`),
     desc: strip(p.short).slice(0, 200), jsonld: [c.json, product], body }), '0.7');
 }
 
@@ -691,12 +678,17 @@ ${projectCard(rel)}
 // В тексте статьи можно использовать подстановки из pricing.json: {{p:landing}}, {{start:site}}, {{total12:shop}},
 // {{buyout12:landing}}, {{own12:landing}}, {{m24:landing}}, {{start24:...}}, {{total24:...}}, {{buyout24:...}}, {{own24:...}}, {{disc}}, {{bo_mult}}, {{bo_credit}}, {{bo_min}}.
 function blogSubst(html) {
-  return html.replace(/\{\{(\w+)(?::(\w+))?\}\}/g, (all, k, id) => {
+  return html.replace(/\{\{(\w+)(?::([\w-]+))?\}\}/g, (all, k, id) => {
     if (k === 'p') return rub(baseById(id).price);
     if (k === 'disc') return discText;
     if (k === 'bo_mult') return String(P.buyout.multiplier);
     if (k === 'bo_credit') return Math.round(P.buyout.creditShare * 100) + '%';
     if (k === 'bo_min') return String(P.buyout.minMonths);
+    if (k === 'mod') return rub(modById(id).price);
+    if (k === 'tr_share') return Math.round(PR.transfer.share * 100) + '%';
+    if (k === 'tr_min') return rub(PR.transfer.min);
+    if (k === 'sale_comm') return Math.round(PR.saleCommission * 100) + '%';
+    if (k === 'proj') { const pr = projects.find((x) => x.id === id); return pr ? projPrice(pr) : (() => { throw new Error('blog: нет проекта ' + id); })(); }
     const mm = /^(start|total|buyout|own)(12|24|36)?$|^m(12|24|36)$/.exec(k);
     if (mm) { const months = Number(mm[2] || mm[3] || REF.months); const c = subCalc(id, months); return rub(mm[3] ? c.monthly : c[mm[1]]); }
     throw new Error('blog: неизвестная подстановка ' + all);
@@ -705,13 +697,35 @@ function blogSubst(html) {
 const BLOG_DIR = path.join(__dirname, 'blog');
 const MONTHS = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
 const ruDate = (d) => { const [y, m, dd] = d.split('-').map(Number); return `${dd} ${MONTHS[m - 1]} ${y}`; };
+// Иллюстрация для статьи о выкупе: цена выкупа лендинга по месяцам при подписке на 36 месяцев (считается из pricing.json)
+{
+  const id = 'landing', L = toFull(baseById(id).price), mon = subCalc(id, 36).monthly;
+  const pts = [0, 6, 12, 18, 24, 30, 36].map((n) => [n, rnd(Math.max(P.buyout.multiplier * L - P.buyout.creditShare * mon * n, P.buyout.minMonths * L))]);
+  const max = pts[0][1], W = 1200, H = 640, x0 = 90, base = 540, bw = 110, gap = (W - 2 * x0 - pts.length * bw) / (pts.length - 1);
+  const txt = (x, y, t, size, fill, w = 400, a = 'middle') => `<text x="${x}" y="${y}" font-size="${size}" font-weight="${w}" fill="${fill}" text-anchor="${a}">${t}</text>`;
+  const bars = pts.map(([n, v], i) => { const x = x0 + i * (bw + gap), h = Math.round((v / max) * 360); return `<rect x="${x}" y="${base - h}" width="${bw}" height="${h}" rx="12" fill="url(#g)" opacity="${1 - i * 0.07}"/>` + txt(x + bw / 2, base - h - 14, nb(v).replace(/\u00a0/g, ' ') + ' ₽', 20, '#e8ecf7', 700) + txt(x + bw / 2, base + 34, n ? `${n} мес.` : 'старт', 20, '#9aa5c4'); }).join('\n');
+  const svgOut = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Цена выкупа лендинга по месяцам подписки на 36 месяцев" font-family="system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif">
+<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6d5dfc"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs>
+<rect width="${W}" height="${H}" rx="24" fill="#10172b"/>
+${txt(60, 76, 'Цена выкупа лендинга при подписке на 36 месяцев', 32, '#e8ecf7', 700, 'start')}
+${txt(60, 112, `Без учёта аванса за последний месяц. Минимум — ${P.buyout.minMonths} платежа без скидки (${nb(P.buyout.minMonths * L).replace(/\u00a0/g, ' ')} ₽)`, 20, '#9aa5c4', 400, 'start')}
+<line x1="60" y1="${base}" x2="${W - 60}" y2="${base}" stroke="#26304f" stroke-width="2"/>
+${bars}
+</svg>
+`;
+  fs.mkdirSync(path.join(PUB, 'assets/blog'), { recursive: true });
+  fs.writeFileSync(path.join(PUB, 'assets/blog/vykup-grafik.svg'), svgOut);
+}
+
 const posts = fs.readdirSync(BLOG_DIR).filter((f) => f.endsWith('.html')).map((f) => {
   const raw = fs.readFileSync(path.join(BLOG_DIR, f), 'utf8');
   const mt = /^<!--meta\s*([\s\S]*?)-->\s*/.exec(raw); if (!mt) throw new Error('blog: нет метаданных в ' + f);
   const meta = JSON.parse(mt[1]);
   const html = blogSubst(raw.slice(mt[0].length)).trim();
   const words = strip(html).split(' ').length;
-  return { ...meta, slug: meta.slug || f.replace(/\.html$/, ''), html, minutes: Math.max(1, Math.round(words / 180)) };
+  const slug = meta.slug || f.replace(/\.html$/, '');
+  const cover = fs.existsSync(path.join(PUB, 'assets/blog', slug + '.webp')) ? { webp: `/assets/blog/${slug}.webp`, og: `/assets/blog/${slug}.jpg`, alt: meta.coverAlt || meta.h1 } : null;
+  return { ...meta, slug, html, cover, minutes: Math.max(1, Math.round(words / 180)) };
 }).sort((a, b) => b.date.localeCompare(a.date));
 
 // Кейсы
@@ -753,6 +767,7 @@ for (const a of posts) {
   const others = [...posts.filter((x) => x !== a).map((o) => [`/blog/${o.slug}`, o.h1, o.desc]), ...(RELATED[a.slug] || [['/prices', 'Цены и калькулятор', 'Тарифы и расчёт стоимости проекта.'], ['/dlya-biznesa', 'Решения по отраслям', 'Готовые сценарии для вашей сферы.']])].slice(0, 3);
   const body = pageHead({ crumbsHtml: c.html, eyebrow: 'Блог', h1: a.h1, lead: a.lead })
     .replace('<p class="lead">', `<p class="post__meta"><time datetime="${a.date}">${ruDate(a.date)}</time>${a.updated && a.updated !== a.date ? ` · обновлено <time datetime="${a.updated}">${ruDate(a.updated)}</time>` : ''} · ${a.minutes} мин чтения</p>\n        <p class="lead">`)
+    + (a.cover ? `\n\n    <div class="container container--narrow post__cover"><img src="${a.cover.webp}" alt="${esc(a.cover.alt)}" width="1200" height="630" fetchpriority="high" decoding="async"></div>` : '')
     + `\n\n    <article class="section post">
       <div class="container container--narrow prose">
 ${a.html.split('\n').map((l) => '        ' + l).join('\n')}
@@ -766,8 +781,8 @@ ${a.html.split('\n').map((l) => '        ' + l).join('\n')}
     </section>` : '')
     + '\n\n' + lead({ title: 'Посчитаем ваш проект', text: 'Расскажите о задаче — ответим в течение рабочего дня, предложим формат и зафиксируем цену.' }).replace(/class="section( section--alt)?"/, 'class="section"');
   const article = { '@context': 'https://schema.org', '@type': 'BlogPosting', headline: a.h1, description: a.desc, datePublished: a.date, dateModified: a.updated || a.date, inLanguage: 'ru',
-    mainEntityOfPage: { '@type': 'WebPage', '@id': SITE + url }, url: SITE + url, image: SITE + '/assets/og-image.png', author: ORG, publisher: { ...ORG, logo: { '@type': 'ImageObject', url: SITE + '/apple-touch-icon.png' } } };
-  add(`blog/${a.slug}.html`, url, layout({ url, active: 'blog', title: a.title, desc: a.desc, ogTitle: a.h1, jsonld: [c.json, article], body,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': SITE + url }, url: SITE + url, image: SITE + (a.cover ? a.cover.og : '/assets/og-image.png'), author: ORG, publisher: { ...ORG, logo: { '@type': 'ImageObject', url: SITE + '/apple-touch-icon.png' } } };
+  add(`blog/${a.slug}.html`, url, layout({ url, active: 'blog', title: a.title, desc: a.desc, ogTitle: a.h1, jsonld: [c.json, article], body, image: a.cover ? a.cover.og : undefined,
     head: `  <meta property="article:published_time" content="${a.date}">\n  <meta property="article:modified_time" content="${a.updated || a.date}">\n` }), '0.7');
 }
 
@@ -779,6 +794,7 @@ ${a.html.split('\n').map((l) => '        ' + l).join('\n')}
       <div class="container">
         <div class="grid grid--2 posts">
 ${posts.map((a) => `          <article class="card feature post-card">
+            ${a.cover ? `<img class="post-card__img" src="${a.cover.webp}" alt="" width="1200" height="630" loading="lazy" decoding="async">` : ''}
             <p class="post__meta"><time datetime="${a.date}">${ruDate(a.date)}</time> · ${a.minutes} мин чтения</p>
             <h2 class="post-card__title"><a class="feature__link" href="/blog/${a.slug}">${a.h1}</a></h2>
             <p>${a.desc}</p>
@@ -789,7 +805,7 @@ ${posts.map((a) => `          <article class="card feature post-card">
     </section>`;
   add('blog.html', '/blog', layout({ url: '/blog', active: 'blog', title: 'Блог DigitalSub: цены на сайты, подписка, выбор подрядчика', desc: 'Статьи о стоимости сайтов и приложений, разработке по подписке и выборе подрядчика для малого бизнеса.',
     jsonld: [c.json, { '@context': 'https://schema.org', '@type': 'Blog', name: 'Блог DigitalSub', url: SITE + '/blog', inLanguage: 'ru', publisher: ORG,
-      blogPost: posts.map((a) => ({ '@type': 'BlogPosting', headline: a.h1, url: `${SITE}/blog/${a.slug}`, datePublished: a.date })) }], body }), '0.7', 'weekly');
+      blogPost: posts.map((a) => ({ '@type': 'BlogPosting', headline: a.h1, url: `${SITE}/blog/${a.slug}`, datePublished: a.date, ...(a.cover ? { image: SITE + a.cover.og } : {}) })) }], body }), '0.7', 'weekly');
 }
 
 // Политика
