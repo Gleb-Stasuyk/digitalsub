@@ -540,3 +540,19 @@ a.project__shot{display:block}
 .contacts h2{margin-top:0;font-size:1.15rem}
 .footer__copy a{color:inherit}
 @media (max-width:560px){.req__list{grid-template-columns:1fr;gap:2px}.req__list dd{margin-bottom:10px}}
+/* Кейсы */
+.cases-mini .case-mini{display:flex;flex-direction:column;gap:6px;color:var(--text)}
+.cases-mini .case-mini:hover{border-color:#3d4a75;text-decoration:none}
+.case-mini__title{font-size:1.15rem}
+.case-mini__text{color:var(--muted);font-size:.95rem}
+.cases{display:grid;gap:28px}
+.case{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:0;padding:0;overflow:hidden;scroll-margin-top:90px}
+.case__shot{background:var(--card-2);border-right:1px solid var(--line)}
+.case__shot img{width:100%;height:auto;display:block;position:sticky;top:90px}
+.case__shot--phone{display:flex;justify-content:center;padding:24px}
+.case__shot--phone img{max-width:240px}
+.case__body{padding:28px 30px}
+.case__title{margin:0 0 10px}
+.case__body h3{font-size:1rem;margin:18px 0 8px}
+.case__links{margin:18px 0 0;font-weight:600}
+@media (max-width:860px){.case{grid-template-columns:1fr}.case__shot{border-right:0;border-bottom:1px solid var(--line)}.case__body{padding:22px 20px}}

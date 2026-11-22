@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Кейсы DigitalSub: сайты, веб-сервисы, магазин и мобильная игра</title>
+  <meta name="description" content="Кейсы DigitalSub: игровой проект L2Start с сервером и лаунчером, калькулятор A/B-тестов SimpleAB, интернет-магазин ARM Game и Android-игра Alias. Задача, решение, стек и результат.">
+  <link rel="canonical" href="https://digitalsub.ru/keysy">
+  <meta name="theme-color" content="#0b1020">
+  <meta name="robots" content="index, follow">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:site_name" content="DigitalSub">
+  <meta property="og:url" content="https://digitalsub.ru/keysy">
+  <meta property="og:title" content="Кейсы DigitalSub: сайты, веб-сервисы, магазин и мобильная игра">
+  <meta property="og:description" content="Кейсы DigitalSub: игровой проект L2Start с сервером и лаунчером, калькулятор A/B-тестов SimpleAB, интернет-магазин ARM Game и Android-игра Alias. Задача, решение, стек и результат.">
+  <meta property="og:image" content="https://digitalsub.ru/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="stylesheet" href="/assets/styles.css?v=1fa056de1b">
+<!-- Google tag (gtag.js) — GA4 G-9QMXBVJ80D -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9QMXBVJ80D"></script>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MN55PMP7');
+window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-9QMXBVJ80D');</script>
+<!-- End Google Tag Manager -->
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=114405591', 'ym');
+
+    ym(114405591, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://digitalsub.ru/"},{"@type":"ListItem","position":2,"name":"Кейсы","item":"https://digitalsub.ru/keysy"}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Кейсы DigitalSub","itemListElement":[{"@type":"ListItem","position":1,"url":"https://digitalsub.ru/keysy#l2start","name":"L2Start"},{"@type":"ListItem","position":2,"url":"https://digitalsub.ru/keysy#simpleab","name":"SimpleAB"},{"@type":"ListItem","position":3,"url":"https://digitalsub.ru/keysy#armgame","name":"ARM Game"},{"@type":"ListItem","position":4,"url":"https://digitalsub.ru/keysy#alias","name":"Alias"}]}</script>
+</head>
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MN55PMP7" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<noscript><div><img src="https://mc.yandex.ru/watch/114405591" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+  <a class="skip" href="#main">Перейти к содержанию</a>
+  <header class="header" id="top">
+    <div class="container header__inner">
+      <a class="logo" href="/" aria-label="DigitalSub — на главную"><img src="/favicon.svg" alt="" width="32" height="32"><span>Digital<b>Sub</b></span></a>
+      <nav class="nav" id="nav" aria-label="Основная навигация">
+        <a href="/">Главная</a>
+        <div class="nav__drop">
+          <a class="nav__droplink" href="/services">Услуги</a>
+          <div class="nav__menu"><a href="/services/landing">Лендинг и сайт-визитка</a><a href="/services/website">Многостраничный сайт</a><a href="/services/shop">Интернет-магазин</a><a href="/services/web-app">Веб-приложение</a><a href="/services/android">Мобильное приложение Android</a><a href="/services/desktop">Десктоп-приложение</a></div>
+        </div>
+        <a href="/prices">Цены</a>
+        <a href="/solutions">Готовые решения</a>
+        <a href="/buyout">Выкуп</a>
+        <a href="/faq">Вопросы</a>
+        <a href="/blog">Блог</a>
+        <a class="btn nav__cta" href="#lead">Оставить заявку</a>
+      </nav>
+      <a class="btn btn--sm header__cta" href="#lead">Оставить заявку</a>
+      <button class="burger" id="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page-head">
+      <div class="hero__glow" aria-hidden="true"></div>
+      <div class="container page-head__inner">
+        <nav class="crumbs" aria-label="Навигационная цепочка"><ol><li><a href="/">Главная</a></li><li aria-current="page">Кейсы</li></ol></nav>
+        <p class="eyebrow">Кейсы</p>
+        <h1>Кейсы: <span class="grad">что мы сделали</span></h1>
+        <p class="lead">Игровой проект с собственным сервером и лаунчером, веб-сервис для аналитиков, интернет-магазин и мобильная игра. Задача, решение, стек и результат по каждому проекту.</p>
+        
+        
+      </div>
+    </section>
+
+    <section class="section" id="cases">
+      <div class="container cases">
+          <article class="card case" id="l2start">
+            <div class="case__shot"><img src="/assets/projects/l2start.webp" alt="L2Start" width="960" height="600" loading="lazy" decoding="async"></div>
+            <div class="case__body">
+              <p class="project__niche">Игровой проект · сайт, сервер, лаунчер</p>
+              <h2 class="case__title">L2Start</h2>
+              <h3>Задача</h3><p>Сделать игровой проект по Lineage 2 Interlude, в который можно играть и в одиночку, и с другими игроками: сервер, на котором мир не пустой даже без живого онлайна, удобная установка на свой компьютер, онлайн-сервер и сайт для сообщества.</p>
+              <h3>Что сделано</h3><ul class="ticks"><li>Сайт l2start.ru на русском и английском: регистрация с подтверждением email, личный кабинет, страницы серверов и загрузок, новости, форум, база знаний и помощь, админ-панель для контента.</li><li>L2Start Local — свой сервер Interlude, который запускается в Docker на Windows, Linux или macOS и работает без интернета. Распространяется как релиз на GitHub и как готовый Docker-образ.</li><li>Кастомный игровой сервер на основе L2J Mobius с модульной системой дополнений и ботами, которые ведут себя как живые игроки: охотятся, собирают группы, ходят на рейд-боссов, торгуют на рынке, участвуют в олимпиаде, PvP и жизни кланов.</li><li>Лаунчер для Windows: проверка и восстановление файлов клиента по подписанному манифесту (докачиваются только недостающие и изменённые файлы, только по HTTPS), переключение языка игры RU/EN, самообновление.</li><li>Онлайн-сервер Freedom ×10 (XP/SP ×10, Adena ×5, без доната) с ботами и живыми игроками — сейчас идёт открытый бета-тест.</li><li>Открытый код: офлайн-сборка Interlude: Living World (одиночная игра «в живом мире», запуск одной кнопкой без установки Java и базы данных, опциональный ИИ-модуль на LLM для разговоров ботов в чате), исходники сервера L2Start и лаунчера опубликованы на GitHub.</li></ul>
+              <h3>Стек</h3><p class="project__stack">Сайт: Next.js, React, TypeScript, Tailwind, FastAPI, PostgreSQL · Сервер: Java (L2J Mobius), MariaDB, Docker · Лаунчер: C#, .NET, WPF</p>
+              <h3>Результат</h3><p>Проект работает: сайт и онлайн-сервер Freedom ×10 доступны игрокам, сервер Local опубликован как релиз и Docker-образ, исходный код открыт (GPL-3.0 для серверов, MIT для лаунчера). Проект можно купить целиком — с исходным кодом и доменом.</p>
+              <p class="case__links"><a href="https://l2start.ru/" target="_blank" rel="noopener">l2start.ru</a> · <a href="https://github.com/Gleb-Stasuyk/L2-Living-Worlds" target="_blank" rel="noopener">GitHub: L2-Living-Worlds</a> · <a href="https://github.com/Gleb-Stasuyk/l2start-server" target="_blank" rel="noopener">GitHub: l2start-server</a> · <a href="https://github.com/Gleb-Stasuyk/l2_launcher" target="_blank" rel="noopener">GitHub: l2_launcher</a> · <a href="/solutions/l2start">Купить проект или заказать такой же →</a></p>
+            </div>
+          </article>
+          <article class="card case" id="simpleab">
+            <div class="case__shot"><img src="/assets/projects/simpleab.webp" alt="SimpleAB" width="960" height="600" loading="lazy" decoding="async"></div>
+            <div class="case__body">
+              <p class="project__niche">Веб-приложение · аналитика</p>
+              <h2 class="case__title">SimpleAB</h2>
+              <h3>Задача</h3><p>Дать маркетологам и продуктовым командам инструмент, который заменяет статистический пакет: спланировать A/B-тест, проверить результат и получить понятный вывод без знания статистики.</p>
+              <h3>Что сделано</h3><ul class="ticks"><li>Расчёт размера выборки и длительности теста по трафику.</li><li>Анализ конверсии: z-тест, χ², точный тест Фишера, доверительные интервалы.</li><li>Средние и средний чек — по сводным статистикам или сырым данным с загрузкой CSV; ratio-метрики (CTR, выручка на заказ) по дельта-методу и бутстрапу.</li><li>CUPED для снижения дисперсии за счёт данных до эксперимента.</li><li>Мульти-метрики с ролями «целевая / вторичная / guardrail», несколько вариантов, поправки Бонферрони, Холма и Бенджамини–Хохберга, проверка SRM.</li><li>Итоговое решение «Катить / Не катить / Нужно больше данных», графики и объяснение простым языком.</li><li>Вики: статьи, подсказки, глоссарий и примеры CSV.</li></ul>
+              <h3>Стек</h3><p class="project__stack">Python, FastAPI, SciPy, statsmodels · Docker</p>
+              <h3>Результат</h3><p>Сервис работает на simpleab.ru: все расчёты доступны в браузере, вики со статьями приводит посетителей из поиска. Проект продаётся целиком.</p>
+              <p class="case__links"><a href="https://simpleab.ru/" target="_blank" rel="noopener">simpleab.ru</a> · <a href="/solutions/simpleab">Купить проект или заказать такой же →</a></p>
+            </div>
+          </article>
+          <article class="card case" id="armgame">
+            <div class="case__shot"><img src="/assets/projects/arm-game.webp" alt="ARM Game" width="960" height="600" loading="lazy" decoding="async"></div>
+            <div class="case__body">
+              <p class="project__niche">Интернет-магазин · игры для консолей</p>
+              <h2 class="case__title">ARM Game</h2>
+              <h3>Задача</h3><p>Запустить магазин игр и аксессуаров для консолей с полным циклом заказа: каталог, корзина, доставка, онлайн-оплата и личный кабинет, а для владельца — простая админка заказов.</p>
+              <h3>Что сделано</h3><ul class="ticks"><li>Каталог с поиском, фильтрами по категории и платформе и сортировкой.</li><li>Карточка товара: галерея с полноэкранным просмотром, цена и скидка, остаток, характеристики, отзывы, похожие товары; избранное и «Купить в 1 клик».</li><li>Оформление заказа по шагам; доставка Почтой России, СДЭК, Boxberry, Яндекс Доставкой или самовывоз.</li><li>Оплата картой и через СБП (ЮKassa), наложенный платёж; резерв товара и автоотмена неоплаченных заказов.</li><li>Личный кабинет покупателя: история и статусы заказов, трек-номера.</li><li>Админка: заказы, товары, доставка и оплата, страницы. Тёмная игровая тема и адаптив под телефон.</li></ul>
+              <h3>Стек</h3><p class="project__stack">Python, FastAPI, PostgreSQL · HTML/CSS/JS · ЮKassa</p>
+              <h3>Результат</h3><p>Магазин готов к запуску: весь путь покупателя от каталога до оплаты и отслеживания заказа работает. Домен пока не подключён — демо показываем по запросу.</p>
+              <p class="case__links"><a href="/solutions/arm-game">Купить проект или заказать такой же →</a></p>
+            </div>
+          </article>
+          <article class="card case" id="alias">
+            <div class="case__shot case__shot--phone"><img src="/assets/projects/alias.svg" alt="Alias" width="540" height="1170" loading="lazy" decoding="async"></div>
+            <div class="case__body">
+              <p class="project__niche">Мобильная игра · Android</p>
+              <h2 class="case__title">Alias</h2>
+              <h3>Задача</h3><p>Сделать игру для вечеринок и семейных вечеров, которая работает на одном телефоне без интернета, аккаунта и рекламы и не собирает персональные данные.</p>
+              <h3>Что сделано</h3><ul class="ticks"><li>От 2 до 8 команд, раунд 30–120 секунд, игра до 30–100 очков; свайп вверх — угадано, вниз — пропуск.</li><li>8 наборов слов (2 830 слов) и 4 набора 18+ (1 147 слов), которые открываются после подтверждения возраста.</li><li>Редактор наборов, задания для проигравшей команды, общее последнее слово, исправление отметок раунда.</li><li>Звук и вибрация, светлая и тёмная тема, интерфейс на русском и английском.</li><li>Подготовлены тексты для карточки Google Play и политика конфиденциальности.</li></ul>
+              <h3>Стек</h3><p class="project__stack">Flutter, Dart, Riverpod · Android 7.0+ · без сервера</p>
+              <h3>Результат</h3><p>Игра готова и скоро появится в Google Play — ссылку добавим после публикации.</p>
+              <p class="case__links"><a href="/solutions/alias">Купить проект или заказать такой же →</a></p>
+            </div>
+          </article>
+      </div>
+    </section>
+
+    <section class="section section--alt" id="lead">
+      <div class="container lead-box">
+        <div class="lead-box__text">
+          <p class="eyebrow">Заявка</p>
+          <h2>Нужен похожий проект?</h2>
+          <p>Расскажите о задаче — ответим в течение рабочего дня и предложим формат: подписка с правом выкупа или покупка готового решения.</p>
+          <ul class="ticks"><li>Бесплатная консультация</li><li>Оценка сроков и стоимости</li><li>Прототип до подписания договора</li></ul>
+        </div>
+        <form class="card form" id="lead-form" action="/api/lead" method="post" novalidate>
+          <div class="field">
+            <label for="f-name">Имя</label>
+            <input id="f-name" name="name" type="text" autocomplete="name" required minlength="2" maxlength="100" placeholder="Как к вам обращаться">
+          </div>
+          <div class="field">
+            <label for="f-contact">Телефон или Telegram</label>
+            <input id="f-contact" name="contact" type="text" autocomplete="tel" required minlength="3" maxlength="100" placeholder="+7 900 000-00-00 или @username">
+          </div>
+          <div class="field">
+            <label for="f-product">Что нужно</label>
+            <select id="f-product" name="product">
+              <option value="Лендинг">Лендинг / сайт-визитка</option>
+              <option value="Многостраничный сайт">Многостраничный сайт</option>
+              <option value="Интернет-магазин">Интернет-магазин</option>
+              <option value="Веб-приложение">Веб-приложение (CRM, кабинет, запись)</option>
+              <option value="Мобильное приложение Android">Мобильное приложение Android</option>
+              <option value="Десктоп-приложение">Десктоп-приложение</option>
+              <option value="Готовое решение">Готовое решение из каталога</option>
+              <option value="Пока не знаю">Пока не знаю, нужна консультация</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-message">Кратко о задаче</label>
+            <textarea id="f-message" name="message" rows="5" maxlength="2000" placeholder="Например: салон красоты, нужна онлайн-запись и напоминания клиентам"></textarea>
+          </div>
+          <input type="hidden" name="calc" id="f-calc">
+          <div class="hp" aria-hidden="true"><label for="f-website">Сайт</label><input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+          <label class="check check--nda">
+            <input type="checkbox" name="nda" id="f-nda" value="1">
+            <span>Подписать соглашение о неконкуренции и неразглашении (+9 900 ₽) — <a href="/faq#nda" target="_blank" rel="noopener">что это</a></span>
+          </label>
+          <label class="check">
+            <input type="checkbox" name="consent" value="1" required>
+            <span>Даю <a href="/soglasie" target="_blank" rel="noopener">согласие на обработку персональных данных</a> и ознакомлен с <a href="/privacy" target="_blank" rel="noopener">политикой конфиденциальности</a></span>
+          </label>
+          <button class="btn btn--lg btn--block" type="submit">Отправить заявку</button>
+          <p class="form__status" id="form-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div>
+        <a class="logo" href="/"><img src="/favicon.svg" alt="" width="28" height="28"><span>Digital<b>Sub</b></span></a>
+        <p class="footer__tag">Сайты и приложения по подписке с правом выкупа.</p>
+      </div>
+      <nav class="footer__nav" aria-label="Услуги">
+        <p class="footer__title">Услуги</p>
+        <a href="/services/landing">Лендинг и сайт-визитка</a><a href="/services/website">Многостраничный сайт</a><a href="/services/shop">Интернет-магазин</a><a href="/services/web-app">Веб-приложение</a><a href="/services/android">Мобильное приложение Android</a><a href="/services/desktop">Десктоп-приложение</a>
+      </nav>
+      <nav class="footer__nav" aria-label="Разделы сайта">
+        <p class="footer__title">Разделы</p>
+        <a href="/prices">Цены и калькулятор</a><a href="/dlya-biznesa">Для бизнеса по отраслям</a><a href="/keysy">Кейсы</a><a href="/solutions">Готовые решения</a><a href="/buyout">Выкуп и переуступка</a><a href="/faq">Вопросы</a><a href="/blog">Блог</a><a href="/#lead">Оставить заявку</a>
+      </nav>
+      <nav class="footer__nav" aria-label="Информация">
+        <p class="footer__title">Информация</p>
+        <a href="/kontakty">Контакты</a><a href="/rekvizity">Реквизиты</a><a href="/privacy">Политика конфиденциальности</a><a href="/soglasie">Согласие на обработку данных</a><a href="mailto:info@digitalsub.ru">info@digitalsub.ru</a>
+      </nav>
+      <p class="footer__copy">© <span id="year">2026</span> DigitalSub · ИНН 781450861386 · <a href="mailto:info@digitalsub.ru">info@digitalsub.ru</a> · работаем удалённо по всей России</p>
+    </div>
+  </footer>
+  <script src="/assets/main.js?v=1fa056de1b" defer></script>
+</body>
+</html>

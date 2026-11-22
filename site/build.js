@@ -70,7 +70,7 @@ const FOOTER = `  <footer class="footer">
       </nav>
       <nav class="footer__nav" aria-label="Разделы сайта">
         <p class="footer__title">Разделы</p>
-        <a href="/prices">Цены и калькулятор</a><a href="/dlya-biznesa">Для бизнеса по отраслям</a><a href="/solutions">Готовые решения</a><a href="/buyout">Выкуп и переуступка</a><a href="/faq">Вопросы</a><a href="/blog">Блог</a><a href="/#lead">Оставить заявку</a>
+        <a href="/prices">Цены и калькулятор</a><a href="/dlya-biznesa">Для бизнеса по отраслям</a><a href="/keysy">Кейсы</a><a href="/solutions">Готовые решения</a><a href="/buyout">Выкуп и переуступка</a><a href="/faq">Вопросы</a><a href="/blog">Блог</a><a href="/#lead">Оставить заявку</a>
       </nav>
       <nav class="footer__nav" aria-label="Информация">
         <p class="footer__title">Информация</p>
@@ -216,6 +216,7 @@ ${SERVICES.map((s) => { const b = baseById(s.base); return `          <article c
 }
 
 const PROJ = require('./projects');
+const CASES = require('./cases');
 const projects = PR.projects.map((p) => {
   const d = PROJ[p.id]; if (!d) throw new Error('no text for project ' + p.id);
   // Картинки, которых ещё нет в public/assets/projects, пропускаются; если нет ни одной — берётся fallback
@@ -342,7 +343,20 @@ const add = (file, url, html, prio, freq = 'monthly') => pages.push({ file, url,
         <div class="teaser__actions"><a class="btn btn--ghost btn--lg" href="/dlya-biznesa">Все отрасли</a></div>
       </div>
     </section>`;
-  const body = hero + '\n\n' + sections([how, part('remote'), what, niches, tariffs, bo, lead()]);
+  const casesBlock = `    <section class="section" id="cases">
+      <div class="container">
+        <div class="section__head">
+          <p class="eyebrow">Кейсы</p>
+          <h2>Что мы уже сделали</h2>
+          <p class="section__sub">Сайты, веб-сервисы, интернет-магазин и мобильная игра — с задачей, решением и стеком.</p>
+        </div>
+        <div class="grid grid--2 cases-mini">
+${CASES.map((k) => `          <a class="card case-mini" href="/keysy#${k.id}"><span class="project__niche">${k.niche}</span><b class="case-mini__title">${k.name}</b><span class="case-mini__text">${k.short}</span></a>`).join('\n')}
+        </div>
+        <div class="teaser__actions"><a class="btn btn--ghost btn--lg" href="/keysy">Все кейсы</a></div>
+      </div>
+    </section>`;
+  const body = hero + '\n\n' + sections([how, part('remote'), what, niches, casesBlock, tariffs, bo, lead()]);
   add('index.html', '/', layout({
     url: '/', active: 'home',
     title: 'DigitalSub — сайты и приложения по подписке с правом выкупа',
@@ -695,6 +709,34 @@ const posts = fs.readdirSync(BLOG_DIR).filter((f) => f.endsWith('.html')).map((f
   const words = strip(html).split(' ').length;
   return { ...meta, slug: meta.slug || f.replace(/\.html$/, ''), html, minutes: Math.max(1, Math.round(words / 180)) };
 }).sort((a, b) => b.date.localeCompare(a.date));
+
+// Кейсы
+{
+  const c = crumbs([['/keysy', 'Кейсы']]);
+  const caseHtml = (k) => `          <article class="card case" id="${k.id}">
+            <div class="case__shot${k.portrait ? ' case__shot--phone' : ''}"><img src="/assets/projects/${k.img}" alt="${esc(k.name)}" ${k.portrait ? 'width="540" height="1170"' : 'width="960" height="600"'} loading="lazy" decoding="async"></div>
+            <div class="case__body">
+              <p class="project__niche">${k.niche}</p>
+              <h2 class="case__title">${k.name}</h2>
+              <h3>Задача</h3><p>${k.task}</p>
+              <h3>Что сделано</h3><ul class="ticks">${k.done.map((d) => `<li>${d}</li>`).join('')}</ul>
+              <h3>Стек</h3><p class="project__stack">${k.stack}</p>
+              <h3>Результат</h3><p>${k.result}</p>
+              <p class="case__links">${k.links.map(([h, t]) => `<a href="${h}" target="_blank" rel="noopener">${t}</a>`).join(' · ')}${k.links.length ? ' · ' : ''}<a href="/solutions/${k.solution}">Купить проект или заказать такой же →</a></p>
+            </div>
+          </article>`;
+  const list = `    <section class="section" id="cases">
+      <div class="container cases">
+${CASES.map(caseHtml).join('\n')}
+      </div>
+    </section>`;
+  const body = pageHead({ crumbsHtml: c.html, eyebrow: 'Кейсы', h1: 'Кейсы: <span class="grad">что мы сделали</span>',
+    lead: 'Игровой проект с собственным сервером и лаунчером, веб-сервис для аналитиков, интернет-магазин и мобильная игра. Задача, решение, стек и результат по каждому проекту.' })
+    + '\n\n' + sections([list, lead({ title: 'Нужен похожий проект?', text: 'Расскажите о задаче — ответим в течение рабочего дня и предложим формат: подписка с правом выкупа или покупка готового решения.' })]);
+  add('keysy.html', '/keysy', layout({ url: '/keysy', active: 'cases', title: 'Кейсы DigitalSub: сайты, веб-сервисы, магазин и мобильная игра',
+    desc: 'Кейсы DigitalSub: игровой проект L2Start с сервером и лаунчером, калькулятор A/B-тестов SimpleAB, интернет-магазин ARM Game и Android-игра Alias. Задача, решение, стек и результат.',
+    jsonld: [c.json, { '@context': 'https://schema.org', '@type': 'ItemList', name: 'Кейсы DigitalSub', itemListElement: CASES.map((k, i) => ({ '@type': 'ListItem', position: i + 1, url: `${SITE}/keysy#${k.id}`, name: k.name })) }], body }), '0.7');
+}
 
 // Блог: статьи
 for (const a of posts) {
