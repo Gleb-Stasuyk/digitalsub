@@ -415,9 +415,10 @@ p{margin:0 0 1em}
 @media (max-width:980px) and (min-width:601px){.products.grid--3{grid-template-columns:repeat(2,1fr)}}
 
 /* Подвал */
-.footer__inner{grid-template-columns:1.2fr 1fr 1fr}
+.footer__inner{grid-template-columns:1.2fr 1fr 1fr 1fr}
 .footer__nav{flex-direction:column;flex-wrap:nowrap;gap:8px}
 .footer__title{margin:0 0 4px;font-weight:700;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text)}
+@media (max-width:1000px) and (min-width:761px){.footer__inner{grid-template-columns:repeat(3,1fr)}.footer__inner>div:first-child{grid-column:1/-1}}
 @media (max-width:760px){.footer__inner{grid-template-columns:1fr 1fr}.footer__inner>div:first-child{grid-column:1/-1}}
 @media (max-width:420px){.footer__inner{grid-template-columns:1fr}}
 @media (max-width:600px){.calc-row b{white-space:normal;text-align:right}}
@@ -530,3 +531,12 @@ a.project__shot{display:block}
 .cookie__ok{flex:none}
 @media (max-width:560px){.cookie{left:10px;right:10px;bottom:10px;flex-direction:column;align-items:stretch;gap:10px}}
 @media print{.cookie{display:none}}
+/* Реквизиты и контакты */
+.req{padding:22px 24px}
+.req__list{display:grid;grid-template-columns:minmax(110px,auto) 1fr;gap:10px 20px;margin:0}
+.req__list dt{color:var(--muted);font-size:.92rem}
+.req__list dd{margin:0;color:var(--text)}
+.contacts{margin:24px 0}
+.contacts h2{margin-top:0;font-size:1.15rem}
+.footer__copy a{color:inherit}
+@media (max-width:560px){.req__list{grid-template-columns:1fr;gap:2px}.req__list dd{margin-bottom:10px}}

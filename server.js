@@ -49,7 +49,7 @@ function cspHeader() {
     "style-src 'self'",
     styleHashes.length ? `style-src-attr 'unsafe-hashes' ${styleHashes.map((h) => `'${h}'`).join(' ')}` : '',
     `script-src 'self' ${hashes.map((h) => `'${h}'`).join(' ')} ${ym} https://yastatic.net ${g}`.replace(/\s+/g, ' '),
-    `connect-src 'self' ${ym} wss://mc.yandex.ru wss://mc.yandex.com ${g} https://*.g.doubleclick.net`,
+    `connect-src 'self' ${ym} wss://mc.yandex.ru wss://mc.yandex.com ${g} https://www.google.com https://*.g.doubleclick.net`,
     `frame-src blob: ${ym} https://www.googletagmanager.com`,
     `child-src blob: ${ym}`,
     "frame-ancestors 'self' https://metrika.yandex.ru https://metrika.yandex.by https://metrica.yandex.com https://metrica.yandex.com.tr https://webvisor.com https://*.webvisor.com",

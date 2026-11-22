@@ -70,9 +70,13 @@ const FOOTER = `  <footer class="footer">
       </nav>
       <nav class="footer__nav" aria-label="Разделы сайта">
         <p class="footer__title">Разделы</p>
-        <a href="/prices">Цены и калькулятор</a><a href="/dlya-biznesa">Для бизнеса по отраслям</a><a href="/solutions">Готовые решения</a><a href="/buyout">Выкуп и переуступка</a><a href="/faq">Вопросы</a><a href="/blog">Блог</a><a href="/#lead">Оставить заявку</a><a href="/privacy">Политика конфиденциальности</a>
+        <a href="/prices">Цены и калькулятор</a><a href="/dlya-biznesa">Для бизнеса по отраслям</a><a href="/solutions">Готовые решения</a><a href="/buyout">Выкуп и переуступка</a><a href="/faq">Вопросы</a><a href="/blog">Блог</a><a href="/#lead">Оставить заявку</a>
       </nav>
-      <p class="footer__copy">© <span id="year">2026</span> DigitalSub · digitalsub.ru</p>
+      <nav class="footer__nav" aria-label="Информация">
+        <p class="footer__title">Информация</p>
+        <a href="/kontakty">Контакты</a><a href="/rekvizity">Реквизиты</a><a href="/privacy">Политика конфиденциальности</a><a href="/soglasie">Согласие на обработку данных</a><a href="mailto:info@digitalsub.ru">info@digitalsub.ru</a>
+      </nav>
+      <p class="footer__copy">© <span id="year">2026</span> DigitalSub · Самозанятый Стасюк Глеб Юрьевич, ИНН 781450861386 · <a href="mailto:info@digitalsub.ru">info@digitalsub.ru</a> · работаем удалённо по всей России</p>
     </div>
   </footer>`;
 
@@ -335,7 +339,7 @@ const add = (file, url, html, prio, freq = 'monthly') => pages.push({ file, url,
     ogDesc: 'Не платите за разработку — подпишитесь на готовый продукт для своего бизнеса. От 4 900 ₽/мес, первая версия сайта за 3–7 дней.',
     head: '  <meta name="yandex-verification" content="57df291596b35bf1" />\n  <meta name="keywords" content="сайт по подписке, сайт в рассрочку, разработка сайтов, CRM для бизнеса, онлайн-запись, веб-приложение, мобильное приложение Android, десктоп-приложение, выкуп сайта">\n  <script src="/assets/legacy-hash.js"></script>\n',
     jsonld: [
-      { '@context': 'https://schema.org', '@type': 'ProfessionalService', name: 'DigitalSub', url: SITE + '/', image: SITE + '/assets/og-image.png', description: 'Разработка сайтов, интернет-магазинов, веб-, мобильных и десктоп-приложений по подписке с правом выкупа.', areaServed: 'RU', priceRange: `от ${nb(minPrice)} ₽/мес` },
+      { '@context': 'https://schema.org', '@type': 'ProfessionalService', name: 'DigitalSub', url: SITE + '/', image: SITE + '/assets/og-image.png', description: 'Разработка сайтов, интернет-магазинов, веб-, мобильных и десктоп-приложений по подписке с правом выкупа.', email: 'info@digitalsub.ru', founder: { '@type': 'Person', name: 'Стасюк Глеб Юрьевич' }, contactPoint: { '@type': 'ContactPoint', contactType: 'customer service', email: 'info@digitalsub.ru', areaServed: 'RU', availableLanguage: 'ru' }, areaServed: 'RU', priceRange: `от ${nb(minPrice)} ₽/мес` },
       { '@context': 'https://schema.org', '@type': 'WebSite', name: 'DigitalSub', url: SITE + '/', inLanguage: 'ru' },
     ],
     body,
@@ -725,6 +729,18 @@ ${posts.map((a) => `          <article class="card feature post-card">
   add('privacy.html', '/privacy', layout({ url: '/privacy', active: '', title: 'Политика конфиденциальности — DigitalSub', desc: 'Политика обработки персональных данных сайта digitalsub.ru', jsonld: [c.json], body }), '0.2', 'yearly');
 }
 
+// Контакты, реквизиты, согласие на обработку ПДн
+{
+  const legalPage = (slug, name, title, desc, extra = '') => {
+    const c = crumbs([[`/${slug}`, name]]);
+    const body = part(slug).replace('<main class="legal">', '<div class="legal">').replace('</main>', '</div>').replace('<div class="container container--narrow">', `<div class="container container--narrow">\n      ${c.html}`) + extra;
+    add(`${slug}.html`, `/${slug}`, layout({ url: `/${slug}`, active: '', title, desc, jsonld: [c.json], body }), slug === 'kontakty' ? '0.5' : '0.2', 'yearly');
+  };
+  legalPage('kontakty', 'Контакты', 'Контакты DigitalSub — работаем удалённо по всей России', 'Как связаться с DigitalSub: email info@digitalsub.ru и заявка на сайте. Работаем удалённо по всей России, договор и документы — онлайн.', '\n\n' + lead({ title: 'Напишите нам' }));
+  legalPage('rekvizity', 'Реквизиты', 'Реквизиты — DigitalSub', 'Реквизиты исполнителя DigitalSub: самозанятый Стасюк Глеб Юрьевич, ИНН 781450861386, email info@digitalsub.ru.');
+  legalPage('soglasie', 'Согласие на обработку данных', 'Согласие на обработку персональных данных — DigitalSub', 'Согласие на обработку персональных данных при отправке заявки на сайте digitalsub.ru (152-ФЗ).');
+}
+
 // Файлы подтверждения прав (Яндекс Вебмастер, Google Search Console) копируются как есть, без изменений
 for (const f of fs.readdirSync(path.join(__dirname, 'verification'))) fs.copyFileSync(path.join(__dirname, 'verification', f), path.join(PUB, f));
 
@@ -738,7 +754,9 @@ fs.writeFileSync(path.join(PUB, '404.html'), layout({ url: '/404', active: '', r
 for (const p of pages) {
   const f = path.join(PUB, p.file);
   fs.mkdirSync(path.dirname(f), { recursive: true });
-  fs.writeFileSync(f, p.html);
+  // На страницах без формы заявки (политика, реквизиты, согласие) кнопки «Оставить заявку» ведут на форму главной
+  const html = p.html.includes('id="lead"') ? p.html : p.html.replace(/href="#lead"/g, 'href="/#lead"');
+  fs.writeFileSync(f, html);
 }
 fs.writeFileSync(path.join(PUB, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
