@@ -27,7 +27,7 @@ const modPrice = (m) => `${m.once ? '' : '+'}${m.from ? 'от ' : ''}${rub(m.pri
 const minPrice = Math.min(...P.bases.map((b) => b.price));
 const disc = P.terms.filter((t) => t.discount);
 const pct = (v) => Math.round(v * 100) + '%';
-// «при подписке на 24 месяца скидка 25%, на 36 месяцев — 35%»
+// «при подписке на 24 месяца скидка 10%, на 36 месяцев — 20%»
 const discText = disc.map((t, i) => (i === 0 ? `при подписке на ${t.months} месяц${t.months % 10 >= 2 && t.months % 10 <= 4 ? 'а' : 'ев'} скидка ${pct(t.discount)}` : `на ${t.months} месяц${t.months % 10 >= 2 && t.months % 10 <= 4 ? 'а' : 'ев'} — ${pct(t.discount)}`)).join(', ');
 const ld = (o) => `  <script type="application/ld+json">${JSON.stringify(o)}</script>`;
 const svg = (inner) => `<svg viewBox="0 0 24 24" aria-hidden="true">${inner}</svg>`;
@@ -257,10 +257,14 @@ function projectCard(p) {
 
 /* ---------- Расчёты подписки (та же логика, что в калькуляторе main.js) ---------- */
 const rnd = (n) => Math.round(n / (P.roundTo || 1)) * (P.roundTo || 1);
-function subCalc(baseId, months = 12) {
-  const price = baseById(baseId).price;
+// Цены в pricing.json — для срока P.priceTerm (36 мес.); «без скидки» — цена при 12 мес.
+const REF = P.terms.find((x) => x.months === P.priceTerm) || P.terms[0];
+const toFull = (sum) => rnd(sum / (1 - (REF.discount || 0)));
+function subCalc(baseId, months = REF.months) {
+  const ref = baseById(baseId).price;
+  const price = toFull(ref);
   const t = P.terms.find((x) => x.months === months) || P.terms[0];
-  const monthly = rnd(price * (1 - (t.discount || 0)));
+  const monthly = t === REF ? ref : rnd(price * (1 - (t.discount || 0)));
   const total = monthly * t.months;
   const buyout = rnd(Math.max(P.buyout.multiplier * price - P.buyout.creditShare * total, P.buyout.minMonths * price));
   return { monthly, total, buyout, start: monthly * P.startPayment.months, own: total + buyout };
@@ -268,7 +272,7 @@ function subCalc(baseId, months = 12) {
 const NICHE_HELPERS = {
   p: (id) => rub(baseById(id).price),
   m: (id) => modPrice(modById(id)),
-  buyout12: (id) => rub(subCalc(id).buyout),
+  buyout12: (id) => rub(subCalc(id, 12).buyout),
   start: (id) => rub(subCalc(id).start),
 };
 const NICHES = require('./niches')(NICHE_HELPERS);
@@ -301,7 +305,7 @@ const add = (file, url, html, prio, freq = 'monthly') => pages.push({ file, url,
           <p class="section__sub">Итоговая стоимость зависит от задачи и фиксируется в договоре. Начните с необходимого — новые модули подключаются в любой момент.</p>
         </div>
         <div class="grid grid--3">
-          <div class="card fact"><p class="fact__big">до ${Math.round(Math.max(...P.terms.map((t) => t.discount)) * 100)}%</p><h3>Скидка за срок</h3><p>Минимальный срок подписки — 12 месяцев, ${discText}. Срок отсчитывается с запуска первой версии.</p></div>
+          <div class="card fact"><p class="fact__big">до ${Math.round(Math.max(...P.terms.map((t) => t.discount)) * 100)}%</p><h3>Скидка за срок</h3><p>Минимальный срок подписки — 12 месяцев, ${discText}. Цены «от» — при подписке на ${REF.months} месяцев. Срок отсчитывается с запуска первой версии.</p></div>
           <div class="card fact"><p class="fact__big">${P.startPayment.months} платежа</p><h3>Оплата на старте</h3><p>На старте оплачиваются только первый и последний месяц подписки, дальше — ежемесячно.</p></div>
           <div class="card fact"><p class="fact__big">${P.bases.length} основ</p><h3>Модули по необходимости</h3><p>Онлайн-оплата, запись, Telegram, интеграции, продвижение — подключаются к основе, когда понадобятся.</p></div>
         </div>
@@ -391,7 +395,7 @@ ${CASES.map((k) => `          <a class="card case-mini" href="/keysy#${k.id}"><s
   const offers = { '@context': 'https://schema.org', '@type': 'OfferCatalog', name: 'Тарифы DigitalSub', url: SITE + '/prices', itemListElement: SERVICES.map((s) => { const b = baseById(s.base); return { '@type': 'Offer', name: b.name, url: `${SITE}/services/${s.slug}`, priceCurrency: 'RUB', price: b.price, priceSpecification: { '@type': 'UnitPriceSpecification', price: b.price, priceCurrency: 'RUB', unitText: 'месяц', unitCode: 'MON' } }; }) };
   add('prices.html', '/prices', layout({ url: '/prices', active: 'prices',
     title: 'Цены на сайты и приложения по подписке — калькулятор | DigitalSub',
-    desc: `Тарифы DigitalSub: лендинг от 4 900 ₽/мес, многостраничный сайт от 9 900 ₽, интернет-магазин от 14 900 ₽, веб-приложение от 19 900 ₽, Android от 29 900 ₽, десктоп от 34 900 ₽. Модули, скидки до 35% и калькулятор стоимости с выкупом.`,
+    desc: `Тарифы DigitalSub: лендинг от 4 900 ₽/мес, многостраничный сайт от 9 900 ₽, интернет-магазин от 14 900 ₽, веб-приложение от 19 900 ₽, Android от 29 900 ₽, десктоп от 34 900 ₽. Цены при подписке на 36 месяцев, модули и калькулятор стоимости с выкупом.`,
     head: '  <link rel="preload" href="/assets/pricing.json" as="fetch" crossorigin>\n',
     jsonld: [c.json, offers], body }), '0.9', 'weekly');
 }
@@ -559,7 +563,7 @@ for (const s of SERVICES) {
   s.modules.forEach((id) => { if (!allowed.has(id)) throw new Error(`module ${id} not allowed for ${b.id}`); });
   const url = `/services/${s.slug}`;
   const c = crumbs([['/services', 'Услуги'], [url, s.short]]);
-  const buyoutEx = Math.round(Math.max(P.buyout.multiplier * b.price - P.buyout.creditShare * b.price * 12, P.buyout.minMonths * b.price) / (P.roundTo || 1)) * (P.roundTo || 1);
+  const buyoutEx = subCalc(b.id).buyout;
   const head = pageHead({ crumbsHtml: c.html, eyebrow: s.short + ' · по подписке', h1: `${s.h1} <span class="grad">${s.h1grad}</span>`, lead: s.lead,
     points: [`<b>от <span data-base-price="${b.id}">${rub(b.price)}</span></b> в месяц`, `<b>${s.time}</b> до первой версии`, `<b>${P.startPayment.months} месяца</b> оплаты на старте`, '<b>право выкупа</b>'],
     actions: `<a class="btn btn--lg" href="#lead">Обсудить проект</a><a class="btn btn--ghost btn--lg" href="/prices?base=${b.id}#calc">Рассчитать стоимость</a>` });
@@ -571,10 +575,10 @@ for (const s of SERVICES) {
           <div class="card"><h3>Кому подходит</h3><p>${s.forWhom}</p><ul class="ticks">${s.forList.map((x) => `<li>${x}</li>`).join('')}</ul></div>
           <div class="card"><h3>Сроки и оплата</h3><ul class="ticks">
             <li>Первая версия — ${s.time}</li>
-            <li>от ${rub(b.price)}/мес при подписке на 12 месяцев</li>
-            <li>Срок 12 месяцев, ${discText}</li>
+            <li>от ${rub(b.price)}/мес при подписке на ${REF.months} месяцев</li>
+            <li>Минимальный срок 12 месяцев, ${discText}</li>
             <li>На старте — первый и последний месяц подписки</li>
-            <li>Выкуп: ${P.buyout.multiplier} платежей без скидки минус ${Math.round(P.buyout.creditShare * 100)}% оплаченного; после 12 месяцев на базовом тарифе — около ${rub(buyoutEx)}</li>
+            <li>Выкуп: ${P.buyout.multiplier} платежей без скидки минус ${Math.round(P.buyout.creditShare * 100)}% оплаченного; после ${REF.months} месяцев на базовом тарифе — около ${rub(buyoutEx)}</li>
           </ul></div>
         </div>
         ${s.related ? `<p class="note"><b>Пример:</b> <a href="/solutions">${s.related.name}</a> — ${s.related.text} Его можно купить целиком или заказать такой же по подписке.</p>` : ''}
@@ -651,8 +655,8 @@ ${n.pains.map(([t, x]) => `          <div class="card"><h3>${t}</h3><p>${x}</p><
           <div class="card"><h3>Оплата и выкуп</h3><ul class="ticks">
             <li>Хостинг, домен, SSL, обновления и правки — в подписке</li>
             <li>На старте — ${rub(sc.start)}: первый и последний месяц</li>
-            <li>Срок 12 месяцев, ${discText}</li>
-            <li>Выкуп: ${P.buyout.multiplier} платежей без скидки минус ${Math.round(P.buyout.creditShare * 100)}% оплаченного; после 12 месяцев на базовом тарифе — около ${rub(sc.buyout)}</li>
+            <li>Минимальный срок 12 месяцев, ${discText}</li>
+            <li>Выкуп: ${P.buyout.multiplier} платежей без скидки минус ${Math.round(P.buyout.creditShare * 100)}% оплаченного; после ${REF.months} месяцев на базовом тарифе — около ${rub(sc.buyout)}</li>
             <li>Домен оформляется на вас</li>
           </ul><p><a href="/buyout">Как устроен выкуп →</a></p></div>
         </div>
@@ -694,7 +698,7 @@ function blogSubst(html) {
     if (k === 'bo_credit') return Math.round(P.buyout.creditShare * 100) + '%';
     if (k === 'bo_min') return String(P.buyout.minMonths);
     const mm = /^(start|total|buyout|own)(12|24|36)?$|^m(12|24|36)$/.exec(k);
-    if (mm) { const months = Number(mm[2] || mm[3] || 12); const c = subCalc(id, months); return rub(mm[3] ? c.monthly : c[mm[1]]); }
+    if (mm) { const months = Number(mm[2] || mm[3] || REF.months); const c = subCalc(id, months); return rub(mm[3] ? c.monthly : c[mm[1]]); }
     throw new Error('blog: неизвестная подстановка ' + all);
   });
 }

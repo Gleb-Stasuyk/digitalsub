@@ -109,17 +109,23 @@
     state.modules.forEach((q, id) => { const m = modById(id); if (m && allowed.has(id)) mods.push({ ...m, q, cost: m.price * q }); });
     mods.sort((a, b) => P.modules.findIndex((x) => x.id === a.id) - P.modules.findIndex((x) => x.id === b.id));
     const term = P.terms.find((t) => t.months === state.term) || P.terms[0];
-    const fullMonthly = base.price + mods.filter((m) => !m.once).reduce((s, m) => s + m.cost, 0);
+    // Цены основ и модулей указаны для срока P.priceTerm (36 мес.); платёж без скидки — цена при 12 мес.
+    const ref = P.terms.find((t) => t.months === P.priceTerm) || P.terms[0];
+    const toFull = (sum) => round(sum / (1 - (ref.discount || 0)));
+    const atTerm = (sum) => (term === ref ? sum : round(toFull(sum) * (1 - (term.discount || 0))));
+    const refMonthly = base.price + mods.filter((m) => !m.once).reduce((s, m) => s + m.cost, 0);
+    const fullMonthly = toFull(refMonthly);
     const once = mods.filter((m) => m.once).reduce((s, m) => s + m.cost, 0); // разовые услуги (раздел «Юридическое»)
-    const monthly = round(fullMonthly * (1 - (term.discount || 0)));
+    const monthly = atTerm(refMonthly);
     const start = monthly * ((P.startPayment && P.startPayment.months) || 2);
     const paidSubs = monthly * term.months;
     const total = paidSubs;
     const bo = P.buyout;
     // В выкуп входят только основа и модули продукта: поддержка и продвижение (bo.excludeGroups) не выкупаются
     const excl = new Set(bo.excludeGroups || []);
-    const boMonthly = base.price + mods.filter((m) => !m.once && !excl.has(m.group)).reduce((s, m) => s + m.cost, 0);
-    const boPaid = round(boMonthly * (1 - (term.discount || 0))) * term.months;
+    const boRef = base.price + mods.filter((m) => !m.once && !excl.has(m.group)).reduce((s, m) => s + m.cost, 0);
+    const boMonthly = toFull(boRef);
+    const boPaid = atTerm(boRef) * term.months;
     const boExcluded = mods.some((m) => !m.once && excl.has(m.group));
     const buyoutBase = bo.multiplier * boMonthly;
     const credit = bo.creditShare * boPaid;
@@ -139,9 +145,8 @@
     if (c.mods.some((m) => m.adBudget)) notes.push('Рекламный бюджет оплачивается отдельно, напрямую рекламной площадке.');
     if (c.boExcluded) notes.push('Модули поддержки и продвижения не входят в цену выкупа: после выкупа они оплачиваются по отдельному договору.');
     const fn = $('#r-fromnote'); if (fn) fn.textContent = notes.join(' ');
-    $('#r-discount').textContent = c.term.discount ? `скидка ${Math.round(c.term.discount * 100)}% за срок ${c.term.months} мес. (без скидки ${fmt(c.fullMonthly, cur)})` : `базовая цена при сроке ${c.term.months} мес.`;
+    $('#r-discount').textContent = c.term.discount ? `скидка ${Math.round(c.term.discount * 100)}% за срок ${c.term.months} мес. (без скидки ${fmt(c.fullMonthly, cur)})` : `цена без скидки при сроке ${c.term.months} мес.`;
     $('#r-start').textContent = (hasFrom ? 'от ' : '') + fmt(c.start, cur);
-    $('#r-total').textContent = (hasFrom ? 'от ' : '') + fmt(c.total, cur);
     $('#r-buyout').textContent = (hasFrom ? 'от ' : '') + fmt(c.buyout, cur);
     const pct = Math.round(P.buyout.creditShare * 100);
     const f = $('#r-formula'); f.textContent = '';
@@ -252,7 +257,7 @@
     const bases = $('#calc-bases'); bases.textContent = '';
     P.bases.forEach((b) => bases.append(option('radio', 'calc-base', b.id, b.id === state.base, b.name, b.desc, `от ${fmt(b.price, cur)}/мес`)));
     const terms = $('#calc-terms'); terms.textContent = '';
-    P.terms.forEach((t) => terms.append(option('radio', 'calc-term', String(t.months), t.months === state.term, `${t.months} мес.`, t.discount ? `скидка ${Math.round(t.discount * 100)}%` : 'базовая цена', '')));
+    P.terms.forEach((t) => terms.append(option('radio', 'calc-term', String(t.months), t.months === state.term, `${t.months} мес.`, t.discount ? `скидка ${Math.round(t.discount * 100)}%` : 'без скидки', '')));
     renderModules();
 
     const calcRoot = $('#calc-bases').closest('section') || document;
@@ -302,7 +307,7 @@
       `Модули: ${c.mods.length ? c.mods.map((m) => modLabel(m, m.q)).join(', ') : 'нет'}`,
       `Срок: ${c.term.months} мес.`,
       `Платёж: ${c.mods.some((m) => m.from) ? 'от ' : ''}${fmt(c.monthly, cur)}/мес, старт (первый и последний месяц): ${fmt(c.start, cur)}`,
-      `Итого за срок: ${fmt(c.total, cur)}, выкуп в конце срока: ${fmt(c.buyout, cur)}`,
+      `Выкуп в конце срока: ${fmt(c.buyout, cur)}`,
       ...(c.once ? [`Разовые услуги: ${fmt(c.once, cur)}`] : []),
     ].join('\n');
   }
