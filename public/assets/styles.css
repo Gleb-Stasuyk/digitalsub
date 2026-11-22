@@ -563,5 +563,3 @@ a.project__shot{display:block}
 .prose figcaption{color:var(--muted);font-size:.9rem;margin-top:8px}
 .post-card__img{display:block;width:calc(100% + 2*var(--card-pad,28px));max-width:none;height:auto;margin:calc(-1*var(--card-pad,28px)) calc(-1*var(--card-pad,28px)) 18px;border-bottom:1px solid var(--line)}
 .post-card{overflow:hidden}
-.nav a,.header__cta{white-space:nowrap}
-@media (max-width:1200px) and (min-width:981px){.nav{gap:14px}.nav a{font-size:.9rem}.header__inner{gap:16px}.header__cta{padding-left:16px;padding-right:16px}}

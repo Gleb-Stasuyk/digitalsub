@@ -5,7 +5,7 @@
   {
    "id": "personal-vpn",
    "slug": "personal-vpn",
-   "name": "Личный VPN",
+   "name": "Частный VPN",
    "price": 30000,
    "subscriptionFrom": null,
    "priceFrom": true

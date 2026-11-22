@@ -34,7 +34,7 @@ const svg = (inner) => `<svg viewBox="0 0 24 24" aria-hidden="true">${inner}</sv
 
 /* ---------- Общие блоки ---------- */
 const NAV = [
-  ['/', 'Главная', 'home'], ['/prices', 'Цены', 'prices'], ['/solutions', 'Готовые решения', 'solutions'], ['/keysy', 'Кейсы', 'cases'], ['/buyout', 'Выкуп', 'buyout'], ['/faq', 'Вопросы', 'faq'], ['/blog', 'Блог', 'blog'],
+  ['/', 'Главная', 'home'], ['/prices', 'Цены', 'prices'], ['/solutions', 'Готовые решения', 'solutions'], ['/buyout', 'Выкуп', 'buyout'], ['/faq', 'Вопросы', 'faq'], ['/blog', 'Блог', 'blog'],
 ];
 function header(active) {
   const a = (href, text, key, extra = '') => `<a href="${href}"${key === active ? ' class="is-active" aria-current="page"' : ''}${extra}>${text}</a>`;
@@ -420,7 +420,7 @@ ${projects.map(projectCard).join('\n')}
   const items = projects.map((p, i) => ({ '@type': 'ListItem', position: i + 1, url: `${SITE}/solutions/${p.slug}`, name: p.name }));
   add('solutions.html', '/solutions', layout({ url: '/solutions', active: 'solutions',
     title: 'Готовые решения: сайты, приложения и сервисы на продажу | DigitalSub',
-    desc: 'Готовые проекты DigitalSub: личный VPN на Xray-core от 30 000 ₽, интернет-магазин ARM Game, мобильная игра Alias, веб-приложение SimpleAB и игровой проект L2Start. Купите проект целиком или закажите такой же по подписке.',
+    desc: 'Готовые проекты DigitalSub: частный защищённый VPN для команды или семьи от 30 000 ₽, интернет-магазин ARM Game, мобильная игра Alias, веб-приложение SimpleAB и игровой проект L2Start. Купите проект целиком или закажите такой же по подписке.',
     jsonld: [c.json, { '@context': 'https://schema.org', '@type': 'ItemList', name: 'Готовые решения DigitalSub', itemListElement: items }], body }), '0.8');
 }
 
