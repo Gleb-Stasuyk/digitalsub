@@ -331,7 +331,18 @@ const add = (file, url, html, prio, freq = 'monthly') => pages.push({ file, url,
         </div>
       </div>
     </section>`;
-  const body = hero + '\n\n' + sections([how, part('remote'), what, tariffs, bo, lead()]);
+  const niches = `    <section class="section" id="niches">
+      <div class="container">
+        <div class="section__head">
+          <p class="eyebrow">Для вашего бизнеса</p>
+          <h2>Готовые сценарии по отраслям</h2>
+          <p class="section__sub">Что входит, сколько стоит и как быстро запускается сайт или приложение для вашей сферы.</p>
+        </div>
+        <ul class="niche-links">${NICHES_LIST.map((n) => `<li><a href="/dlya-biznesa/${n.slug}">${n.h1} ${n.h1grad}</a></li>`).join('')}</ul>
+        <div class="teaser__actions"><a class="btn btn--ghost btn--lg" href="/dlya-biznesa">Все отрасли</a></div>
+      </div>
+    </section>`;
+  const body = hero + '\n\n' + sections([how, part('remote'), what, niches, tariffs, bo, lead()]);
   add('index.html', '/', layout({
     url: '/', active: 'home',
     title: 'DigitalSub — сайты и приложения по подписке с правом выкупа',
@@ -353,7 +364,16 @@ const add = (file, url, html, prio, freq = 'monthly') => pages.push({ file, url,
   const body = pageHead({ crumbsHtml: c.html, eyebrow: 'Цены', h1: 'Цены на сайты и приложения <span class="grad">по подписке</span>',
     lead: `Ежемесячная подписка от ${rub(minPrice)}: разработка, хостинг, домен, обновления и поддержка включены. Выберите основу, добавьте модули и узнайте точную цену в калькуляторе.`,
     actions: '<a class="btn btn--lg" href="#calc">Открыть калькулятор</a><a class="btn btn--ghost btn--lg" href="#lead">Обсудить проект</a>' })
-    + '\n\n' + sections([pricing, part('calc'), part('remote'), lead({ text: 'Отправьте расчёт из калькулятора или опишите задачу — ответим в течение рабочего дня, уточним детали и зафиксируем цену в договоре.' })]);
+    + '\n\n' + sections([pricing, part('calc'), `    <section class="section" id="niches">
+      <div class="container">
+        <div class="section__head">
+          <p class="eyebrow">Цены по отраслям</p>
+          <h2>Сколько стоит решение для вашей сферы</h2>
+          <p class="section__sub">Готовые сценарии с примерным расчётом подписки и выкупа. Подробно о ценах на рынке — в статьях <a href="/blog/skolko-stoit-sajt-2026">«Сколько стоит сайт в 2026 году»</a> и <a href="/blog/sajt-po-podpiske-ili-razovaya-oplata">«Сайт по подписке или разовая оплата»</a>.</p>
+        </div>
+        <ul class="niche-links">${NICHES_LIST.map((n) => `<li><a href="/dlya-biznesa/${n.slug}">${n.h1} ${n.h1grad}</a></li>`).join('')}</ul>
+      </div>
+    </section>`, part('remote'), lead({ text: 'Отправьте расчёт из калькулятора или опишите задачу — ответим в течение рабочего дня, уточним детали и зафиксируем цену в договоре.' })]);
   const offers = { '@context': 'https://schema.org', '@type': 'OfferCatalog', name: 'Тарифы DigitalSub', url: SITE + '/prices', itemListElement: SERVICES.map((s) => { const b = baseById(s.base); return { '@type': 'Offer', name: b.name, url: `${SITE}/services/${s.slug}`, priceCurrency: 'RUB', price: b.price, priceSpecification: { '@type': 'UnitPriceSpecification', price: b.price, priceCurrency: 'RUB', unitText: 'месяц', unitCode: 'MON' } }; }) };
   add('prices.html', '/prices', layout({ url: '/prices', active: 'prices',
     title: 'Цены на сайты и приложения по подписке — калькулятор | DigitalSub',
@@ -680,7 +700,11 @@ const posts = fs.readdirSync(BLOG_DIR).filter((f) => f.endsWith('.html')).map((f
 for (const a of posts) {
   const url = `/blog/${a.slug}`;
   const c = crumbs([['/blog', 'Блог'], [url, a.h1]]);
-  const others = posts.filter((x) => x !== a).slice(0, 3);
+  const RELATED = {
+    'sajt-po-podpiske-ili-razovaya-oplata': [['/buyout', 'Выкуп и переуступка проекта', 'Как считается цена выкупа и что происходит с проектом после окончания подписки.'], ['/dlya-biznesa/internet-magazin-v-rassrochku', 'Интернет-магазин без оплаты разработки', 'Магазин по подписке: что входит, сколько стоит и как выкупить.']],
+    'skolko-stoit-sajt-2026': [['/prices', 'Цены и калькулятор', 'Тарифы DigitalSub и расчёт стоимости вашего проекта с выкупом.'], ['/dlya-biznesa/salon-krasoty', 'Сайт для салона красоты с онлайн-записью', 'Отраслевой пример: состав сайта, цена подписки и сроки запуска.']],
+  };
+  const others = [...posts.filter((x) => x !== a).map((o) => [`/blog/${o.slug}`, o.h1, o.desc]), ...(RELATED[a.slug] || [['/prices', 'Цены и калькулятор', 'Тарифы и расчёт стоимости проекта.'], ['/dlya-biznesa', 'Решения по отраслям', 'Готовые сценарии для вашей сферы.']])].slice(0, 3);
   const body = pageHead({ crumbsHtml: c.html, eyebrow: 'Блог', h1: a.h1, lead: a.lead })
     .replace('<p class="lead">', `<p class="post__meta"><time datetime="${a.date}">${ruDate(a.date)}</time>${a.updated && a.updated !== a.date ? ` · обновлено <time datetime="${a.updated}">${ruDate(a.updated)}</time>` : ''} · ${a.minutes} мин чтения</p>\n        <p class="lead">`)
     + `\n\n    <article class="section post">
@@ -690,8 +714,8 @@ ${a.html.split('\n').map((l) => '        ' + l).join('\n')}
     </article>`
     + (others.length ? `\n\n    <section class="section section--alt">
       <div class="container container--narrow">
-        <div class="section__head"><p class="eyebrow">Читать дальше</p><h2>Другие статьи</h2></div>
-        <ul class="post-list">${others.map((o) => `<li><a href="/blog/${o.slug}">${o.h1}</a><p>${o.desc}</p></li>`).join('')}</ul>
+        <div class="section__head"><p class="eyebrow">Читать дальше</p><h2>Читайте также</h2></div>
+        <ul class="post-list">${others.map(([href, t, d]) => `<li><a href="${href}">${t}</a><p>${d}</p></li>`).join('')}</ul>
       </div>
     </section>` : '')
     + '\n\n' + lead({ title: 'Посчитаем ваш проект', text: 'Расскажите о задаче — ответим в течение рабочего дня, предложим формат и зафиксируем цену.' }).replace(/class="section( section--alt)?"/, 'class="section"');
