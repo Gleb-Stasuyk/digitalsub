@@ -523,3 +523,10 @@ a.project__shot{display:block}
 .post-list p{margin:.3em 0 0;color:var(--muted)}
 .post-card__title{font-size:1.3rem;margin:0 0 10px}
 .section.post{padding-top:8px}
+/* Уведомление о cookie */
+.cookie{position:fixed;left:16px;right:16px;bottom:16px;z-index:60;max-width:640px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--card-2);border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,.45)}
+.cookie__text{margin:0;font-size:.86rem;line-height:1.45;color:var(--muted)}
+.cookie__text a{color:var(--brand-2)}
+.cookie__ok{flex:none}
+@media (max-width:560px){.cookie{left:10px;right:10px;bottom:10px;flex-direction:column;align-items:stretch;gap:10px}}
+@media print{.cookie{display:none}}

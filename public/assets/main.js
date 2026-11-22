@@ -422,3 +422,22 @@
   const open = () => { const id = decodeURIComponent(location.hash.slice(1)); const d = id && document.getElementById(id); if (d && d.tagName === 'DETAILS') { d.open = true; d.scrollIntoView({ block: 'center' }); } };
   window.addEventListener('hashchange', open); open();
 })();
+
+/* Уведомление о cookie (Яндекс Метрика, Google Analytics): показывается один раз, закрытие запоминается в localStorage.
+   Плашка фиксирована у нижнего края и не сдвигает контент. */
+(() => {
+  const KEY = 'ds_cookie_notice';
+  let seen = false;
+  try { seen = localStorage.getItem(KEY) === '1'; } catch (e) { /* localStorage недоступен — показываем каждый раз */ }
+  if (seen || /^\/admin/.test(location.pathname)) return;
+  const box = document.createElement('div');
+  box.className = 'cookie'; box.setAttribute('role', 'region'); box.setAttribute('aria-label', 'Уведомление о cookie');
+  const p = document.createElement('p'); p.className = 'cookie__text';
+  const a = document.createElement('a'); a.href = '/privacy'; a.textContent = 'политике конфиденциальности';
+  p.append('Сайт использует cookie и аналитику (Яндекс Метрика, Google Analytics). Подробнее — в ', a, '.');
+  const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'btn btn--sm cookie__ok'; btn.textContent = 'Понятно';
+  btn.addEventListener('click', () => { try { localStorage.setItem(KEY, '1'); } catch (e) { /* ignore */ } box.remove(); });
+  box.append(p, btn);
+  const show = () => document.body.append(box);
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', show); else show();
+})();

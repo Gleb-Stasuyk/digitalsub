@@ -13,6 +13,8 @@ const PR = JSON.parse(fs.readFileSync(path.join(PUB, 'assets/projects.json'), 'u
 const SERVICES = require('./services');
 const part = (n) => fs.readFileSync(path.join(__dirname, 'partials', n + '.html'), 'utf8').replace(/\s+$/, '');
 const LASTMOD = new Date().toISOString().slice(0, 10);
+// Версия статики по содержимому: /assets/styles.css?v=<хеш> кэшируется браузером надолго (immutable), новый билд меняет адрес
+const ASSET_V = require('node:crypto').createHash('sha256').update(['styles.css', 'main.js', 'legacy-hash.js'].map((f) => fs.readFileSync(path.join(PUB, 'assets', f))).join('\n')).digest('hex').slice(0, 10);
 
 const nb = (n) => new Intl.NumberFormat('ru-RU').format(n).replace(/\s/g, '\u00a0');
 const rub = (n) => `${nb(n)}\u00a0₽`;
@@ -178,7 +180,7 @@ function layout({ url, title, desc, active, body, jsonld = [], head = '', ogTitl
   <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-${head}  <link rel="stylesheet" href="/assets/styles.css">
+${head.replace('/assets/legacy-hash.js"', `/assets/legacy-hash.js?v=${ASSET_V}"`)}  <link rel="stylesheet" href="/assets/styles.css?v=${ASSET_V}">
 ${ymHead}
 ${jsonld.map(ld).join('\n')}
 </head>
@@ -191,7 +193,7 @@ ${body}
   </main>
 
 ${FOOTER}
-  <script src="/assets/main.js" defer></script>
+  <script src="/assets/main.js?v=${ASSET_V}" defer></script>
 </body>
 </html>
 `;
@@ -329,7 +331,7 @@ const add = (file, url, html, prio, freq = 'monthly') => pages.push({ file, url,
   add('index.html', '/', layout({
     url: '/', active: 'home',
     title: 'DigitalSub — сайты и приложения по подписке с правом выкупа',
-    desc: 'Сайт, интернет-магазин, веб-приложение, мобильное приложение Android или десктоп-программа для вашего бизнеса без оплаты разработки. Подписка от 4 900 ₽/мес: хостинг, домен, обновления и поддержка включены. Первая версия сайта за 3–7 дней, мобильного и десктоп-приложения — до 30 дней. Право выкупа продукта.',
+    desc: 'Сайты, интернет-магазины и приложения для бизнеса по подписке от 4 900 ₽/мес: хостинг, домен и поддержка включены, запуск за 3–7 дней, право выкупа.',
     ogDesc: 'Не платите за разработку — подпишитесь на готовый продукт для своего бизнеса. От 4 900 ₽/мес, первая версия сайта за 3–7 дней.',
     head: '  <meta name="yandex-verification" content="57df291596b35bf1" />\n  <meta name="keywords" content="сайт по подписке, сайт в рассрочку, разработка сайтов, CRM для бизнеса, онлайн-запись, веб-приложение, мобильное приложение Android, десктоп-приложение, выкуп сайта">\n  <script src="/assets/legacy-hash.js"></script>\n',
     jsonld: [
@@ -350,7 +352,7 @@ const add = (file, url, html, prio, freq = 'monthly') => pages.push({ file, url,
     + '\n\n' + sections([pricing, part('calc'), part('remote'), lead({ text: 'Отправьте расчёт из калькулятора или опишите задачу — ответим в течение рабочего дня, уточним детали и зафиксируем цену в договоре.' })]);
   const offers = { '@context': 'https://schema.org', '@type': 'OfferCatalog', name: 'Тарифы DigitalSub', url: SITE + '/prices', itemListElement: SERVICES.map((s) => { const b = baseById(s.base); return { '@type': 'Offer', name: b.name, url: `${SITE}/services/${s.slug}`, priceCurrency: 'RUB', price: b.price, priceSpecification: { '@type': 'UnitPriceSpecification', price: b.price, priceCurrency: 'RUB', unitText: 'месяц', unitCode: 'MON' } }; }) };
   add('prices.html', '/prices', layout({ url: '/prices', active: 'prices',
-    title: 'Цены на разработку сайтов и приложений по подписке — калькулятор | DigitalSub',
+    title: 'Цены на сайты и приложения по подписке — калькулятор | DigitalSub',
     desc: `Тарифы DigitalSub: лендинг от 4 900 ₽/мес, многостраничный сайт от 9 900 ₽, интернет-магазин от 14 900 ₽, веб-приложение от 19 900 ₽, Android от 29 900 ₽, десктоп от 34 900 ₽. Модули, скидки до 35% и калькулятор стоимости с выкупом.`,
     head: '  <link rel="preload" href="/assets/pricing.json" as="fetch" crossorigin>\n',
     jsonld: [c.json, offers], body }), '0.9', 'weekly');
@@ -471,7 +473,7 @@ for (const p of projects) {
     actions: '<a class="btn btn--lg" href="/prices#calc">Посчитать выкуп</a><a class="btn btn--ghost btn--lg" href="#lead">Задать вопрос</a>' })
     + '\n\n' + sections([buyout, compare, lead()]);
   add('buyout.html', '/buyout', layout({ url: '/buyout', active: 'buyout',
-    title: 'Выкуп сайта или приложения по подписке, переуступка и продажа проекта | DigitalSub',
+    title: 'Выкуп сайта или приложения по подписке и переуступка | DigitalSub',
     desc: 'Как выкупить продукт по подписке: 12 платежей без скидки минус 30% оплаченного, минимум 3 платежа. Переуступка проекта — 15% от остаточной стоимости, от 30 000 ₽; продажа через каталог — 10%. Сравнение с разработкой под ключ.',
     jsonld: [c.json], body }), '0.8');
 }

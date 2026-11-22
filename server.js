@@ -7,6 +7,7 @@ const fs = require('node:fs');
 const fsp = require('node:fs/promises');
 const path = require('node:path');
 const crypto = require('node:crypto');
+const zlib = require('node:zlib');
 
 const PORT = parseInt(process.env.PORT || '8080', 10);
 const DATA_DIR = path.resolve(process.env.DATA_DIR || path.join(__dirname, 'data'));
@@ -137,6 +138,39 @@ async function handleLead(req, res) {
 const isFile = (f) => { try { return fs.statSync(f).isFile(); } catch { return false; } };
 const redirect = (res, location) => send(res, 301, '', { Location: location, 'Cache-Control': 'public, max-age=3600' });
 
+// Кэш: HTML — всегда с проверкой (no-cache + ETag); статика с ?v=<хеш> из билда — на год (immutable);
+// картинки — неделя; прочие файлы без версии (pricing.json, projects.json и т. п.) — час.
+const LONG_CACHE = 'public, max-age=31536000, immutable';
+function cacheControl(ext, search) {
+  if (ext === '.html') return 'no-cache';
+  if (/[?&]v=[0-9a-f]{6,}/.test(search || '')) return LONG_CACHE;
+  if (['.png', '.jpg', '.webp', '.ico'].includes(ext) || ext === '.svg') return 'public, max-age=604800';
+  return 'public, max-age=3600';
+}
+
+// Сжатие текстовых файлов: brotli или gzip, результат держится в памяти до изменения файла
+const COMPRESSIBLE = new Set(['.html', '.css', '.js', '.json', '.svg', '.xml', '.txt', '.webmanifest']);
+const zcache = new Map();
+function pickEncoding(accept) {
+  const a = String(accept || '');
+  if (/\bbr\b/.test(a)) return 'br';
+  if (/\bgzip\b/.test(a)) return 'gzip';
+  return null;
+}
+async function compressed(file, st, enc) {
+  const key = `${file}|${st.mtimeMs}|${st.size}|${enc}`;
+  let buf = zcache.get(key);
+  if (!buf) {
+    const raw = await fsp.readFile(file);
+    buf = enc === 'br'
+      ? zlib.brotliCompressSync(raw, { params: { [zlib.constants.BROTLI_PARAM_QUALITY]: 11, [zlib.constants.BROTLI_PARAM_SIZE_HINT]: raw.length } })
+      : zlib.gzipSync(raw, { level: 9 });
+    if (zcache.size > 500) zcache.clear();
+    zcache.set(key, buf);
+  }
+  return buf;
+}
+
 // Чистые адреса страниц: /prices -> public/prices.html, /services/shop -> public/services/shop.html.
 // Старые адреса с .html и со слешем на конце перенаправляются на чистые (301).
 async function serveStatic(req, res, pathname, search) {
@@ -158,8 +192,17 @@ async function serveStatic(req, res, pathname, search) {
     const st = await fsp.stat(file);
     if (!st.isFile()) throw new Error('not file');
     const ext = path.extname(file).toLowerCase();
-    const cache = ext === '.html' ? 'no-cache' : 'public, max-age=3600';
-    res.writeHead(200, { ...SECURITY_HEADERS, 'Content-Type': MIME[ext] || 'application/octet-stream', 'Content-Length': st.size, 'Cache-Control': cache });
+    const etag = `W/"${st.size.toString(36)}-${Math.floor(st.mtimeMs).toString(36)}"`;
+    const headers = { ...SECURITY_HEADERS, 'Content-Type': MIME[ext] || 'application/octet-stream', 'Cache-Control': cacheControl(ext, search), ETag: etag };
+    if (req.headers['if-none-match'] === etag) { res.writeHead(304, headers); return res.end(); }
+    const enc = COMPRESSIBLE.has(ext) && st.size >= 1024 ? pickEncoding(req.headers['accept-encoding']) : null;
+    if (COMPRESSIBLE.has(ext)) headers.Vary = 'Accept-Encoding';
+    if (enc) {
+      const body = await compressed(file, st, enc);
+      res.writeHead(200, { ...headers, 'Content-Encoding': enc, 'Content-Length': body.length });
+      return res.end(req.method === 'HEAD' ? undefined : body);
+    }
+    res.writeHead(200, { ...headers, 'Content-Length': st.size });
     if (req.method === 'HEAD') return res.end();
     fs.createReadStream(file).pipe(res);
   } catch {
