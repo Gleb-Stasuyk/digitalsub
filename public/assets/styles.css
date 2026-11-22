@@ -279,7 +279,7 @@ p{margin:0 0 1em}
 
 /* Карусель тарифов */
 .carousel{position:relative;min-width:0}
-.carousel__track{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 44px) / 3);gap:22px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;padding:18px 2px 8px;margin:-18px -2px 0;-webkit-overflow-scrolling:touch}
+.carousel__track{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 44px) / 3);gap:22px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scroll-padding-inline:2px;scroll-behavior:smooth;scrollbar-width:none;padding:18px 2px 8px;margin:-18px -2px 0;-webkit-overflow-scrolling:touch}
 .carousel__track::-webkit-scrollbar{display:none}
 .carousel__track:focus-visible{outline:2px solid var(--brand-2);outline-offset:4px;border-radius:var(--radius)}
 .carousel__track>.plan{scroll-snap-align:start;min-width:0}
