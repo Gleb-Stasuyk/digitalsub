@@ -109,23 +109,25 @@
     state.modules.forEach((q, id) => { const m = modById(id); if (m && allowed.has(id)) mods.push({ ...m, q, cost: m.price * q }); });
     mods.sort((a, b) => P.modules.findIndex((x) => x.id === a.id) - P.modules.findIndex((x) => x.id === b.id));
     const term = P.terms.find((t) => t.months === state.term) || P.terms[0];
-    // Цены основ и модулей указаны для срока P.priceTerm (36 мес.); платёж без скидки — цена при 12 мес.
+    // Цена основы указана для срока P.priceTerm (36 мес.); скидка за срок действует только на основу.
+    // Основа без скидки — цена при 12 мес. Модули — фиксированная цена при любом сроке.
     const ref = P.terms.find((t) => t.months === P.priceTerm) || P.terms[0];
-    const toFull = (sum) => round(sum / (1 - (ref.discount || 0)));
-    const atTerm = (sum) => (term === ref ? sum : round(toFull(sum) * (1 - (term.discount || 0))));
-    const refMonthly = base.price + mods.filter((m) => !m.once).reduce((s, m) => s + m.cost, 0);
-    const fullMonthly = toFull(refMonthly);
+    const baseFull = round(base.price / (1 - (ref.discount || 0)));
+    const baseAt = term === ref ? base.price : round(baseFull * (1 - (term.discount || 0)));
+    const modSum = (list) => list.filter((m) => !m.once).reduce((s, m) => s + m.cost, 0);
+    const modsMonthly = modSum(mods);
+    const fullMonthly = baseFull + modsMonthly;
     const once = mods.filter((m) => m.once).reduce((s, m) => s + m.cost, 0); // разовые услуги (раздел «Юридическое»)
-    const monthly = atTerm(refMonthly);
+    const monthly = baseAt + modsMonthly;
     const start = monthly * ((P.startPayment && P.startPayment.months) || 2);
     const paidSubs = monthly * term.months;
     const total = paidSubs;
     const bo = P.buyout;
     // В выкуп входят только основа и модули продукта: поддержка и продвижение (bo.excludeGroups) не выкупаются
     const excl = new Set(bo.excludeGroups || []);
-    const boRef = base.price + mods.filter((m) => !m.once && !excl.has(m.group)).reduce((s, m) => s + m.cost, 0);
-    const boMonthly = toFull(boRef);
-    const boPaid = atTerm(boRef) * term.months;
+    const boMods = modSum(mods.filter((m) => !excl.has(m.group)));
+    const boMonthly = baseFull + boMods;
+    const boPaid = (baseAt + boMods) * term.months;
     const boExcluded = mods.some((m) => !m.once && excl.has(m.group));
     const buyoutBase = bo.multiplier * boMonthly;
     const credit = bo.creditShare * boPaid;
@@ -145,7 +147,7 @@
     if (c.mods.some((m) => m.adBudget)) notes.push('Рекламный бюджет оплачивается отдельно, напрямую рекламной площадке.');
     if (c.boExcluded) notes.push('Модули поддержки и продвижения не входят в цену выкупа: после выкупа они оплачиваются по отдельному договору.');
     const fn = $('#r-fromnote'); if (fn) fn.textContent = notes.join(' ');
-    $('#r-discount').textContent = c.term.discount ? `скидка ${Math.round(c.term.discount * 100)}% за срок ${c.term.months} мес. (без скидки ${fmt(c.fullMonthly, cur)})` : `цена без скидки при сроке ${c.term.months} мес.`;
+    $('#r-discount').textContent = c.term.discount ? `скидка ${Math.round(c.term.discount * 100)}% на основу за срок ${c.term.months} мес. (без скидки ${fmt(c.fullMonthly, cur)})` : `цена без скидки при сроке ${c.term.months} мес.`;
     $('#r-start').textContent = (hasFrom ? 'от ' : '') + fmt(c.start, cur);
     $('#r-buyout').textContent = (hasFrom ? 'от ' : '') + fmt(c.buyout, cur);
     const pct = Math.round(P.buyout.creditShare * 100);

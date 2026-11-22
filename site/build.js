@@ -257,7 +257,7 @@ function projectCard(p) {
 
 /* ---------- Расчёты подписки (та же логика, что в калькуляторе main.js) ---------- */
 const rnd = (n) => Math.round(n / (P.roundTo || 1)) * (P.roundTo || 1);
-// Цены в pricing.json — для срока P.priceTerm (36 мес.); «без скидки» — цена при 12 мес.
+// Цены основ в pricing.json — для срока P.priceTerm (36 мес.); «без скидки» — цена при 12 мес. Модули — фиксированная цена, скидка за срок на них не действует.
 const REF = P.terms.find((x) => x.months === P.priceTerm) || P.terms[0];
 const toFull = (sum) => rnd(sum / (1 - (REF.discount || 0)));
 function subCalc(baseId, months = REF.months) {
@@ -305,7 +305,7 @@ const add = (file, url, html, prio, freq = 'monthly') => pages.push({ file, url,
           <p class="section__sub">Итоговая стоимость зависит от задачи и фиксируется в договоре. Начните с необходимого — новые модули подключаются в любой момент.</p>
         </div>
         <div class="grid grid--3">
-          <div class="card fact"><p class="fact__big">до ${Math.round(Math.max(...P.terms.map((t) => t.discount)) * 100)}%</p><h3>Скидка за срок</h3><p>Минимальный срок подписки — 12 месяцев, ${discText}. Цены «от» — при подписке на ${REF.months} месяцев. Срок отсчитывается с запуска первой версии.</p></div>
+          <div class="card fact"><p class="fact__big">до ${Math.round(Math.max(...P.terms.map((t) => t.discount)) * 100)}%</p><h3>Скидка за срок</h3><p>Минимальный срок подписки — 12 месяцев, ${discText}. Цены «от» — при подписке на ${REF.months} месяцев, скидка действует на основу. Срок отсчитывается с запуска первой версии.</p></div>
           <div class="card fact"><p class="fact__big">${P.startPayment.months} платежа</p><h3>Оплата на старте</h3><p>На старте оплачиваются только первый и последний месяц подписки, дальше — ежемесячно.</p></div>
           <div class="card fact"><p class="fact__big">${P.bases.length} основ</p><h3>Модули по необходимости</h3><p>Онлайн-оплата, запись, Telegram, интеграции, продвижение — подключаются к основе, когда понадобятся.</p></div>
         </div>
