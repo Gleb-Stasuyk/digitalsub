@@ -116,11 +116,16 @@
     const paidSubs = monthly * term.months;
     const total = paidSubs;
     const bo = P.buyout;
-    const buyoutBase = bo.multiplier * fullMonthly;
-    const credit = bo.creditShare * paidSubs;
-    const buyoutMin = bo.minMonths * fullMonthly;
+    // В выкуп входят только основа и модули продукта: поддержка и продвижение (bo.excludeGroups) не выкупаются
+    const excl = new Set(bo.excludeGroups || []);
+    const boMonthly = base.price + mods.filter((m) => !m.once && !excl.has(m.group)).reduce((s, m) => s + m.cost, 0);
+    const boPaid = round(boMonthly * (1 - (term.discount || 0))) * term.months;
+    const boExcluded = mods.some((m) => !m.once && excl.has(m.group));
+    const buyoutBase = bo.multiplier * boMonthly;
+    const credit = bo.creditShare * boPaid;
+    const buyoutMin = bo.minMonths * boMonthly;
     const buyout = round(Math.max(buyoutBase - credit, buyoutMin));
-    return { base, mods, once, term, fullMonthly, monthly, start, paidSubs, total, buyoutBase, credit, buyoutMin, buyout };
+    return { base, mods, once, term, fullMonthly, monthly, start, paidSubs, total, boMonthly, boPaid, boExcluded, buyoutBase, credit, buyoutMin, buyout };
   }
 
   function render() {
@@ -132,6 +137,7 @@
     const notes = [];
     if (hasFrom) notes.push('Часть модулей указана «от»: итоговая цена уточняется после обсуждения задачи.');
     if (c.mods.some((m) => m.adBudget)) notes.push('Рекламный бюджет оплачивается отдельно, напрямую рекламной площадке.');
+    if (c.boExcluded) notes.push('Модули поддержки и продвижения не входят в цену выкупа: после выкупа они оплачиваются по отдельному договору.');
     const fn = $('#r-fromnote'); if (fn) fn.textContent = notes.join(' ');
     $('#r-discount').textContent = c.term.discount ? `скидка ${Math.round(c.term.discount * 100)}% за срок ${c.term.months} мес. (без скидки ${fmt(c.fullMonthly, cur)})` : `базовая цена при сроке ${c.term.months} мес.`;
     $('#r-start').textContent = (hasFrom ? 'от ' : '') + fmt(c.start, cur);
@@ -139,7 +145,7 @@
     $('#r-buyout').textContent = (hasFrom ? 'от ' : '') + fmt(c.buyout, cur);
     const pct = Math.round(P.buyout.creditShare * 100);
     const f = $('#r-formula'); f.textContent = '';
-    f.append(`Выкуп = ${P.buyout.multiplier} × ${fmt(c.fullMonthly, cur)} (платёж без скидки) − ${pct}% × ${fmt(c.paidSubs, cur)} (оплачено за ${c.term.months} мес.)`);
+    f.append(`Выкуп = ${P.buyout.multiplier} × ${fmt(c.boMonthly, cur)} (платёж без скидки${c.boExcluded ? ', без поддержки и продвижения' : ''}) − ${pct}% × ${fmt(c.boPaid, cur)} (оплачено за ${c.term.months} мес.)`);
     f.append(document.createElement('br'));
     f.append(`= ${fmt(c.buyoutBase, cur)} − ${fmt(c.credit, cur)}, но не меньше ${P.buyout.minMonths} × платёж без скидки (${fmt(c.buyoutMin, cur)}).`);
     $('#r-selected').textContent = c.mods.length ? `Модули: ${c.mods.map((m) => modLabel(m, m.q)).join(', ')}` : 'Модули не выбраны';
