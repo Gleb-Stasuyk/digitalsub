@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" width="1200" height="520" role="img" aria-label="Две роли: вы как бизнес-аналитик и DigitalSub как разработчик" font-family="system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6d5dfc"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs>
+<rect width="1200" height="520" rx="24" fill="#10172b"/>
+<text x="60" y="80" font-size="34" font-weight="700" fill="#e8ecf7" text-anchor="start">Кто за что отвечает в проекте</text>
+<rect x="60" y="120" width="520" height="360" rx="16" fill="#141c33" stroke="#26304f" stroke-width="2"/>
+<rect x="60" y="120" width="520" height="8" rx="4" fill="#6d5dfc"/>
+<text x="92" y="180" font-size="24" font-weight="700" fill="#e8ecf7" text-anchor="start">Вы — аналитик и владелец продукта</text>
+<circle cx="112" cy="214" r="10" fill="#6d5dfc"/>
+<text x="136" y="222" font-size="22" font-weight="400" fill="#9aa5c4" text-anchor="start">Сбор требований и приоритеты</text>
+<circle cx="112" cy="274" r="10" fill="#6d5dfc"/>
+<text x="136" y="282" font-size="22" font-weight="400" fill="#9aa5c4" text-anchor="start">User stories, CJM, схемы BPMN</text>
+<circle cx="112" cy="334" r="10" fill="#6d5dfc"/>
+<text x="136" y="342" font-size="22" font-weight="400" fill="#9aa5c4" text-anchor="start">Техническое задание на первую версию</text>
+<circle cx="112" cy="394" r="10" fill="#6d5dfc"/>
+<text x="136" y="402" font-size="22" font-weight="400" fill="#9aa5c4" text-anchor="start">Приёмка, запуск и решения по данным</text>
+<rect x="620" y="120" width="520" height="360" rx="16" fill="#141c33" stroke="#26304f" stroke-width="2"/>
+<rect x="620" y="120" width="520" height="8" rx="4" fill="#22d3ee"/>
+<text x="652" y="180" font-size="24" font-weight="700" fill="#e8ecf7" text-anchor="start">DigitalSub — разработка и поддержка</text>
+<circle cx="672" cy="214" r="10" fill="#22d3ee"/>
+<text x="696" y="222" font-size="22" font-weight="400" fill="#9aa5c4" text-anchor="start">Разработка сайта или приложения</text>
+<circle cx="672" cy="274" r="10" fill="#22d3ee"/>
+<text x="696" y="282" font-size="22" font-weight="400" fill="#9aa5c4" text-anchor="start">Хостинг, домен, обновления, копии</text>
+<circle cx="672" cy="334" r="10" fill="#22d3ee"/>
+<text x="696" y="342" font-size="22" font-weight="400" fill="#9aa5c4" text-anchor="start">Запуск на вашем домене или в магазине</text>
+<circle cx="672" cy="394" r="10" fill="#22d3ee"/>
+<text x="696" y="402" font-size="22" font-weight="400" fill="#9aa5c4" text-anchor="start">Правки в рамках часов подписки</text>
+</svg>

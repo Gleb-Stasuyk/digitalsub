@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620" width="1200" height="620" role="img" aria-label="Шесть шагов: задача, требования, ТЗ, приёмка, аналитика, портфолио" font-family="system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6d5dfc"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs>
+<rect width="1200" height="620" rx="24" fill="#10172b"/>
+<text x="60" y="80" font-size="34" font-weight="700" fill="#e8ecf7" text-anchor="start">Как пройти путь от идеи до портфолио</text>
+<rect x="60" y="130" width="350" height="200" rx="16" fill="#141c33" stroke="#26304f" stroke-width="2"/>
+<circle cx="106" cy="182" r="24" fill="url(#g)"/>
+<text x="106" y="191" font-size="24" font-weight="700" fill="#10172b" text-anchor="middle">1</text>
+<text x="144" y="191" font-size="26" font-weight="700" fill="#e8ecf7" text-anchor="start">Задача</text>
+<text x="88" y="254" font-size="20" font-weight="400" fill="#9aa5c4" text-anchor="start">выбрать сценарий,</text>
+<text x="88" y="284" font-size="20" font-weight="400" fill="#9aa5c4" text-anchor="start">который можно проверить</text>
+<rect x="430" y="130" width="350" height="200" rx="16" fill="#141c33" stroke="#26304f" stroke-width="2"/>
+<circle cx="476" cy="182" r="24" fill="url(#g)"/>
+<text x="476" y="191" font-size="24" font-weight="700" fill="#10172b" text-anchor="middle">2</text>
+<text x="514" y="191" font-size="26" font-weight="700" fill="#e8ecf7" text-anchor="start">Требования</text>
+<text x="458" y="254" font-size="20" font-weight="400" fill="#9aa5c4" text-anchor="start">истории, CJM,</text>
+<text x="458" y="284" font-size="20" font-weight="400" fill="#9aa5c4" text-anchor="start">BPMN и состав MVP</text>
+<rect x="800" y="130" width="350" height="200" rx="16" fill="#141c33" stroke="#26304f" stroke-width="2"/>
+<circle cx="846" cy="182" r="24" fill="url(#g)"/>
+<text x="846" y="191" font-size="24" font-weight="700" fill="#10172b" text-anchor="middle">3</text>
+<text x="884" y="191" font-size="26" font-weight="700" fill="#e8ecf7" text-anchor="start">ТЗ и договор</text>
+<text x="828" y="254" font-size="20" font-weight="400" fill="#9aa5c4" text-anchor="start">спецификация, расчёт</text>
+<text x="828" y="284" font-size="20" font-weight="400" fill="#9aa5c4" text-anchor="start">и запуск разработки</text>
+<rect x="60" y="360" width="350" height="200" rx="16" fill="#141c33" stroke="#26304f" stroke-width="2"/>
+<circle cx="106" cy="412" r="24" fill="url(#g)"/>
+<text x="106" y="421" font-size="24" font-weight="700" fill="#10172b" text-anchor="middle">4</text>
+<text x="144" y="421" font-size="26" font-weight="700" fill="#e8ecf7" text-anchor="start">Приёмка</text>
+<text x="88" y="484" font-size="20" font-weight="400" fill="#9aa5c4" text-anchor="start">проверить сценарии</text>
+<text x="88" y="514" font-size="20" font-weight="400" fill="#9aa5c4" text-anchor="start">и выпустить версию</text>
+<rect x="430" y="360" width="350" height="200" rx="16" fill="#141c33" stroke="#26304f" stroke-width="2"/>
+<circle cx="476" cy="412" r="24" fill="url(#g)"/>
+<text x="476" y="421" font-size="24" font-weight="700" fill="#10172b" text-anchor="middle">5</text>
+<text x="514" y="421" font-size="26" font-weight="700" fill="#e8ecf7" text-anchor="start">Аналитика</text>
+<text x="458" y="484" font-size="20" font-weight="400" fill="#9aa5c4" text-anchor="start">цели Метрики и GA4,</text>
+<text x="458" y="514" font-size="20" font-weight="400" fill="#9aa5c4" text-anchor="start">воронка, гипотезы</text>
+<rect x="800" y="360" width="350" height="200" rx="16" fill="#141c33" stroke="#26304f" stroke-width="2"/>
+<circle cx="846" cy="412" r="24" fill="url(#g)"/>
+<text x="846" y="421" font-size="24" font-weight="700" fill="#10172b" text-anchor="middle">6</text>
+<text x="884" y="421" font-size="26" font-weight="700" fill="#e8ecf7" text-anchor="start">Портфолио</text>
+<text x="828" y="484" font-size="20" font-weight="400" fill="#9aa5c4" text-anchor="start">артефакты, метрики</text>
+<text x="828" y="514" font-size="20" font-weight="400" fill="#9aa5c4" text-anchor="start">и честное описание</text>
+</svg>
