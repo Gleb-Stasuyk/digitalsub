@@ -22,7 +22,7 @@
   <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-  <link rel="stylesheet" href="/assets/styles.css?v=15916cc89b">
+  <link rel="stylesheet" href="/assets/styles.css?v=b6134946e3">
 <!-- Google tag (gtag.js) — GA4 G-9QMXBVJ80D -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-9QMXBVJ80D"></script>
 <!-- Google Tag Manager -->
@@ -45,7 +45,7 @@ window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(argume
     ym(114405591, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
 </script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://digitalsub.ru/"},{"@type":"ListItem","position":2,"name":"Для бизнеса","item":"https://digitalsub.ru/dlya-biznesa"},{"@type":"ListItem","position":3,"name":"Ремонт и строительство","item":"https://digitalsub.ru/dlya-biznesa/remont-i-stroitelstvo"}]}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Service","name":"Сайт для строительной и ремонтной компании","serviceType":"сайт для строительной компании","description":"Сайт для компании по ремонту квартир, строительству домов или отделке по подписке: услуги и цены, портфолио объектов, заявка на замер. Без оплаты разработки, от 4 900 ₽/мес.","url":"https://digitalsub.ru/dlya-biznesa/remont-i-stroitelstvo","areaServed":"RU","provider":{"@type":"Organization","name":"DigitalSub","url":"https://digitalsub.ru/"},"offers":{"@type":"Offer","url":"https://digitalsub.ru/dlya-biznesa/remont-i-stroitelstvo","priceCurrency":"RUB","price":9900,"priceSpecification":{"@type":"UnitPriceSpecification","price":9900,"priceCurrency":"RUB","unitText":"месяц","unitCode":"MON"}}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Service","name":"Сайт для строительной и ремонтной компании","serviceType":"сайт для строительной компании","description":"Сайт для компании по ремонту квартир, строительству домов или отделке по подписке: услуги и цены, портфолио объектов, заявка на замер. Без оплаты разработки, от 4 900 ₽/мес.","url":"https://digitalsub.ru/dlya-biznesa/remont-i-stroitelstvo","areaServed":"RU","provider":{"@type":"Organization","name":"DigitalSub","url":"https://digitalsub.ru/","email":"info@digitalsub.ru","sameAs":["https://t.me/DigitalSubInfo"]},"offers":{"@type":"Offer","priceCurrency":"RUB","price":9900,"priceSpecification":{"@type":"UnitPriceSpecification","price":9900,"priceCurrency":"RUB","unitText":"месяц","unitCode":"MON"},"url":"https://digitalsub.ru/dlya-biznesa/remont-i-stroitelstvo"}}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Сколько стоит сайт для ремонтной компании?","acceptedAnswer":{"@type":"Answer","text":"Лендинг — от 4 900 ₽/мес, многостраничный сайт — от 9 900 ₽/мес при подписке на 36 месяцев. Форма «Мы перезвоним» — +2 000 ₽/мес, уведомления о заявках в Telegram — +2 000 ₽/мес."}},{"@type":"Question","name":"Сделаете калькулятор стоимости ремонта?","acceptedAnswer":{"@type":"Answer","text":"Да. Калькулятор считает по вашим расценкам: площадь, тип помещения, виды работ, материалы. Объём зависит от числа параметров, поэтому оцениваем его после разговора и фиксируем до начала работ."}},{"@type":"Question","name":"Кто готовит фотографии и тексты для портфолио?","acceptedAnswer":{"@type":"Answer","text":"Фотографии объектов — ваши. Тексты поможем составить по вашим ответам: что за объект, какие работы, сроки, площадь. Готовые описания работ из интернета не копируем."}},{"@type":"Question","name":"Можно ли вести сайт под несколько городов?","acceptedAnswer":{"@type":"Answer","text":"Да, отдельные страницы под города и районы — дополнительные страницы (+1 000 ₽/мес за стр.). Для поиска по городам их стоит наполнить уникальным содержанием, а не копиями."}}]}</script>
 </head>
 <body>
@@ -67,8 +67,10 @@ window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(argume
         <a href="/buyout">Выкуп</a>
         <a href="/faq">Вопросы</a>
         <a href="/blog">Блог</a>
+        <a class="header__tg header__tg--nav" href="https://t.me/DigitalSubInfo" target="_blank" rel="noopener">Telegram</a>
         <a class="btn nav__cta" href="#lead">Оставить заявку</a>
       </nav>
+      <a class="header__tg" href="https://t.me/DigitalSubInfo" target="_blank" rel="noopener">Telegram</a>
       <a class="btn btn--sm header__cta" href="#lead">Оставить заявку</a>
       <button class="burger" id="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
     </div>
@@ -102,11 +104,15 @@ window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(argume
     <section class="section section--alt" id="included">
       <div class="container">
         <div class="section__head"><p class="eyebrow">Решение</p><h2>Что будет на сайте и сколько это стоит</h2></div>
+            <aside class="proto" role="note">
+      <p class="proto__badge">Для сайтов — бесплатно</p>
+      <p>Прототип лендинга, многостраничного сайта или интернет-магазина делаем <b>до оплаты и до подписания договора</b>. Это ни к чему не обязывает: вы смотрите, как будет выглядеть сайт, и только потом решаете, заключать договор или нет. Для приложений прототип на этом этапе не делается.</p>
+    </aside>
         <div class="grid grid--3 svc-info">
           <div class="card"><h3>Что сделаем</h3><ul class="ticks"><li>Страницы услуг с ценами за м² или за работу</li><li>Портфолио объектов с фотографиями и описанием</li><li>Этапы работ, гарантия и договор — простыми словами</li><li>Форма заявки на замер с площадью и видом работ</li><li>Уведомления о заявках в Telegram</li><li>Кнопка «Мы перезвоним»</li></ul></div>
           <div class="card"><h3>Какой тариф подходит</h3><p>Компании с несколькими направлениями подходит «Многостраничный сайт» — от 9 900 ₽/мес (страницы сверх пяти — +1 000 ₽/мес за стр.). Бригаде или мастеру с одной-двумя услугами хватит лендинга от 4 900 ₽/мес. Калькулятор стоимости ремонта под ваши расценки оценим отдельно — он зависит от формул и числа параметров.</p><p><a href="/services/website">Подробнее о тарифе «Многостраничный сайт» →</a></p></div>
           <div class="card"><h3>Оплата и выкуп</h3><ul class="ticks">
-            <li>Хостинг, домен, SSL, обновления и правки — в подписке</li>
+            <li>Хостинг, база данных, SSL, выделенный IP, резервные копии и 2 нефункциональные правки в месяц — в подписке</li>
             <li>На старте — 19 800 ₽: первый и последний месяц</li>
             <li>Минимальный срок 12 месяцев, при подписке на 24 месяца скидка 10%, на 36 месяцев — 20%</li>
             <li>Выкуп: 12 платежей без скидки минус 30% оплаченного; после 36 месяцев на базовом тарифе — около 41 900 ₽</li>
@@ -153,7 +159,8 @@ window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(argume
           <p class="eyebrow">Заявка</p>
           <h2>Обсудим ваш проект</h2>
           <p>Расскажите о задаче — ответим в течение рабочего дня, предложим решение и зафиксируем цену. Сфера «ремонт и строительство» уже указана в заявке.</p>
-          <ul class="ticks"><li>Бесплатная консультация</li><li>Оценка сроков и стоимости</li><li>Прототип до подписания договора</li></ul>
+          <ul class="ticks"><li>Бесплатная консультация</li><li>Оценка сроков и стоимости</li><li>Для сайтов: бесплатный прототип до оплаты и договора</li></ul>
+          <p class="lead-box__tg">Или напишите нам в <a href="https://t.me/DigitalSubInfo" target="_blank" rel="noopener">Telegram</a></p>
         </div>
         <form class="card form" id="lead-form" action="/api/lead" method="post" novalidate>
           <div class="field">
@@ -215,11 +222,11 @@ window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(argume
       </nav>
       <nav class="footer__nav" aria-label="Информация">
         <p class="footer__title">Информация</p>
-        <a href="/kontakty">Контакты</a><a href="/rekvizity">Реквизиты</a><a href="/privacy">Политика конфиденциальности</a><a href="/soglasie">Согласие на обработку данных</a><a href="mailto:info@digitalsub.ru">info@digitalsub.ru</a>
+        <a href="/kontakty">Контакты</a><a href="/rekvizity">Реквизиты</a><a href="/privacy">Политика конфиденциальности</a><a href="/soglasie">Согласие на обработку данных</a><a href="mailto:info@digitalsub.ru">info@digitalsub.ru</a><a href="https://t.me/DigitalSubInfo" target="_blank" rel="noopener">Telegram</a>
       </nav>
-      <p class="footer__copy">© <span id="year">2026</span> DigitalSub · ИНН 781450861386 · <a href="mailto:info@digitalsub.ru">info@digitalsub.ru</a> · работаем удалённо по всей России</p>
+      <p class="footer__copy">© <span id="year">2026</span> DigitalSub · ИНН 781450861386 · <a href="mailto:info@digitalsub.ru">info@digitalsub.ru</a> · <a href="https://t.me/DigitalSubInfo" target="_blank" rel="noopener">Telegram</a> · работаем удалённо по всей России</p>
     </div>
   </footer>
-  <script src="/assets/main.js?v=15916cc89b" defer></script>
+  <script src="/assets/main.js?v=b6134946e3" defer></script>
 </body>
 </html>

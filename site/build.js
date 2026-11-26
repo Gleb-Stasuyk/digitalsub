@@ -21,10 +21,34 @@ const rub = (n) => `${nb(n)}\u00a0₽`;
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const strip = (s) => String(s).replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
 const baseById = (id) => { const b = P.bases.find((x) => x.id === id); if (!b) throw new Error('base ' + id); return b; };
+const TG_URL = 'https://t.me/DigitalSubInfo';
+const TG_A = `<a href="${TG_URL}" target="_blank" rel="noopener">Telegram</a>`;
+const mskYmd = (d = new Date()) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Moscow', year: 'numeric', month: '2-digit', day: '2-digit' }).format(d);
+const promoOf = (b, now) => (b && b.promo && b.promo.price && b.promo.until && mskYmd(now) <= b.promo.until) ? b.promo : null;
+const basePrice = (b, now) => promoOf(b, now) ? b.promo.price : b.price;
+const untilRu = (iso) => { const [y, m, d] = iso.split('-'); return `${d}.${m}.${y}`; };
+const editsWord = (n) => n === 1 ? '1 нефункциональная правка в месяц' : `${n} нефункциональные правки в месяц`;
+const EDITS_DEF = 'Нефункциональная правка — изменение текстов, фото, цен или цветов без добавления новых функций. Новые функции и прочие доработки оплачиваются отдельно: пакетом часов или по оценке. Неиспользованные правки на следующий месяц не переносятся.';
+function priceHtml(b, { cls = 'plan__price', prefix = 'от' } = {}) {
+  const now = basePrice(b);
+  const promo = promoOf(b);
+  const badge = promo ? `<span class="plan__badge plan__badge--sale">${esc(promo.label || 'Акция')}</span>` : '';
+  const until = promo ? `<small class="plan__until">по акции до ${untilRu(promo.until)}</small>` : '';
+  const was = promo ? `<span class="plan__was">${nb(b.price)}&nbsp;₽</span> ` : '';
+  return `${badge}<p class="${cls}" data-base-price="${b.id}"${promo ? ` data-regular-price="${b.price}" data-promo-price="${promo.price}" data-promo-until="${promo.until}"` : ''}><span>${prefix}</span> ${was}<span class="plan__now">${nb(now)}&nbsp;₽<small>/мес</small></span>${until}</p>`;
+}
+function offerPrice(b) {
+  const price = basePrice(b);
+  const promo = promoOf(b);
+  const o = { '@type': 'Offer', priceCurrency: 'RUB', price, priceSpecification: { '@type': 'UnitPriceSpecification', price, priceCurrency: 'RUB', unitText: 'месяц', unitCode: 'MON' } };
+  if (promo) o.priceValidUntil = promo.until;
+  return o;
+}
+
 const modById = (id) => { const m = P.modules.find((x) => x.id === id); if (!m) throw new Error('module ' + id); return m; };
 const unit1 = (u) => (Array.isArray(u) ? u[0] : u);
 const modPrice = (m) => `${m.once ? '' : '+'}${m.from ? 'от ' : ''}${rub(m.price)}${m.once ? ' разово' : '/мес'}${m.qty ? ` за ${m.qty.short || unit1(m.qty.unit)}` : ''}`;
-const minPrice = Math.min(...P.bases.map((b) => b.price));
+const minPrice = Math.min(...P.bases.map((b) => basePrice(b)));
 const disc = P.terms.filter((t) => t.discount);
 const pct = (v) => Math.round(v * 100) + '%';
 // «при подписке на 24 месяца скидка 10%, на 36 месяцев — 20%»
@@ -51,8 +75,10 @@ function header(active) {
           <div class="nav__menu">${svc}</div>
         </div>
         ${NAV.slice(1).map(([h, t, k]) => a(h, t, k)).join('\n        ')}
+        <a class="header__tg header__tg--nav" href="https://t.me/DigitalSubInfo" target="_blank" rel="noopener">Telegram</a>
         <a class="btn nav__cta" href="#lead">Оставить заявку</a>
       </nav>
+      <a class="header__tg" href="https://t.me/DigitalSubInfo" target="_blank" rel="noopener">Telegram</a>
       <a class="btn btn--sm header__cta" href="#lead">Оставить заявку</a>
       <button class="burger" id="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
     </div>
@@ -74,9 +100,9 @@ const FOOTER = `  <footer class="footer">
       </nav>
       <nav class="footer__nav" aria-label="Информация">
         <p class="footer__title">Информация</p>
-        <a href="/kontakty">Контакты</a><a href="/rekvizity">Реквизиты</a><a href="/privacy">Политика конфиденциальности</a><a href="/soglasie">Согласие на обработку данных</a><a href="mailto:info@digitalsub.ru">info@digitalsub.ru</a>
+        <a href="/kontakty">Контакты</a><a href="/rekvizity">Реквизиты</a><a href="/privacy">Политика конфиденциальности</a><a href="/soglasie">Согласие на обработку данных</a><a href="mailto:info@digitalsub.ru">info@digitalsub.ru</a><a href="https://t.me/DigitalSubInfo" target="_blank" rel="noopener">Telegram</a>
       </nav>
-      <p class="footer__copy">© <span id="year">2026</span> DigitalSub · ИНН 781450861386 · <a href="mailto:info@digitalsub.ru">info@digitalsub.ru</a> · работаем удалённо по всей России</p>
+      <p class="footer__copy">© <span id="year">2026</span> DigitalSub · ИНН 781450861386 · <a href="mailto:info@digitalsub.ru">info@digitalsub.ru</a> · <a href="https://t.me/DigitalSubInfo" target="_blank" rel="noopener">Telegram</a> · работаем удалённо по всей России</p>
     </div>
   </footer>`;
 
@@ -140,7 +166,7 @@ ${col(items.slice(half))}
     </section>`;
 }
 
-const ORG = { '@type': 'Organization', name: 'DigitalSub', url: SITE + '/' };
+const ORG = { '@type': 'Organization', name: 'DigitalSub', url: SITE + '/', email: 'info@digitalsub.ru', sameAs: [TG_URL] };
 
 // Яндекс Метрика (сниппет Глеба без изменений): скрипт — в <head>, <noscript> — в начале <body>.
 // Хеши встроенного скрипта и style-атрибута пишутся в lib/csp.json для CSP-заголовка server.js.
@@ -210,7 +236,7 @@ ${SERVICES.map((s) => { const b = baseById(s.base); return `          <article c
             <div class="feature__icon">${svg(s.icon)}</div>
             <h3><a class="feature__link" href="/services/${s.slug}">${s.short}</a></h3>
             <p>${s.card}</p>
-            <div class="feature__foot"><span class="feature__price">от <b data-base-price="${b.id}">${rub(b.price)}</b>/мес</span><span class="feature__more" aria-hidden="true">Подробнее →</span></div>
+            <div class="feature__foot"><span class="feature__price">${promoOf(b) ? `<span class="plan__badge plan__badge--sale plan__badge--inline">${esc(promoOf(b).label)}</span> <s class="price-was">${nb(b.price)}&nbsp;₽</s> ` : ""}от <b data-base-price="${b.id}"${promoOf(b) ? ` data-regular-price="${b.price}" data-promo-price="${promoOf(b).price}" data-promo-until="${promoOf(b).until}"` : ""}>${rub(basePrice(b))}</b>/мес</span><span class="feature__more" aria-hidden="true">Подробнее →</span></div>
           </article>`; }).join('\n')}
         </div>`;
 }
@@ -261,7 +287,7 @@ const rnd = (n) => Math.round(n / (P.roundTo || 1)) * (P.roundTo || 1);
 const REF = P.terms.find((x) => x.months === P.priceTerm) || P.terms[0];
 const toFull = (sum) => rnd(sum / (1 - (REF.discount || 0)));
 function subCalc(baseId, months = REF.months) {
-  const ref = baseById(baseId).price;
+  const ref = basePrice(baseById(baseId));
   const price = toFull(ref);
   const t = P.terms.find((x) => x.months === months) || P.terms[0];
   const monthly = t === REF ? ref : rnd(price * (1 - (t.discount || 0)));
@@ -270,7 +296,7 @@ function subCalc(baseId, months = REF.months) {
   return { monthly, total, buyout, start: monthly * P.startPayment.months, own: total + buyout };
 }
 const NICHE_HELPERS = {
-  p: (id) => rub(baseById(id).price),
+  p: (id) => rub(basePrice(baseById(id))),
   m: (id) => modPrice(modById(id)),
   buyout12: (id) => rub(subCalc(id, 12).buyout),
   start: (id) => rub(subCalc(id).start),
@@ -280,6 +306,14 @@ const NICHES_LIST = NICHES;
 const ICON_NICHE = '<path d="M4 20V9l8-5 8 5v11"/><path d="M9 20v-6h6v6"/>';
 
 /* ---------- Страницы ---------- */
+const SITE_BASES = new Set(['landing', 'site', 'shop']);
+function protoBlock() {
+  return `    <aside class="proto" role="note">
+      <p class="proto__badge">Для сайтов — бесплатно</p>
+      <p>Прототип лендинга, многостраничного сайта или интернет-магазина делаем <b>до оплаты и до подписания договора</b>. Это ни к чему не обязывает: вы смотрите, как будет выглядеть сайт, и только потом решаете, заключать договор или нет. Для приложений прототип на этом этапе не делается.</p>
+    </aside>`;
+}
+
 const pages = [];
 const add = (file, url, html, prio, freq = 'monthly') => pages.push({ file, url, html, prio, freq });
 
@@ -355,7 +389,7 @@ const add = (file, url, html, prio, freq = 'monthly') => pages.push({ file, url,
     ogDesc: 'Не платите за разработку — подпишитесь на готовый продукт для своего бизнеса. От 4 900 ₽/мес, первая версия сайта за 3–7 дней.',
     head: '  <meta name="yandex-verification" content="57df291596b35bf1" />\n  <meta name="keywords" content="сайт по подписке, сайт в рассрочку, разработка сайтов, CRM для бизнеса, онлайн-запись, веб-приложение, мобильное приложение Android, десктоп-приложение, выкуп сайта">\n  <script src="/assets/legacy-hash.js"></script>\n',
     jsonld: [
-      { '@context': 'https://schema.org', '@type': 'ProfessionalService', name: 'DigitalSub', url: SITE + '/', image: SITE + '/assets/og-image.png', description: 'Разработка сайтов, интернет-магазинов, веб-, мобильных и десктоп-приложений по подписке с правом выкупа.', email: 'info@digitalsub.ru', founder: { '@type': 'Person', name: 'Стасюк Глеб Юрьевич' }, contactPoint: { '@type': 'ContactPoint', contactType: 'customer service', email: 'info@digitalsub.ru', areaServed: 'RU', availableLanguage: 'ru' }, areaServed: 'RU', priceRange: `от ${nb(minPrice)} ₽/мес` },
+      { '@context': 'https://schema.org', '@type': 'ProfessionalService', name: 'DigitalSub', url: SITE + '/', image: SITE + '/assets/og-image.png', description: 'Разработка сайтов, интернет-магазинов, веб-, мобильных и десктоп-приложений по подписке с правом выкупа.', email: 'info@digitalsub.ru', founder: { '@type': 'Person', name: 'Стасюк Глеб Юрьевич' }, sameAs: [TG_URL], contactPoint: { '@type': 'ContactPoint', contactType: 'customer service', email: 'info@digitalsub.ru', url: TG_URL, areaServed: 'RU', availableLanguage: 'ru' }, areaServed: 'RU', priceRange: `от ${nb(minPrice)} ₽/мес` },
       { '@context': 'https://schema.org', '@type': 'WebSite', name: 'DigitalSub', url: SITE + '/', inLanguage: 'ru' },
     ],
     body,
@@ -379,7 +413,7 @@ const add = (file, url, html, prio, freq = 'monthly') => pages.push({ file, url,
         <ul class="niche-links">${NICHES_LIST.map((n) => `<li><a href="/dlya-biznesa/${n.slug}">${n.h1} ${n.h1grad}</a></li>`).join('')}</ul>
       </div>
     </section>`, part('remote'), lead({ text: 'Отправьте расчёт из калькулятора или опишите задачу — ответим в течение рабочего дня, уточним детали и зафиксируем цену в договоре.' })]);
-  const offers = { '@context': 'https://schema.org', '@type': 'OfferCatalog', name: 'Тарифы DigitalSub', url: SITE + '/prices', itemListElement: SERVICES.map((s) => { const b = baseById(s.base); return { '@type': 'Offer', name: b.name, url: `${SITE}/services/${s.slug}`, priceCurrency: 'RUB', price: b.price, priceSpecification: { '@type': 'UnitPriceSpecification', price: b.price, priceCurrency: 'RUB', unitText: 'месяц', unitCode: 'MON' } }; }) };
+  const offers = { '@context': 'https://schema.org', '@type': 'OfferCatalog', name: 'Тарифы DigitalSub', url: SITE + '/prices', itemListElement: SERVICES.map((s) => { const b = baseById(s.base); return { ...offerPrice(b), name: b.name, url: `${SITE}/services/${s.slug}` }; }) };
   add('prices.html', '/prices', layout({ url: '/prices', active: 'prices',
     title: 'Цены на сайты и приложения по подписке — калькулятор | DigitalSub',
     desc: `Тарифы DigitalSub: лендинг от 4 900 ₽/мес, многостраничный сайт от 9 900 ₽, интернет-магазин от 14 900 ₽, веб-приложение от 19 900 ₽, Android от 29 900 ₽, десктоп от 34 900 ₽. Цены при подписке на 36 месяцев, модули и калькулятор стоимости с выкупом.`,
@@ -552,17 +586,18 @@ for (const s of SERVICES) {
   const c = crumbs([['/services', 'Услуги'], [url, s.short]]);
   const buyoutEx = subCalc(b.id).buyout;
   const head = pageHead({ crumbsHtml: c.html, eyebrow: s.short + ' · по подписке', h1: `${s.h1} <span class="grad">${s.h1grad}</span>`, lead: s.lead,
-    points: [`<b>от <span data-base-price="${b.id}">${rub(b.price)}</span></b> в месяц`, `<b>${s.time}</b> до первой версии`, `<b>${P.startPayment.months} месяца</b> оплаты на старте`, '<b>право выкупа</b>'],
+    points: [`<b>от <span data-base-price="${b.id}"${promoOf(b) ? ` data-regular-price="${b.price}" data-promo-price="${promoOf(b).price}" data-promo-until="${promoOf(b).until}"` : ""}>${rub(basePrice(b))}</span></b> в месяц`, `<b>${s.time}</b> до первой версии`, ...(SITE_BASES.has(s.base) ? ['<b>прототип бесплатно</b> до оплаты и договора'] : []), `<b>${P.startPayment.months} месяца</b> оплаты на старте`, '<b>право выкупа</b>'],
     actions: `<a class="btn btn--lg" href="#lead">Обсудить проект</a><a class="btn btn--ghost btn--lg" href="/prices?base=${b.id}#calc">Рассчитать стоимость</a>` });
   const inc = `    <section class="section" id="included">
       <div class="container">
         <div class="section__head"><p class="eyebrow">Что входит</p><h2>${s.name}: что вы получаете</h2></div>
+        ${SITE_BASES.has(s.base) ? protoBlock() : ''}
         <div class="grid grid--3 svc-info">
           <div class="card"><h3>В подписке</h3><ul class="ticks">${s.included.map((x) => `<li>${x}</li>`).join('')}</ul></div>
           <div class="card"><h3>Кому подходит</h3><p>${s.forWhom}</p><ul class="ticks">${s.forList.map((x) => `<li>${x}</li>`).join('')}</ul></div>
           <div class="card"><h3>Сроки и оплата</h3><ul class="ticks">
             <li>Первая версия — ${s.time}</li>
-            <li>от ${rub(b.price)}/мес при подписке на ${REF.months} месяцев</li>
+            <li>от ${rub(basePrice(b))}/мес при подписке на ${REF.months} месяцев${promoOf(b) ? ` <span class="plan__badge plan__badge--sale plan__badge--inline">${esc(promoOf(b).label)}</span> (обычно ${rub(b.price)}, акция до ${untilRu(promoOf(b).until)})` : ""}</li>
             <li>Минимальный срок 12 месяцев, ${discText}</li>
             <li>На старте — первый и последний месяц подписки</li>
             <li>Выкуп: ${P.buyout.multiplier} платежей без скидки минус ${Math.round(P.buyout.creditShare * 100)}% оплаченного; после ${REF.months} месяцев на базовом тарифе — около ${rub(buyoutEx)}</li>
@@ -584,7 +619,7 @@ ${s.modules.map((id) => { const m = modById(id); return `          <div class="c
   const faq = faqBlock(s.faq, { id: 'faq', title: `Вопросы: ${s.short.toLowerCase()}` });
   const body = head + '\n\n' + sections([inc, mods, faq, lead({ product: s.product, title: 'Обсудим ваш проект', text: `Расскажите о задаче — ответим в течение рабочего дня, предложим решение и зафиксируем цену. В заявке уже выбрано: «${s.short}».` })]);
   const service = { '@context': 'https://schema.org', '@type': 'Service', name: s.name, serviceType: s.serviceType, description: s.desc, url: SITE + url, areaServed: 'RU', provider: ORG,
-    offers: { '@type': 'Offer', url: SITE + url, priceCurrency: 'RUB', price: b.price, priceSpecification: { '@type': 'UnitPriceSpecification', price: b.price, priceCurrency: 'RUB', unitText: 'месяц', unitCode: 'MON' } } };
+    offers: { ...offerPrice(b), url: SITE + url } };
   add(`services/${s.slug}.html`, url, layout({ url, active: 'svc-' + s.slug, title: s.title, desc: s.desc, jsonld: [c.json, service, faqLd(s.faq)], body }), '0.9');
 }
 
@@ -596,7 +631,7 @@ ${NICHES.map((n) => { const b = baseById(n.base); return `          <article cla
             <div class="feature__icon">${svg(ICON_NICHE)}</div>
             <h3><a class="feature__link" href="/dlya-biznesa/${n.slug}">${n.short}</a></h3>
             <p>${n.card}</p>
-            <div class="feature__foot"><span class="feature__price">от <b data-base-price="${b.id}">${rub(b.price)}</b>/мес</span><span class="feature__more" aria-hidden="true">Подробнее →</span></div>
+            <div class="feature__foot"><span class="feature__price">${promoOf(b) ? `<span class="plan__badge plan__badge--sale plan__badge--inline">${esc(promoOf(b).label)}</span> <s class="price-was">${nb(b.price)}&nbsp;₽</s> ` : ""}от <b data-base-price="${b.id}"${promoOf(b) ? ` data-regular-price="${b.price}" data-promo-price="${promoOf(b).price}" data-promo-until="${promoOf(b).until}"` : ""}>${rub(basePrice(b))}</b>/мес</span><span class="feature__more" aria-hidden="true">Подробнее →</span></div>
           </article>`; }).join('\n')}
         </div>`;
   const body = pageHead({ crumbsHtml: c.html, eyebrow: 'Для бизнеса', h1: 'Сайты и приложения <span class="grad">для вашей отрасли</span>',
@@ -623,7 +658,7 @@ for (const n of NICHES) {
   const svc = SERVICES.find((s) => s.base === n.base);
   const sc = subCalc(n.base);
   const head = pageHead({ crumbsHtml: c.html, eyebrow: `${n.short} · по подписке`, h1: `${n.h1} <span class="grad">${n.h1grad}</span>`, lead: n.lead,
-    points: [`<b>от <span data-base-price="${b.id}">${rub(b.price)}</span></b> в месяц`, `<b>${svc ? svc.time : '3–7 дней'}</b> до первой версии`, `<b>${P.startPayment.months} месяца</b> оплаты на старте`, '<b>право выкупа</b>'],
+    points: [`<b>от <span data-base-price="${b.id}"${promoOf(b) ? ` data-regular-price="${b.price}" data-promo-price="${promoOf(b).price}" data-promo-until="${promoOf(b).until}"` : ""}>${rub(basePrice(b))}</span></b> в месяц`, `<b>${svc ? svc.time : '3–7 дней'}</b> до первой версии`, `<b>${P.startPayment.months} месяца</b> оплаты на старте`, '<b>право выкупа</b>'],
     actions: `<a class="btn btn--lg" href="#lead">Обсудить проект</a><a class="btn btn--ghost btn--lg" href="/prices?base=${b.id}#calc">Рассчитать стоимость</a>` });
   const pains = `    <section class="section" id="tasks">
       <div class="container">
@@ -636,11 +671,12 @@ ${n.pains.map(([t, x]) => `          <div class="card"><h3>${t}</h3><p>${x}</p><
   const plan = `    <section class="section" id="included">
       <div class="container">
         <div class="section__head"><p class="eyebrow">Решение</p><h2>Что будет на сайте и сколько это стоит</h2></div>
+        ${SITE_BASES.has(n.base) ? protoBlock() : ''}
         <div class="grid grid--3 svc-info">
           <div class="card"><h3>Что сделаем</h3><ul class="ticks">${n.solution.map((x) => `<li>${x}</li>`).join('')}</ul></div>
           <div class="card"><h3>Какой тариф подходит</h3><p>${n.planText}</p><p><a href="/services/${svc ? svc.slug : ''}">Подробнее о тарифе «${svc ? svc.short : b.name}» →</a></p></div>
           <div class="card"><h3>Оплата и выкуп</h3><ul class="ticks">
-            <li>Хостинг, домен, SSL, обновления и правки — в подписке</li>
+            <li>Хостинг, база данных, SSL, выделенный IP, резервные копии и ${editsWord(b.edits)} — в подписке</li>
             <li>На старте — ${rub(sc.start)}: первый и последний месяц</li>
             <li>Минимальный срок 12 месяцев, ${discText}</li>
             <li>Выкуп: ${P.buyout.multiplier} платежей без скидки минус ${Math.round(P.buyout.creditShare * 100)}% оплаченного; после ${REF.months} месяцев на базовом тарифе — около ${rub(sc.buyout)}</li>
@@ -670,7 +706,7 @@ ${projectCard(rel)}
   const faq = faqBlock(n.faq, { id: 'faq', title: `Вопросы: ${n.short.toLowerCase()}` });
   const body = head + '\n\n' + sections([pains, plan, mods, related, faq, lead({ product: n.product, niche: n.niche, title: 'Обсудим ваш проект', text: `Расскажите о задаче — ответим в течение рабочего дня, предложим решение и зафиксируем цену. Сфера «${n.niche}» уже указана в заявке.` })].filter(Boolean));
   const service = { '@context': 'https://schema.org', '@type': 'Service', name: strip(`${n.h1} ${n.h1grad}`), serviceType: n.query, description: n.desc, url: SITE + url, areaServed: 'RU', provider: ORG,
-    offers: { '@type': 'Offer', url: SITE + url, priceCurrency: 'RUB', price: b.price, priceSpecification: { '@type': 'UnitPriceSpecification', price: b.price, priceCurrency: 'RUB', unitText: 'месяц', unitCode: 'MON' } } };
+    offers: { ...offerPrice(b), url: SITE + url } };
   add(`dlya-biznesa/${n.slug}.html`, url, layout({ url, active: 'niches', title: n.title, desc: n.desc, jsonld: [c.json, service, faqLd(n.faq)], body }), '0.8');
 }
 
@@ -679,7 +715,7 @@ ${projectCard(rel)}
 // {{buyout12:landing}}, {{own12:landing}}, {{m24:landing}}, {{start24:...}}, {{total24:...}}, {{buyout24:...}}, {{own24:...}}, {{disc}}, {{bo_mult}}, {{bo_credit}}, {{bo_min}}.
 function blogSubst(html) {
   return html.replace(/\{\{(\w+)(?::([\w-]+))?\}\}/g, (all, k, id) => {
-    if (k === 'p') return rub(baseById(id).price);
+    if (k === 'p') return rub(basePrice(baseById(id)));
     if (k === 'disc') return discText;
     if (k === 'bo_mult') return String(P.buyout.multiplier);
     if (k === 'bo_credit') return Math.round(P.buyout.creditShare * 100) + '%';
@@ -699,7 +735,7 @@ const MONTHS = ['января', 'февраля', 'марта', 'апреля', 
 const ruDate = (d) => { const [y, m, dd] = d.split('-').map(Number); return `${dd} ${MONTHS[m - 1]} ${y}`; };
 // Иллюстрация для статьи о выкупе: цена выкупа лендинга по месяцам при подписке на 36 месяцев (считается из pricing.json)
 {
-  const id = 'landing', L = toFull(baseById(id).price), mon = subCalc(id, 36).monthly;
+  const id = 'landing', L = toFull(basePrice(baseById(id))), mon = subCalc(id, 36).monthly;
   const pts = [0, 6, 12, 18, 24, 30, 36].map((n) => [n, rnd(Math.max(P.buyout.multiplier * L - P.buyout.creditShare * mon * n, P.buyout.minMonths * L))]);
   const max = pts[0][1], W = 1200, H = 640, x0 = 90, base = 540, bw = 110, gap = (W - 2 * x0 - pts.length * bw) / (pts.length - 1);
   const txt = (x, y, t, size, fill, w = 400, a = 'middle') => `<text x="${x}" y="${y}" font-size="${size}" font-weight="${w}" fill="${fill}" text-anchor="${a}">${t}</text>`;
@@ -822,7 +858,7 @@ ${posts.map((a) => `          <article class="card feature post-card">
     const body = part(slug).replace('<main class="legal">', '<div class="legal">').replace('</main>', '</div>').replace('<div class="container container--narrow">', `<div class="container container--narrow">\n      ${c.html}`) + extra;
     add(`${slug}.html`, `/${slug}`, layout({ url: `/${slug}`, active: '', title, desc, jsonld: [c.json], body }), slug === 'kontakty' ? '0.5' : '0.2', 'yearly');
   };
-  legalPage('kontakty', 'Контакты', 'Контакты DigitalSub — работаем удалённо по всей России', 'Как связаться с DigitalSub: email info@digitalsub.ru и заявка на сайте. Работаем удалённо по всей России, договор и документы — онлайн.', '\n\n' + lead({ title: 'Напишите нам' }));
+  legalPage('kontakty', 'Контакты', 'Контакты DigitalSub — работаем удалённо по всей России', 'Как связаться с DigitalSub: email info@digitalsub.ru, Telegram https://t.me/DigitalSubInfo и заявка на сайте. Работаем удалённо по всей России, договор и документы — онлайн.', '\n\n' + lead({ title: 'Напишите нам' }));
   legalPage('rekvizity', 'Реквизиты', 'Реквизиты — DigitalSub', 'Реквизиты исполнителя DigitalSub: самозанятый Стасюк Глеб Юрьевич, ИНН 781450861386, email info@digitalsub.ru.');
   legalPage('soglasie', 'Согласие на обработку данных', 'Согласие на обработку персональных данных — DigitalSub', 'Согласие на обработку персональных данных при отправке заявки на сайте digitalsub.ru (152-ФЗ).');
 }

@@ -92,6 +92,10 @@
   let P = null, lastCalc = null;
   const round = (n) => { const r = (P && P.roundTo) || 1; return Math.round(n / r) * r; };
   const curBase = () => P.bases.find((b) => b.id === state.base) || P.bases[0];
+  const mskYmd = (d = new Date()) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Moscow', year: 'numeric', month: '2-digit', day: '2-digit' }).format(d);
+  const promoOf = (b) => (b && b.promo && b.promo.price && b.promo.until && mskYmd() <= b.promo.until) ? b.promo : null;
+  const basePrice = (b) => promoOf(b) ? b.promo.price : b.price;
+  const untilRu = (iso) => { const [y, m, d] = String(iso).split('-'); return `${d}.${m}.${y}`; };
   const modById = (id) => P.modules.find((m) => m.id === id);
   // unit: строка или формы ["язык", "языка", "языков"]
   const plural = (u, n) => {
@@ -112,8 +116,9 @@
     // Цена основы указана для срока P.priceTerm (36 мес.); скидка за срок действует только на основу.
     // Основа без скидки — цена при 12 мес. Модули — фиксированная цена при любом сроке.
     const ref = P.terms.find((t) => t.months === P.priceTerm) || P.terms[0];
-    const baseFull = round(base.price / (1 - (ref.discount || 0)));
-    const baseAt = term === ref ? base.price : round(baseFull * (1 - (term.discount || 0)));
+    const price36 = basePrice(base);
+    const baseFull = round(price36 / (1 - (ref.discount || 0)));
+    const baseAt = term === ref ? price36 : round(baseFull * (1 - (term.discount || 0)));
     const modSum = (list) => list.filter((m) => !m.once).reduce((s, m) => s + m.cost, 0);
     const modsMonthly = modSum(mods);
     const fullMonthly = baseFull + modsMonthly;
@@ -252,7 +257,13 @@
     const qb = new URLSearchParams(location.search).get('base');
     if (qb && P.bases.some((b) => b.id === qb)) state.base = qb;
     const bases = $('#calc-bases'); bases.textContent = '';
-    P.bases.forEach((b) => bases.append(option('radio', 'calc-base', b.id, b.id === state.base, b.name, b.desc, `от ${fmt(b.price, cur)}/мес`)));
+    P.bases.forEach((b) => {
+      const p36 = basePrice(b), promo = promoOf(b);
+      const price = promo
+        ? `Акция: от ${fmt(p36, cur)}/мес (было ${fmt(b.price, cur)}, до ${untilRu(promo.until)})`
+        : `от ${fmt(p36, cur)}/мес`;
+      bases.append(option('radio', 'calc-base', b.id, b.id === state.base, b.name, b.desc, price));
+    });
     const terms = $('#calc-terms'); terms.textContent = '';
     P.terms.forEach((t) => terms.append(option('radio', 'calc-term', String(t.months), t.months === state.term, `${t.months} мес.`, t.discount ? `скидка ${Math.round(t.discount * 100)}%` : 'без скидки', '')));
     renderModules();
@@ -378,7 +389,23 @@
   // Цены на карточках и страницах услуг берутся из pricing.json, чтобы не расходиться с калькулятором
   function hydratePrices() {
     const cur = P.currency || '₽';
-    $$('[data-base-price]').forEach((el) => { const b = P.bases.find((x) => x.id === el.dataset.basePrice); if (b) el.textContent = fmt(b.price, cur); });
+    $$('[data-base-price]').forEach((el) => {
+      const b = P.bases.find((x) => x.id === el.dataset.basePrice); if (!b) return;
+      const promo = promoOf(b);
+      if (el.dataset.promoUntil) {
+        // Карточка сверстана с акцией: если срок вышел — возвращаем обычную цену.
+        if (!promo) {
+          el.querySelectorAll('.plan__was, .plan__until, .plan__badge--sale').forEach((n) => n.remove());
+          const was = el.querySelector('.plan__was'); if (was) was.remove();
+          // replace inner price text conservatively
+          el.innerHTML = `<span>от</span> ${fmt(basePrice(b), cur)}<small>/мес</small>`;
+          const badge = el.parentElement && el.parentElement.querySelector('.plan__badge--sale');
+          if (badge) badge.remove();
+        }
+        return;
+      }
+      el.textContent = fmt(basePrice(b), cur);
+    });
     $$('[data-mod-price]').forEach((el) => {
       const m = modById(el.dataset.modPrice); if (!m) return;
       el.textContent = `${m.once ? '' : '+'}${m.from ? 'от ' : ''}${fmt(m.price, cur)}${m.once ? ' разово' : '/мес'}${m.qty ? ` за ${m.qty.short || unit1(m.qty.unit)}` : ''}`;

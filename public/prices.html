@@ -23,7 +23,7 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <link rel="preload" href="/assets/pricing.json" as="fetch" crossorigin>
-  <link rel="stylesheet" href="/assets/styles.css?v=15916cc89b">
+  <link rel="stylesheet" href="/assets/styles.css?v=b6134946e3">
 <!-- Google tag (gtag.js) — GA4 G-9QMXBVJ80D -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-9QMXBVJ80D"></script>
 <!-- Google Tag Manager -->
@@ -46,7 +46,7 @@ window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(argume
     ym(114405591, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
 </script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://digitalsub.ru/"},{"@type":"ListItem","position":2,"name":"Цены","item":"https://digitalsub.ru/prices"}]}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"OfferCatalog","name":"Тарифы DigitalSub","url":"https://digitalsub.ru/prices","itemListElement":[{"@type":"Offer","name":"Лендинг","url":"https://digitalsub.ru/services/landing","priceCurrency":"RUB","price":4900,"priceSpecification":{"@type":"UnitPriceSpecification","price":4900,"priceCurrency":"RUB","unitText":"месяц","unitCode":"MON"}},{"@type":"Offer","name":"Многостраничный сайт","url":"https://digitalsub.ru/services/website","priceCurrency":"RUB","price":9900,"priceSpecification":{"@type":"UnitPriceSpecification","price":9900,"priceCurrency":"RUB","unitText":"месяц","unitCode":"MON"}},{"@type":"Offer","name":"Интернет-магазин","url":"https://digitalsub.ru/services/shop","priceCurrency":"RUB","price":14900,"priceSpecification":{"@type":"UnitPriceSpecification","price":14900,"priceCurrency":"RUB","unitText":"месяц","unitCode":"MON"}},{"@type":"Offer","name":"Веб-приложение","url":"https://digitalsub.ru/services/web-app","priceCurrency":"RUB","price":19900,"priceSpecification":{"@type":"UnitPriceSpecification","price":19900,"priceCurrency":"RUB","unitText":"месяц","unitCode":"MON"}},{"@type":"Offer","name":"Мобильное приложение Android","url":"https://digitalsub.ru/services/android","priceCurrency":"RUB","price":29900,"priceSpecification":{"@type":"UnitPriceSpecification","price":29900,"priceCurrency":"RUB","unitText":"месяц","unitCode":"MON"}},{"@type":"Offer","name":"Десктоп-приложение","url":"https://digitalsub.ru/services/desktop","priceCurrency":"RUB","price":34900,"priceSpecification":{"@type":"UnitPriceSpecification","price":34900,"priceCurrency":"RUB","unitText":"месяц","unitCode":"MON"}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"OfferCatalog","name":"Тарифы DigitalSub","url":"https://digitalsub.ru/prices","itemListElement":[{"@type":"Offer","priceCurrency":"RUB","price":4900,"priceSpecification":{"@type":"UnitPriceSpecification","price":4900,"priceCurrency":"RUB","unitText":"месяц","unitCode":"MON"},"name":"Лендинг","url":"https://digitalsub.ru/services/landing"},{"@type":"Offer","priceCurrency":"RUB","price":9900,"priceSpecification":{"@type":"UnitPriceSpecification","price":9900,"priceCurrency":"RUB","unitText":"месяц","unitCode":"MON"},"name":"Многостраничный сайт","url":"https://digitalsub.ru/services/website"},{"@type":"Offer","priceCurrency":"RUB","price":14900,"priceSpecification":{"@type":"UnitPriceSpecification","price":14900,"priceCurrency":"RUB","unitText":"месяц","unitCode":"MON"},"priceValidUntil":"2026-12-31","name":"Интернет-магазин","url":"https://digitalsub.ru/services/shop"},{"@type":"Offer","priceCurrency":"RUB","price":19900,"priceSpecification":{"@type":"UnitPriceSpecification","price":19900,"priceCurrency":"RUB","unitText":"месяц","unitCode":"MON"},"name":"Веб-приложение","url":"https://digitalsub.ru/services/web-app"},{"@type":"Offer","priceCurrency":"RUB","price":29900,"priceSpecification":{"@type":"UnitPriceSpecification","price":29900,"priceCurrency":"RUB","unitText":"месяц","unitCode":"MON"},"name":"Мобильное приложение Android","url":"https://digitalsub.ru/services/android"},{"@type":"Offer","priceCurrency":"RUB","price":34900,"priceSpecification":{"@type":"UnitPriceSpecification","price":34900,"priceCurrency":"RUB","unitText":"месяц","unitCode":"MON"},"name":"Десктоп-приложение","url":"https://digitalsub.ru/services/desktop"}]}</script>
 </head>
 <body>
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MN55PMP7" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -67,8 +67,10 @@ window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(argume
         <a href="/buyout">Выкуп</a>
         <a href="/faq">Вопросы</a>
         <a href="/blog">Блог</a>
+        <a class="header__tg header__tg--nav" href="https://t.me/DigitalSubInfo" target="_blank" rel="noopener">Telegram</a>
         <a class="btn nav__cta" href="#lead">Оставить заявку</a>
       </nav>
+      <a class="header__tg" href="https://t.me/DigitalSubInfo" target="_blank" rel="noopener">Telegram</a>
       <a class="btn btn--sm header__cta" href="#lead">Оставить заявку</a>
       <button class="burger" id="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
     </div>
@@ -92,39 +94,77 @@ window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(argume
         <div class="section__head">
           <p class="eyebrow">Тарифы</p>
           <h2>Понятная ежемесячная цена</h2>
-          <p class="section__sub">Итоговая стоимость зависит от задачи и фиксируется в договоре. Цены указаны при подписке на 36 месяцев. Минимальный срок — 12 месяцев: при 12 месяцах действует цена без скидки, при 24 месяцах — скидка 10%, при 36 месяцах — 20%. Скидка действует только на основу, модули стоят одинаково при любом сроке. Срок подписки отсчитывается с момента запуска первой версии.</p>
+          <p class="section__sub">Итоговая стоимость зависит от задачи и фиксируется в договоре. Цены указаны при подписке на 36 месяцев. Минимальный срок — 12 месяцев: при 12 месяцах действует цена без скидки, при 24 месяцах — скидка 10%, при 36 месяцах — 20%. Скидка действует только на основу, модули стоят одинаково при любом сроке. Срок подписки отсчитывается с момента запуска первой версии. В любой пакет входят 1–3 нефункциональные правки в месяц — количество зависит от тарифа.</p>
         </div>
+        <aside class="proto" role="note">
+          <p class="proto__badge">Для сайтов — бесплатно</p>
+          <p>Прототип лендинга, многостраничного сайта или интернет-магазина делаем <b>до оплаты и до подписания договора</b>. Это ни к чему не обязывает. Для приложений прототип на этом этапе не делается.</p>
+        </aside>
         <div class="carousel" id="pricing-carousel" role="region" aria-roledescription="карусель" aria-label="Тарифы">
           <div class="carousel__track pricing" tabindex="0" aria-label="Тарифы, используйте стрелки влево и вправо">
           <article class="card plan">
             <h3>Сайт</h3><p class="plan__desc">Лендинг, сайт-визитка или многостраничный сайт на 5 страниц</p>
             <p class="plan__price"><span>от</span> 4 900 ₽<small>/мес</small></p>
-            <ul class="ticks"><li>Многостраничный сайт: 5 страниц — от 9 900 ₽/мес, доп. страница +1 000 ₽</li><li>Первая версия за 3–7 дней</li><li>Форма заявок</li><li>Хостинг, домен .ru / .рф / .online, SSL</li><li>Обновления и резервные копии</li><li>3 правки или 4 часа работы в месяц</li></ul>
+            <ul class="ticks">
+              <li>Лендинг: одностраничный сайт или визитка, форма заявок</li>
+              <li>Многостраничный сайт: 5 страниц — от 9 900 ₽/мес</li>
+              <li>Прототип бесплатно до оплаты и договора</li>
+              <li>Первая версия за 3–7 дней</li>
+              <li>Хостинг, база данных, SSL-шифрование, выделенный IP, резервные копии</li>
+              <li>Домен .ru / .рф / .online</li>
+              <li>1 нефункциональная правка в месяц на лендинге, 2 — на многостраничном сайте</li>
+            </ul>
             <a class="btn btn--ghost btn--block" href="#calc" data-base="landing">Рассчитать</a>
           </article>
-          <article class="card plan">
+          <article class="card plan plan--sale">
+            <span class="plan__badge plan__badge--sale">Акция до 31.12.2026</span>
             <h3>Интернет-магазин</h3><p class="plan__desc">Каталог, корзина и оформление заказа</p>
-            <p class="plan__price"><span>от</span> 14 900 ₽<small>/мес</small></p>
-            <ul class="ticks"><li>Первая версия за 3–7 дней</li><li>Каталог товаров и корзина</li><li>Заказы с уведомлениями</li><li>Хостинг, домен, SSL</li><li>Модули: оплата, доставка, 1С, маркетплейсы</li></ul>
+            <p class="plan__price" data-base-price="shop" data-regular-price="25000" data-promo-price="14900" data-promo-until="2026-12-31"><span>от</span> <span class="plan__was">25 000 ₽</span> <span class="plan__now">14 900 ₽<small>/мес</small></span><small class="plan__until">по акции до 31.12.2026</small></p>
+            <ul class="ticks">
+              <li>Каталог, корзина и оформление заказа</li>
+              <li>Прототип бесплатно до оплаты и договора</li>
+              <li>Первая версия за 3–7 дней</li>
+              <li>Хостинг, база данных, SSL-шифрование, выделенный IP, резервные копии</li>
+              <li>Домен .ru / .рф / .online</li>
+              <li>2 нефункциональные правки в месяц</li>
+            </ul>
             <a class="btn btn--ghost btn--block" href="#calc" data-base="shop">Рассчитать</a>
           </article>
           <article class="card plan plan--hot">
             <span class="plan__badge">Чаще всего нужно бизнесу</span>
-            <h3>Веб-приложение</h3><p class="plan__desc">CRM, личный кабинет, онлайн-запись, каталог</p>
+            <h3>Веб-приложение</h3><p class="plan__desc">CRM, личный кабинет, онлайн-запись</p>
             <p class="plan__price"><span>от</span> 19 900 ₽<small>/мес</small></p>
-            <ul class="ticks"><li>Всё из тарифа «Сайт»</li><li>Первая версия за 3–7 дней</li><li>База данных и роли пользователей</li><li>Модули: оплата, запись, Telegram и другие</li><li>Мониторинг и защита</li><li>Больше часов на доработки</li></ul>
+            <ul class="ticks">
+              <li>CRM, личный кабинет и онлайн-запись</li>
+              <li>Первая версия за 3–7 дней</li>
+              <li>База данных и роли пользователей</li>
+              <li>Хостинг, SSL-шифрование, выделенный IP, резервные копии</li>
+              <li>Домен .ru / .рф / .online</li>
+              <li>3 нефункциональные правки в месяц</li>
+            </ul>
             <a class="btn btn--block" href="#calc" data-base="webapp">Рассчитать</a>
           </article>
           <article class="card plan">
             <h3>Мобильное приложение Android</h3><p class="plan__desc">Приложение для смартфонов и планшетов</p>
             <p class="plan__price"><span>от</span> 29 900 ₽<small>/мес</small></p>
-            <ul class="ticks"><li>Первая версия — до 30 дней</li><li>Сервер и хранение данных</li><li>Модули: push, публикация в Google Play и RuStore, офлайн, камера</li><li>Обновления под новые версии Android</li><li>Поддержка пользователей</li></ul>
+            <ul class="ticks">
+              <li>Приложение для смартфонов и планшетов на Android</li>
+              <li>Первая версия — до 30 дней</li>
+              <li>Сервер, база данных, SSL-шифрование, выделенный IP, резервные копии</li>
+              <li>Обновления под новые версии Android</li>
+              <li>3 нефункциональные правки в месяц</li>
+            </ul>
             <a class="btn btn--ghost btn--block" href="#calc" data-base="android">Рассчитать</a>
           </article>
           <article class="card plan">
             <h3>Десктоп-приложение</h3><p class="plan__desc">Программа для Windows и других ОС</p>
             <p class="plan__price"><span>от</span> 34 900 ₽<small>/мес</small></p>
-            <ul class="ticks"><li>Первая версия — до 30 дней</li><li>Сборка под Windows</li><li>Модули: автообновление, офлайн, лицензирование</li><li>Сервер и хранение данных</li><li>Поддержка пользователей</li><li>Приоритетные доработки</li></ul>
+            <ul class="ticks">
+              <li>Сборка под Windows, серверная часть</li>
+              <li>Первая версия — до 30 дней</li>
+              <li>Сервер, база данных, SSL-шифрование, выделенный IP, резервные копии</li>
+              <li>3 нефункциональные правки в месяц</li>
+            </ul>
             <a class="btn btn--ghost btn--block" href="#calc" data-base="desktop">Рассчитать</a>
           </article>
           </div>
@@ -134,7 +174,7 @@ window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(argume
             <button class="carousel__btn" type="button" data-dir="1" aria-label="Следующий тариф"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
           </div>
         </div>
-        <p class="note"><b>Пакет можно расширять:</b> новые модули подключаются в любой момент, не нужно заказывать всё сразу. Часы сверх лимита тарифа и крупные новые функции оцениваются отдельно и согласуются заранее. Неиспользованные часы на следующий месяц не переносятся.</p>
+        <p class="note"><b>Нефункциональная правка</b> — это изменение текстов, фото, цен или цветов без добавления новых функций. Новые функции и прочие доработки оплачиваются отдельно: пакетом часов в калькуляторе или по оценке, которую мы сообщаем заранее. Неиспользованные правки на следующий месяц не переносятся. Пакет можно расширять: новые модули подключаются в любой момент, не нужно заказывать всё сразу.</p>
       </div>
     </section>
 
@@ -197,7 +237,7 @@ window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(argume
         <ol class="rsteps">
           <li class="card rstep"><span class="rstep__num">1</span><h3>Заявка</h3><p>Оставляете заявку на сайте или отправляете расчёт из калькулятора.</p></li>
           <li class="card rstep"><span class="rstep__num">2</span><h3>Созвон</h3><p>Обсуждаем задачу по видео или телефону, отвечаем на вопросы, показываем примеры.</p></li>
-          <li class="card rstep"><span class="rstep__num">3</span><h3>Спецификация</h3><p>Фиксируем состав работ, тариф, срок подписки и цену выкупа — она не меняется в течение срока.</p></li>
+          <li class="card rstep"><span class="rstep__num">3</span><h3>Спецификация и прототип сайта</h3><p>Фиксируем состав работ, тариф, срок подписки и цену выкупа. Для лендинга, многостраничного сайта и интернет-магазина готовим <b>бесплатный прототип до оплаты и подписания договора</b>.</p></li>
           <li class="card rstep"><span class="rstep__num">4</span><h3>Подписание онлайн</h3><p>Договор подписывается по коду из SMS (простая электронная подпись), юрлицам — через ЭДО. <a href="/faq#podpisanie">Как это работает</a></p></li>
           <li class="card rstep"><span class="rstep__num">5</span><h3>Оплата</h3><p>Картой или через СБП, юрлицам и ИП — по счёту. На старте — первый и последний месяц. <a href="/faq#oplata">Подробнее</a></p></li>
           <li class="card rstep"><span class="rstep__num">6</span><h3>Запуск</h3><p>Показываем первую версию, вносим правки и запускаем продукт на вашем домене. С этого момента отсчитывается срок подписки.</p></li>
@@ -213,7 +253,8 @@ window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(argume
           <p class="eyebrow">Заявка</p>
           <h2>Расскажите о задаче</h2>
           <p>Отправьте расчёт из калькулятора или опишите задачу — ответим в течение рабочего дня, уточним детали и зафиксируем цену в договоре.</p>
-          <ul class="ticks"><li>Бесплатная консультация</li><li>Оценка сроков и стоимости</li><li>Прототип до подписания договора</li></ul>
+          <ul class="ticks"><li>Бесплатная консультация</li><li>Оценка сроков и стоимости</li><li>Для сайтов: бесплатный прототип до оплаты и договора</li></ul>
+          <p class="lead-box__tg">Или напишите нам в <a href="https://t.me/DigitalSubInfo" target="_blank" rel="noopener">Telegram</a></p>
         </div>
         <form class="card form" id="lead-form" action="/api/lead" method="post" novalidate>
           <div class="field">
@@ -275,11 +316,11 @@ window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(argume
       </nav>
       <nav class="footer__nav" aria-label="Информация">
         <p class="footer__title">Информация</p>
-        <a href="/kontakty">Контакты</a><a href="/rekvizity">Реквизиты</a><a href="/privacy">Политика конфиденциальности</a><a href="/soglasie">Согласие на обработку данных</a><a href="mailto:info@digitalsub.ru">info@digitalsub.ru</a>
+        <a href="/kontakty">Контакты</a><a href="/rekvizity">Реквизиты</a><a href="/privacy">Политика конфиденциальности</a><a href="/soglasie">Согласие на обработку данных</a><a href="mailto:info@digitalsub.ru">info@digitalsub.ru</a><a href="https://t.me/DigitalSubInfo" target="_blank" rel="noopener">Telegram</a>
       </nav>
-      <p class="footer__copy">© <span id="year">2026</span> DigitalSub · ИНН 781450861386 · <a href="mailto:info@digitalsub.ru">info@digitalsub.ru</a> · работаем удалённо по всей России</p>
+      <p class="footer__copy">© <span id="year">2026</span> DigitalSub · ИНН 781450861386 · <a href="mailto:info@digitalsub.ru">info@digitalsub.ru</a> · <a href="https://t.me/DigitalSubInfo" target="_blank" rel="noopener">Telegram</a> · работаем удалённо по всей России</p>
     </div>
   </footer>
-  <script src="/assets/main.js?v=15916cc89b" defer></script>
+  <script src="/assets/main.js?v=b6134946e3" defer></script>
 </body>
 </html>
