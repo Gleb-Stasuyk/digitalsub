@@ -175,14 +175,14 @@ p{margin:0 0 1em}
 /* Lead */
 .lead-box{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:start}
 .lead-box__text>p{color:var(--muted);font-size:1.05rem}
-.form{display:grid;gap:16px}
+.form{display:grid;gap:16px;position:relative}
 .field{display:grid;gap:6px}
 .field label{font-weight:600;font-size:.92rem}
 .field input,.field select,.field textarea{width:100%;font:inherit;font-size:1rem;color:var(--text);background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:.8em 1em;transition:border-color .15s}
 .field textarea{resize:vertical;min-height:110px}
 .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--brand)}
 .field--err input{border-color:var(--err)}
-.hp{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}
+.hp{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);clip-path:inset(50%);white-space:nowrap;border:0}
 .check{display:flex;gap:10px;align-items:flex-start;font-size:.88rem;color:var(--muted);cursor:pointer}
 .check input{margin-top:.25em;accent-color:var(--brand);width:18px;height:18px;flex:none}
 .form__status{margin:0;font-size:.95rem;min-height:1.4em}

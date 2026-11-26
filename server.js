@@ -22,7 +22,9 @@ fs.mkdirSync(DATA_DIR, { recursive: true });
 const { createStore } = require('./lib/store');
 const { createBot } = require('./lib/bot');
 const { createAdmin } = require('./lib/admin');
+const { createAntispam } = require('./lib/antispam');
 const store = createStore(DATA_DIR);
+const spam = createAntispam(DATA_DIR);
 
 const MIME = {
   '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8',
@@ -58,15 +60,6 @@ function cspHeader() {
   ].filter(Boolean).join('; ');
 }
 
-// Простой rate limit: не больше 5 заявок за 10 минут с одного IP
-const hits = new Map();
-function rateLimited(ip) {
-  const now = Date.now(), win = 10 * 60 * 1000;
-  const list = (hits.get(ip) || []).filter((t) => now - t < win);
-  list.push(now); hits.set(ip, list);
-  if (hits.size > 5000) hits.clear();
-  return list.length > 5;
-}
 
 function send(res, status, body, headers = {}) {
   res.writeHead(status, { ...SECURITY_HEADERS, ...headers });
@@ -87,7 +80,12 @@ function parseCalc(v) {
 }
 
 function clientIp(req) {
-  return String(req.headers['x-real-ip'] || (req.headers['x-forwarded-for'] || '').split(',')[0] || req.socket.remoteAddress || '').trim();
+  const raw = String(req.headers['x-real-ip'] || (req.headers['x-forwarded-for'] || '').split(',')[0] || req.socket.remoteAddress || '').trim();
+  return raw.replace(/^::ffff:/i, '');
+}
+function reject(res, ip, reason) {
+  console.log(`[lead] rejected ip=${ip || '-'} reason=${reason}`);
+  return json(res, 200, { ok: true }); // ложный успех: боту не подсказываем, цель lead_submit на клиенте не стреляет (нет id)
 }
 function refPath(ref) { try { const u = new URL(ref); return (u.pathname + u.search).slice(0, 300); } catch { return ''; } }
 async function readBody(req, max) {
@@ -101,7 +99,6 @@ const admin = createAdmin({ password: ADMIN_PASSWORD, store, bot, clientIp, read
 
 async function handleLead(req, res) {
   const ip = clientIp(req);
-  if (rateLimited(ip)) return json(res, 429, { ok: false, error: 'Слишком много заявок. Попробуйте позже.' });
   let size = 0; const chunks = [];
   for await (const c of req) { size += c.length; if (size > MAX_BODY) return json(res, 413, { ok: false, error: 'Слишком большой запрос' }); chunks.push(c); }
   let data;
@@ -110,7 +107,17 @@ async function handleLead(req, res) {
     data = (req.headers['content-type'] || '').includes('application/json') ? JSON.parse(raw) : Object.fromEntries(new URLSearchParams(raw));
   } catch { return json(res, 400, { ok: false, error: 'Некорректные данные' }); }
 
-  if (clean(data.website, 100)) return json(res, 200, { ok: true }); // honeypot — бот
+  const limited = spam.rateLimit(ip);
+  if (limited) {
+    console.log(`[lead] rejected ip=${ip || '-'} reason=rate_limit`);
+    return json(res, 429, { ok: false, error: limited.msg });
+  }
+
+  if (clean(data.website, 200)) return reject(res, ip, 'honeypot');
+
+  const tokenErr = spam.checkRequestToken(data.form_t, spam.parseCookie(req, 'ds_ft'));
+  if (tokenErr) return reject(res, ip, tokenErr);
+
   const lead = {
     id: crypto.randomUUID(),
     createdAt: new Date().toISOString(),
@@ -123,8 +130,10 @@ async function handleLead(req, res) {
     page: clean(data.page, 300) || refPath(req.headers.referer),
     ip, userAgent: clean(req.headers['user-agent'], 300),
   };
+  const contentErr = spam.contentReason(lead.name, lead.message);
+  if (contentErr) return reject(res, ip, contentErr);
   if (lead.name.length < 2) return json(res, 422, { ok: false, error: 'Укажите имя' });
-  if (lead.contact.length < 3) return json(res, 422, { ok: false, error: 'Укажите телефон или Telegram' });
+  if (!spam.validContact(lead.contact)) return json(res, 422, { ok: false, error: 'Укажите телефон, Telegram или электронную почту' });
   if (!data.consent || data.consent === 'false') return json(res, 422, { ok: false, error: 'Нужно согласие на обработку данных' });
 
   let saved;
@@ -133,6 +142,12 @@ async function handleLead(req, res) {
   console.log(`[lead] #${saved.num} ${lead.createdAt}`);
   if (bot) bot.notifyLead(saved); // не блокируем ответ
   return json(res, 200, { ok: true, id: lead.id });
+}
+
+function handleFormToken(req, res) {
+  const token = spam.sign();
+  const headers = { 'Content-Type': MIME['.json'], 'Cache-Control': 'no-store', 'Set-Cookie': spam.tokenCookie(req, token) };
+  return send(res, 200, JSON.stringify({ ok: true, token }), headers);
 }
 
 const isFile = (f) => { try { return fs.statSync(f).isFile(); } catch { return false; } };
@@ -194,6 +209,7 @@ async function serveStatic(req, res, pathname, search) {
     const ext = path.extname(file).toLowerCase();
     const etag = `W/"${st.size.toString(36)}-${Math.floor(st.mtimeMs).toString(36)}"`;
     const headers = { ...SECURITY_HEADERS, 'Content-Type': MIME[ext] || 'application/octet-stream', 'Cache-Control': cacheControl(ext, search), ETag: etag };
+    if (ext === '.html') headers['Set-Cookie'] = spam.tokenCookie(req, spam.sign());
     if (req.headers['if-none-match'] === etag) { res.writeHead(304, headers); return res.end(); }
     const enc = COMPRESSIBLE.has(ext) && st.size >= 1024 ? pickEncoding(req.headers['accept-encoding']) : null;
     if (COMPRESSIBLE.has(ext)) headers.Vary = 'Accept-Encoding';
@@ -216,6 +232,10 @@ const server = http.createServer(async (req, res) => {
     const { pathname, search } = new URL(req.url, 'http://localhost');
     if (pathname === '/api/health') return json(res, 200, { ok: true });
     if (pathname === '/admin' || pathname.startsWith('/admin/')) return await admin(req, res, new URL(req.url, 'http://localhost'));
+    if (pathname === '/api/form-token') {
+      if (req.method !== 'GET') return json(res, 405, { ok: false, error: 'Method not allowed' });
+      return handleFormToken(req, res);
+    }
     if (pathname === '/api/lead') {
       if (req.method !== 'POST') return json(res, 405, { ok: false, error: 'Method not allowed' });
       return await handleLead(req, res);

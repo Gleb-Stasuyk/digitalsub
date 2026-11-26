@@ -392,31 +392,36 @@
 
   /* ---------- Форма заявки ---------- */
   const form = $('#lead-form'), status = $('#form-status');
-  if (form) form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const fd = new FormData(form);
-    const data = Object.fromEntries(fd.entries());
-    data.page = location.pathname + location.search;
-    const setStatus = (t, ok) => { status.className = 'form__status ' + (ok ? 'form__status--ok' : 'form__status--err'); status.textContent = t; };
-    $$('.field--err', form).forEach((f) => f.classList.remove('field--err'));
-    const bad = [];
-    if (!data.name || data.name.trim().length < 2) bad.push('#f-name');
-    if (!data.contact || data.contact.trim().length < 3) bad.push('#f-contact');
-    bad.forEach((s) => $(s).closest('.field').classList.add('field--err'));
-    if (bad.length) { setStatus('Заполните имя и телефон или Telegram.', false); $(bad[0]).focus(); return; }
-    if (!data.consent) { setStatus('Нужно согласие на обработку персональных данных.', false); return; }
-    const btn = $('button[type="submit"]', form); btn.disabled = true; btn.textContent = 'Отправляем…';
-    try {
-      const r = await fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-      const j = await r.json().catch(() => ({}));
-      if (!r.ok || !j.ok) throw new Error(j.error || 'Ошибка отправки');
-      form.reset(); $('#f-calc').value = ''; state.attached = false;
-      setStatus('Спасибо! Заявка отправлена, мы свяжемся с вами в течение рабочего дня.', true);
-      goal('lead_submit');
-    } catch (err) {
-      setStatus((err && err.message) || 'Не удалось отправить заявку. Попробуйте ещё раз.', false);
-    } finally { btn.disabled = false; btn.textContent = 'Отправить заявку'; }
-  });
+  if (form) {
+    const tokenField = $('#f-form-t', form);
+    fetch('/api/form-token').then((r) => r.json()).then((j) => { if (j && j.token && tokenField) tokenField.value = j.token; }).catch(() => {});
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      const data = Object.fromEntries(fd.entries());
+      data.page = location.pathname + location.search;
+      const setStatus = (t, ok) => { status.className = 'form__status ' + (ok ? 'form__status--ok' : 'form__status--err'); status.textContent = t; };
+      $$('.field--err', form).forEach((f) => f.classList.remove('field--err'));
+      const bad = [];
+      if (!data.name || data.name.trim().length < 2) bad.push('#f-name');
+      if (!data.contact || data.contact.trim().length < 3) bad.push('#f-contact');
+      bad.forEach((s) => $(s).closest('.field').classList.add('field--err'));
+      if (bad.length) { setStatus('Заполните имя и телефон или Telegram.', false); $(bad[0]).focus(); return; }
+      if (!data.consent) { setStatus('Нужно согласие на обработку персональных данных.', false); return; }
+      const btn = $('button[type="submit"]', form); btn.disabled = true; btn.textContent = 'Отправляем…';
+      try {
+        const r = await fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+        const j = await r.json().catch(() => ({}));
+        if (!r.ok || !j.ok) throw new Error(j.error || 'Ошибка отправки');
+        form.reset(); $('#f-calc').value = ''; if (tokenField) tokenField.value = ''; state.attached = false;
+        setStatus('Спасибо! Заявка отправлена, мы свяжемся с вами в течение рабочего дня.', true);
+        if (j.id) goal('lead_submit');
+        fetch('/api/form-token').then((r) => r.json()).then((t) => { if (t && t.token && tokenField) tokenField.value = t.token; }).catch(() => {});
+      } catch (err) {
+        setStatus((err && err.message) || 'Не удалось отправить заявку. Попробуйте ещё раз.', false);
+      } finally { btn.disabled = false; btn.textContent = 'Отправить заявку'; }
+    });
+  }
 })();
 
 /* Ссылка вида /faq#nda раскрывает нужный вопрос */
