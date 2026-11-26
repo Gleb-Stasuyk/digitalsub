@@ -165,7 +165,10 @@
     const t = document.createElement('span'); t.className = 'opt__title'; t.textContent = title;
     box.append(t);
     if (sub) { const s = document.createElement('span'); s.className = 'opt__sub'; s.textContent = sub; box.append(s); }
-    if (price) { const p = document.createElement('span'); p.className = 'opt__price'; p.textContent = price; box.append(p); }
+    if (price) {
+      if (price instanceof Node) box.append(price);
+      else { const p = document.createElement('span'); p.className = 'opt__price'; p.textContent = price; box.append(p); }
+    }
     l.append(i, box); return l;
   }
 
@@ -259,9 +262,16 @@
     const bases = $('#calc-bases'); bases.textContent = '';
     P.bases.forEach((b) => {
       const p36 = basePrice(b), promo = promoOf(b);
-      const price = promo
-        ? `Акция: от ${fmt(p36, cur)}/мес (было ${fmt(b.price, cur)}, до ${untilRu(promo.until)})`
-        : `от ${fmt(p36, cur)}/мес`;
+      let price;
+      if (promo) {
+        price = document.createElement('span');
+        price.className = 'opt__price opt__price--promo';
+        const was = document.createElement('s'); was.className = 'price-was'; was.textContent = fmt(b.price, cur);
+        const now = document.createElement('span'); now.textContent = `от ${fmt(p36, cur)}/мес`;
+        price.append(was, now);
+      } else {
+        price = `от ${fmt(p36, cur)}/мес`;
+      }
       bases.append(option('radio', 'calc-base', b.id, b.id === state.base, b.name, b.desc, price));
     });
     const terms = $('#calc-terms'); terms.textContent = '';
@@ -393,14 +403,14 @@
       const b = P.bases.find((x) => x.id === el.dataset.basePrice); if (!b) return;
       const promo = promoOf(b);
       if (el.dataset.promoUntil) {
-        // Карточка сверстана с акцией: если срок вышел — возвращаем обычную цену.
         if (!promo) {
-          el.querySelectorAll('.plan__was, .plan__until, .plan__badge--sale').forEach((n) => n.remove());
-          const was = el.querySelector('.plan__was'); if (was) was.remove();
-          // replace inner price text conservatively
-          el.innerHTML = `<span>от</span> ${fmt(basePrice(b), cur)}<small>/мес</small>`;
-          const badge = el.parentElement && el.parentElement.querySelector('.plan__badge--sale');
-          if (badge) badge.remove();
+          const root = el.closest('.feature, .plan, .card, article') || el.parentElement;
+          root && root.querySelectorAll('.plan__was, .price-was, .plan__until, .plan__badge--sale').forEach((n) => n.remove());
+          if (el.classList.contains('plan__price')) {
+            el.innerHTML = `<span>от</span> ${fmt(basePrice(b), cur)}<small>/мес</small>`;
+          } else {
+            el.textContent = fmt(basePrice(b), cur);
+          }
         }
         return;
       }

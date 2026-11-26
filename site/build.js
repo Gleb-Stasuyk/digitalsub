@@ -23,6 +23,16 @@ const strip = (s) => String(s).replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim
 const baseById = (id) => { const b = P.bases.find((x) => x.id === id); if (!b) throw new Error('base ' + id); return b; };
 const TG_URL = 'https://t.me/DigitalSubInfo';
 const TG_A = `<a href="${TG_URL}" target="_blank" rel="noopener">Telegram</a>`;
+const TG_ICON = `<svg class="tg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1.05em" height="1.05em" fill="currentColor" aria-hidden="true" focusable="false"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>`;
+function withTgIcons(html) {
+  return html.replace(/<a([^>]*href="https:\/\/t\.me\/DigitalSubInfo"[^>]*)>([\s\S]*?)<\/a>/g, (m, attrs, inner) => {
+    if (inner.includes('tg-icon') || inner.includes('<svg')) return m;
+    let a = attrs;
+    if (/\bclass="/i.test(a)) a = a.replace(/\bclass="/i, 'class="tg-link ');
+    else a = ` class="tg-link"${a}`;
+    return `<a${a}>${TG_ICON}${inner}</a>`;
+  });
+}
 const mskYmd = (d = new Date()) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Moscow', year: 'numeric', month: '2-digit', day: '2-digit' }).format(d);
 const promoOf = (b, now) => (b && b.promo && b.promo.price && b.promo.until && mskYmd(now) <= b.promo.until) ? b.promo : null;
 const basePrice = (b, now) => promoOf(b, now) ? b.promo.price : b.price;
@@ -35,7 +45,7 @@ function priceHtml(b, { cls = 'plan__price', prefix = 'от' } = {}) {
   const badge = promo ? `<span class="plan__badge plan__badge--sale">${esc(promo.label || 'Акция')}</span>` : '';
   const until = promo ? `<small class="plan__until">по акции до ${untilRu(promo.until)}</small>` : '';
   const was = promo ? `<span class="plan__was">${nb(b.price)}&nbsp;₽</span> ` : '';
-  return `${badge}<p class="${cls}" data-base-price="${b.id}"${promo ? ` data-regular-price="${b.price}" data-promo-price="${promo.price}" data-promo-until="${promo.until}"` : ''}><span>${prefix}</span> ${was}<span class="plan__now">${nb(now)}&nbsp;₽<small>/мес</small></span>${until}</p>`;
+  return `${badge}<p class="${cls}" data-base-price="${b.id}"${promo ? ` data-regular-price="${b.price}" data-promo-price="${promo.price}" data-promo-until="${promo.until}"` : ''}>${was}<span>${prefix}</span> <span class="plan__now">${nb(now)}&nbsp;₽<small>/мес</small></span>${until}</p>`;
 }
 function offerPrice(b) {
   const price = basePrice(b);
@@ -186,7 +196,7 @@ const ymBody = gtmBody + '\n' + ymBody0;
 
 function layout({ url, title, desc, active, body, jsonld = [], head = '', ogTitle, ogDesc, robots = 'index, follow', image = '/assets/og-image.png' }) {
   const canon = SITE + url;
-  return `<!doctype html>
+  const html = `<!doctype html>
 <html lang="ru">
 <head>
   <meta charset="utf-8">
@@ -227,16 +237,26 @@ ${FOOTER}
 </body>
 </html>
 `;
+  return withTgIcons(html);
 }
 
 /* ---------- Карточки ---------- */
+function featurePriceFoot(b) {
+  const promo = promoOf(b);
+  const attrs = promo ? ` data-regular-price="${b.price}" data-promo-price="${promo.price}" data-promo-until="${promo.until}"` : '';
+  const was = promo ? `<s class="price-was">${nb(b.price)}&nbsp;₽</s> ` : '';
+  const badge = promo ? `<span class="plan__badge plan__badge--sale">Акция</span>` : '';
+  return `${badge}<div class="feature__foot"><span class="feature__price${promo ? ' feature__price--promo' : ''}">${was}от <b data-base-price="${b.id}"${attrs}>${rub(basePrice(b))}</b>/мес</span><span class="feature__more" aria-hidden="true">Подробнее →</span></div>`;
+}
+
+
 function productCards() {
   return `<div class="grid grid--3 products">
-${SERVICES.map((s) => { const b = baseById(s.base); return `          <article class="card feature">
+${SERVICES.map((s) => { const b = baseById(s.base); return `          <article class="card feature${promoOf(b) ? ' feature--sale' : ''}">
             <div class="feature__icon">${svg(s.icon)}</div>
             <h3><a class="feature__link" href="/services/${s.slug}">${s.short}</a></h3>
             <p>${s.card}</p>
-            <div class="feature__foot"><span class="feature__price">${promoOf(b) ? `<span class="plan__badge plan__badge--sale plan__badge--inline">${esc(promoOf(b).label)}</span> <s class="price-was">${nb(b.price)}&nbsp;₽</s> ` : ""}от <b data-base-price="${b.id}"${promoOf(b) ? ` data-regular-price="${b.price}" data-promo-price="${promoOf(b).price}" data-promo-until="${promoOf(b).until}"` : ""}>${rub(basePrice(b))}</b>/мес</span><span class="feature__more" aria-hidden="true">Подробнее →</span></div>
+            ${featurePriceFoot(b)}
           </article>`; }).join('\n')}
         </div>`;
 }
@@ -307,6 +327,10 @@ const ICON_NICHE = '<path d="M4 20V9l8-5 8 5v11"/><path d="M9 20v-6h6v6"/>';
 
 /* ---------- Страницы ---------- */
 const SITE_BASES = new Set(['landing', 'site', 'shop']);
+
+const DOMAIN_STAR = 'Бесплатный домен*';
+const domainNote = () => `<p class="note note--star">* домен стоимостью до 200 ₽ в год</p>`;
+
 function protoBlock() {
   return `    <aside class="proto" role="note">
       <p class="proto__badge">Для сайтов — бесплатно</p>
@@ -597,12 +621,13 @@ for (const s of SERVICES) {
           <div class="card"><h3>Кому подходит</h3><p>${s.forWhom}</p><ul class="ticks">${s.forList.map((x) => `<li>${x}</li>`).join('')}</ul></div>
           <div class="card"><h3>Сроки и оплата</h3><ul class="ticks">
             <li>Первая версия — ${s.time}</li>
-            <li>от ${rub(basePrice(b))}/мес при подписке на ${REF.months} месяцев${promoOf(b) ? ` <span class="plan__badge plan__badge--sale plan__badge--inline">${esc(promoOf(b).label)}</span> (обычно ${rub(b.price)}, акция до ${untilRu(promoOf(b).until)})` : ""}</li>
+            <li>от ${promoOf(b) ? `<s class="price-was">${rub(b.price)}</s> ` : ''}${rub(basePrice(b))}/мес при подписке на ${REF.months} месяцев${promoOf(b) ? ` (до ${untilRu(promoOf(b).until)})` : ''}</li>
             <li>Минимальный срок 12 месяцев, ${discText}</li>
             <li>На старте — первый и последний месяц подписки</li>
             <li>Выкуп: ${P.buyout.multiplier} платежей без скидки минус ${Math.round(P.buyout.creditShare * 100)}% оплаченного; после ${REF.months} месяцев на базовом тарифе — около ${rub(buyoutEx)}</li>
           </ul></div>
         </div>
+        ${s.included.some((x) => x.includes('*')) ? domainNote() : ''}
         ${s.related ? `<p class="note"><b>Пример:</b> <a href="/solutions">${s.related.name}</a> — ${s.related.text} Его можно купить целиком или заказать такой же по подписке.</p>` : ''}
       </div>
     </section>`;
@@ -627,11 +652,11 @@ ${s.modules.map((id) => { const m = modById(id); return `          <div class="c
 {
   const c = crumbs([['/dlya-biznesa', 'Для бизнеса']]);
   const cards = `<div class="grid grid--3 products">
-${NICHES.map((n) => { const b = baseById(n.base); return `          <article class="card feature">
+${NICHES.map((n) => { const b = baseById(n.base); return `          <article class="card feature${promoOf(b) ? ' feature--sale' : ''}">
             <div class="feature__icon">${svg(ICON_NICHE)}</div>
             <h3><a class="feature__link" href="/dlya-biznesa/${n.slug}">${n.short}</a></h3>
             <p>${n.card}</p>
-            <div class="feature__foot"><span class="feature__price">${promoOf(b) ? `<span class="plan__badge plan__badge--sale plan__badge--inline">${esc(promoOf(b).label)}</span> <s class="price-was">${nb(b.price)}&nbsp;₽</s> ` : ""}от <b data-base-price="${b.id}"${promoOf(b) ? ` data-regular-price="${b.price}" data-promo-price="${promoOf(b).price}" data-promo-until="${promoOf(b).until}"` : ""}>${rub(basePrice(b))}</b>/мес</span><span class="feature__more" aria-hidden="true">Подробнее →</span></div>
+            ${featurePriceFoot(b)}
           </article>`; }).join('\n')}
         </div>`;
   const body = pageHead({ crumbsHtml: c.html, eyebrow: 'Для бизнеса', h1: 'Сайты и приложения <span class="grad">для вашей отрасли</span>',
@@ -677,12 +702,13 @@ ${n.pains.map(([t, x]) => `          <div class="card"><h3>${t}</h3><p>${x}</p><
           <div class="card"><h3>Какой тариф подходит</h3><p>${n.planText}</p><p><a href="/services/${svc ? svc.slug : ''}">Подробнее о тарифе «${svc ? svc.short : b.name}» →</a></p></div>
           <div class="card"><h3>Оплата и выкуп</h3><ul class="ticks">
             <li>Хостинг, база данных, SSL, выделенный IP, резервные копии и ${editsWord(b.edits)} — в подписке</li>
+            <li>${DOMAIN_STAR}, оформляется на вас</li>
             <li>На старте — ${rub(sc.start)}: первый и последний месяц</li>
             <li>Минимальный срок 12 месяцев, ${discText}</li>
             <li>Выкуп: ${P.buyout.multiplier} платежей без скидки минус ${Math.round(P.buyout.creditShare * 100)}% оплаченного; после ${REF.months} месяцев на базовом тарифе — около ${rub(sc.buyout)}</li>
-            <li>Домен оформляется на вас</li>
           </ul><p><a href="/buyout">Как устроен выкуп →</a></p></div>
         </div>
+        ${domainNote()}
       </div>
     </section>`;
   const mods = `    <section class="section" id="modules">
