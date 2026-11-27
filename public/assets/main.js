@@ -146,7 +146,14 @@
     updateTabCounts(); attachCalc();
     const hasFrom = c.mods.some((m) => m.from && !m.once);
     const onceRow = $('#r-once-row'); if (onceRow) { onceRow.hidden = !c.once; $('#r-once').textContent = fmt(c.once, cur); }
-    $('#r-monthly').textContent = (hasFrom ? 'от ' : '') + fmt(c.monthly, cur);
+    const prefix = hasFrom ? 'от ' : '';
+    const wasEl = $('#r-monthly-was');
+    const showWas = !!(c.term.discount && c.fullMonthly > c.monthly);
+    if (wasEl) {
+      wasEl.hidden = !showWas;
+      wasEl.textContent = showWas ? prefix + fmt(c.fullMonthly, cur) : '';
+    }
+    $('#r-monthly').textContent = (showWas ? '' : prefix) + fmt(c.monthly, cur);
     const notes = [];
     if (hasFrom) notes.push('Часть модулей указана «от»: итоговая цена уточняется после обсуждения задачи.');
     if (c.mods.some((m) => m.adBudget)) notes.push('Рекламный бюджет оплачивается отдельно, напрямую рекламной площадке.');

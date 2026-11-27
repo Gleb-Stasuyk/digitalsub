@@ -1,47 +1,41 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620" width="1200" height="620" role="img" aria-label="Семь шагов: заявка, созвон, спецификация, подписание, оплата, запуск, документы" font-family="system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620" width="1200" height="620" role="img" aria-label="Шесть шагов: заявка, спецификация, подписание, оплата, запуск, документы" font-family="system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif">
 <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6d5dfc"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs>
 <rect width="1200" height="620" rx="24" fill="#10172b"/>
 <text x="60" y="80" font-size="34" font-weight="700" fill="#e8ecf7" text-anchor="start">Как проходит договор на разработку онлайн</text>
-<rect x="60" y="130" width="250" height="210" rx="16" fill="#141c33" stroke="#26304f" stroke-width="2"/>
+<rect x="60" y="130" width="340" height="210" rx="16" fill="#141c33" stroke="#26304f" stroke-width="2"/>
 <circle cx="106" cy="182" r="24" fill="url(#g)"/>
 <text x="106" y="191" font-size="24" font-weight="700" fill="#10172b" text-anchor="middle">1</text>
 <text x="84" y="254" font-size="26" font-weight="700" fill="#e8ecf7" text-anchor="start">Заявка</text>
-<text x="84" y="290" font-size="19" font-weight="400" fill="#9aa5c4" text-anchor="start">на сайте или</text>
-<text x="84" y="316" font-size="19" font-weight="400" fill="#9aa5c4" text-anchor="start">из калькулятора</text>
-<rect x="335" y="130" width="250" height="210" rx="16" fill="#141c33" stroke="#26304f" stroke-width="2"/>
-<circle cx="381" cy="182" r="24" fill="url(#g)"/>
-<text x="381" y="191" font-size="24" font-weight="700" fill="#10172b" text-anchor="middle">2</text>
-<text x="359" y="254" font-size="26" font-weight="700" fill="#e8ecf7" text-anchor="start">Созвон</text>
-<text x="359" y="290" font-size="19" font-weight="400" fill="#9aa5c4" text-anchor="start">по видео</text>
-<text x="359" y="316" font-size="19" font-weight="400" fill="#9aa5c4" text-anchor="start">или телефону</text>
-<rect x="610" y="130" width="250" height="210" rx="16" fill="#141c33" stroke="#26304f" stroke-width="2"/>
-<circle cx="656" cy="182" r="24" fill="url(#g)"/>
-<text x="656" y="191" font-size="24" font-weight="700" fill="#10172b" text-anchor="middle">3</text>
-<text x="634" y="254" font-size="26" font-weight="700" fill="#e8ecf7" text-anchor="start">Спецификация</text>
-<text x="634" y="290" font-size="19" font-weight="400" fill="#9aa5c4" text-anchor="start">состав, тариф,</text>
-<text x="634" y="316" font-size="19" font-weight="400" fill="#9aa5c4" text-anchor="start">срок, цена выкупа</text>
-<rect x="885" y="130" width="250" height="210" rx="16" fill="#141c33" stroke="#26304f" stroke-width="2"/>
-<circle cx="931" cy="182" r="24" fill="url(#g)"/>
-<text x="931" y="191" font-size="24" font-weight="700" fill="#10172b" text-anchor="middle">4</text>
-<text x="909" y="254" font-size="26" font-weight="700" fill="#e8ecf7" text-anchor="start">Подписание</text>
-<text x="909" y="290" font-size="19" font-weight="400" fill="#9aa5c4" text-anchor="start">код из SMS</text>
-<text x="909" y="316" font-size="19" font-weight="400" fill="#9aa5c4" text-anchor="start">или ЭДО</text>
-<rect x="60" y="380" width="250" height="210" rx="16" fill="#141c33" stroke="#26304f" stroke-width="2"/>
+<text x="84" y="290" font-size="19" font-weight="400" fill="#9aa5c4" text-anchor="start">сайт, Telegram</text>
+<text x="84" y="316" font-size="19" font-weight="400" fill="#9aa5c4" text-anchor="start">созвон по желанию</text>
+<rect x="430" y="130" width="340" height="210" rx="16" fill="#141c33" stroke="#26304f" stroke-width="2"/>
+<circle cx="476" cy="182" r="24" fill="url(#g)"/>
+<text x="476" y="191" font-size="24" font-weight="700" fill="#10172b" text-anchor="middle">2</text>
+<text x="454" y="254" font-size="26" font-weight="700" fill="#e8ecf7" text-anchor="start">Спецификация</text>
+<text x="454" y="290" font-size="19" font-weight="400" fill="#9aa5c4" text-anchor="start">состав, тариф,</text>
+<text x="454" y="316" font-size="19" font-weight="400" fill="#9aa5c4" text-anchor="start">срок, цена выкупа</text>
+<rect x="800" y="130" width="340" height="210" rx="16" fill="#141c33" stroke="#26304f" stroke-width="2"/>
+<circle cx="846" cy="182" r="24" fill="url(#g)"/>
+<text x="846" y="191" font-size="24" font-weight="700" fill="#10172b" text-anchor="middle">3</text>
+<text x="824" y="254" font-size="26" font-weight="700" fill="#e8ecf7" text-anchor="start">Подписание</text>
+<text x="824" y="290" font-size="19" font-weight="400" fill="#9aa5c4" text-anchor="start">код из SMS</text>
+<text x="824" y="316" font-size="19" font-weight="400" fill="#9aa5c4" text-anchor="start">или ЭДО</text>
+<rect x="60" y="380" width="340" height="210" rx="16" fill="#141c33" stroke="#26304f" stroke-width="2"/>
 <circle cx="106" cy="432" r="24" fill="url(#g)"/>
-<text x="106" y="441" font-size="24" font-weight="700" fill="#10172b" text-anchor="middle">5</text>
+<text x="106" y="441" font-size="24" font-weight="700" fill="#10172b" text-anchor="middle">4</text>
 <text x="84" y="504" font-size="26" font-weight="700" fill="#e8ecf7" text-anchor="start">Оплата</text>
 <text x="84" y="540" font-size="19" font-weight="400" fill="#9aa5c4" text-anchor="start">карта, СБП</text>
 <text x="84" y="566" font-size="19" font-weight="400" fill="#9aa5c4" text-anchor="start">или счёт</text>
-<rect x="335" y="380" width="250" height="210" rx="16" fill="#141c33" stroke="#26304f" stroke-width="2"/>
-<circle cx="381" cy="432" r="24" fill="url(#g)"/>
-<text x="381" y="441" font-size="24" font-weight="700" fill="#10172b" text-anchor="middle">6</text>
-<text x="359" y="504" font-size="26" font-weight="700" fill="#e8ecf7" text-anchor="start">Запуск</text>
-<text x="359" y="540" font-size="19" font-weight="400" fill="#9aa5c4" text-anchor="start">отсюда считается</text>
-<text x="359" y="566" font-size="19" font-weight="400" fill="#9aa5c4" text-anchor="start">срок подписки</text>
-<rect x="610" y="380" width="250" height="210" rx="16" fill="#141c33" stroke="#26304f" stroke-width="2"/>
-<circle cx="656" cy="432" r="24" fill="url(#g)"/>
-<text x="656" y="441" font-size="24" font-weight="700" fill="#10172b" text-anchor="middle">7</text>
-<text x="634" y="504" font-size="26" font-weight="700" fill="#e8ecf7" text-anchor="start">Документы</text>
-<text x="634" y="540" font-size="19" font-weight="400" fill="#9aa5c4" text-anchor="start">каждый месяц</text>
-<text x="634" y="566" font-size="19" font-weight="400" fill="#9aa5c4" text-anchor="start">в электронном виде</text>
+<rect x="430" y="380" width="340" height="210" rx="16" fill="#141c33" stroke="#26304f" stroke-width="2"/>
+<circle cx="476" cy="432" r="24" fill="url(#g)"/>
+<text x="476" y="441" font-size="24" font-weight="700" fill="#10172b" text-anchor="middle">5</text>
+<text x="454" y="504" font-size="26" font-weight="700" fill="#e8ecf7" text-anchor="start">Запуск</text>
+<text x="454" y="540" font-size="19" font-weight="400" fill="#9aa5c4" text-anchor="start">отсюда считается</text>
+<text x="454" y="566" font-size="19" font-weight="400" fill="#9aa5c4" text-anchor="start">срок подписки</text>
+<rect x="800" y="380" width="340" height="210" rx="16" fill="#141c33" stroke="#26304f" stroke-width="2"/>
+<circle cx="846" cy="432" r="24" fill="url(#g)"/>
+<text x="846" y="441" font-size="24" font-weight="700" fill="#10172b" text-anchor="middle">6</text>
+<text x="824" y="504" font-size="26" font-weight="700" fill="#e8ecf7" text-anchor="start">Документы</text>
+<text x="824" y="540" font-size="19" font-weight="400" fill="#9aa5c4" text-anchor="start">каждый месяц</text>
+<text x="824" y="566" font-size="19" font-weight="400" fill="#9aa5c4" text-anchor="start">в электронном виде</text>
 </svg>
