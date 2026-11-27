@@ -124,7 +124,9 @@
     const fullMonthly = baseFull + modsMonthly;
     const once = mods.filter((m) => m.once).reduce((s, m) => s + m.cost, 0); // разовые услуги (раздел «Юридическое»)
     const monthly = baseAt + modsMonthly;
-    const start = monthly * ((P.startPayment && P.startPayment.months) || 2);
+    const startMonths = (P.startPayment && P.startPayment.months) || 2;
+    const start = monthly * startMonths;
+    const fullStart = fullMonthly * startMonths;
     const paidSubs = monthly * term.months;
     const total = paidSubs;
     const bo = P.buyout;
@@ -134,11 +136,10 @@
     const boMonthly = baseFull + boMods;
     const boPaid = (baseAt + boMods) * term.months;
     const boExcluded = mods.some((m) => !m.once && excl.has(m.group));
-    const buyoutBase = bo.multiplier * boMonthly;
-    const credit = bo.creditShare * boPaid;
-    const buyoutMin = bo.minMonths * boMonthly;
-    const buyout = round(Math.max(buyoutBase - credit, buyoutMin));
-    return { base, mods, once, term, fullMonthly, monthly, start, paidSubs, total, boMonthly, boPaid, boExcluded, buyoutBase, credit, buyoutMin, buyout };
+    const buyoutOf = (paid) => round(Math.max(bo.multiplier * boMonthly - bo.creditShare * paid, bo.minMonths * boMonthly));
+    const buyout = buyoutOf(boPaid);
+    const fullBuyout = buyoutOf(boMonthly * 12); // выкуп, как если бы срок был 12 мес. с теми же модулями
+    return { base, mods, once, term, fullMonthly, monthly, start, fullStart, paidSubs, total, boMonthly, boPaid, boExcluded, buyoutBase: bo.multiplier * boMonthly, credit: bo.creditShare * boPaid, buyoutMin: bo.minMonths * boMonthly, buyout, fullBuyout };
   }
 
   function render() {
@@ -147,21 +148,21 @@
     const hasFrom = c.mods.some((m) => m.from && !m.once);
     const onceRow = $('#r-once-row'); if (onceRow) { onceRow.hidden = !c.once; $('#r-once').textContent = fmt(c.once, cur); }
     const prefix = hasFrom ? 'от ' : '';
-    const wasEl = $('#r-monthly-was');
     const showWas = !!(c.term.discount && c.fullMonthly > c.monthly);
-    if (wasEl) {
-      wasEl.hidden = !showWas;
-      wasEl.textContent = showWas ? prefix + fmt(c.fullMonthly, cur) : '';
-    }
-    $('#r-monthly').textContent = (showWas ? '' : prefix) + fmt(c.monthly, cur);
+    const setPair = (id, now, was) => {
+      const wasEl = $('#' + id + '-was');
+      if (wasEl) { wasEl.hidden = !showWas; wasEl.textContent = showWas ? prefix + fmt(was, cur) : ''; }
+      const el = $('#' + id); if (el) el.textContent = (showWas ? '' : prefix) + fmt(now, cur);
+    };
+    $('#r-monthly').textContent = prefix + fmt(c.monthly, cur);
     const notes = [];
     if (hasFrom) notes.push('Часть модулей указана «от»: итоговая цена уточняется после обсуждения задачи.');
     if (c.mods.some((m) => m.adBudget)) notes.push('Рекламный бюджет оплачивается отдельно, напрямую рекламной площадке.');
     if (c.boExcluded) notes.push('Модули поддержки и продвижения не входят в цену выкупа: после выкупа они оплачиваются по отдельному договору.');
     const fn = $('#r-fromnote'); if (fn) fn.textContent = notes.join(' ');
-    $('#r-discount').textContent = c.term.discount ? `скидка ${Math.round(c.term.discount * 100)}% на основу за срок ${c.term.months} мес. (без скидки ${fmt(c.fullMonthly, cur)})` : `цена без скидки при сроке ${c.term.months} мес.`;
-    $('#r-start').textContent = (hasFrom ? 'от ' : '') + fmt(c.start, cur);
-    $('#r-buyout').textContent = (hasFrom ? 'от ' : '') + fmt(c.buyout, cur);
+    $('#r-discount').textContent = c.term.discount ? `скидка ${Math.round(c.term.discount * 100)}% на основу за срок ${c.term.months} мес.` : `цена без скидки при сроке ${c.term.months} мес.`;
+    setPair('r-start', c.start, c.fullStart);
+    setPair('r-buyout', c.buyout, c.fullBuyout);
     $('#r-selected').textContent = c.mods.length ? `Модули: ${c.mods.map((m) => modLabel(m, m.q)).join(', ')}` : 'Модули не выбраны';
   }
 

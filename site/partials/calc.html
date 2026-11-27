@@ -22,12 +22,12 @@
           </div>
           <aside class="card calc__summary" aria-live="polite">
             <p class="calc__summary-title">Ваш расчёт</p>
-            <div class="calc__big"><s class="price-was calc__was" id="r-monthly-was" hidden></s><span class="calc__now"><span id="r-monthly">—</span><small>/мес</small></span></div>
+            <div class="calc__big"><span class="calc__now"><span id="r-monthly">—</span><small>/мес</small></span></div>
             <p class="calc__discount" id="r-discount"></p>
             <p class="calc__fromnote" id="r-fromnote"></p>
-            <div class="calc-row"><span>Стартовый платёж<br><small>первый и последний месяц</small></span><b id="r-start">—</b></div>
+            <div class="calc-row"><span>Стартовый платёж<br><small>первый и последний месяц</small></span><span class="calc-row__val"><s class="price-was calc__was" id="r-start-was" hidden></s><b id="r-start">—</b></span></div>
             <div class="calc-row calc-row--once" id="r-once-row" hidden><span>Разовые услуги<br><small>оплачиваются один раз, отдельно от подписки</small></span><b id="r-once">—</b></div>
-            <div class="calc-row calc-row--total"><span>Выкуп в конце срока</span><b id="r-buyout">—</b></div>
+            <div class="calc-row calc-row--total"><span>Выкуп в конце срока</span><span class="calc-row__val"><s class="price-was calc__was" id="r-buyout-was" hidden></s><b id="r-buyout">—</b></span></div>
             <p class="calc__selected" id="r-selected"></p>
             <button class="btn btn--lg btn--block" type="button" id="calc-send">Отправить расчёт</button>
             <p class="calc__hint">Цена основы указана при подписке на 36 месяцев, скидка за срок действует только на основу; модули стоят одинаково при любом сроке. Цены «от» и не являются публичной офертой.</p>
